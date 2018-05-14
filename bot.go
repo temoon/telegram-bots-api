@@ -44,6 +44,11 @@ type Bot interface {
     UnbanChatMember(request *requests.UnbanChatMember) (bool, error)
     RestrictChatMember(request *requests.RestrictChatMember) (bool, error)
     PromoteChatMember(request *requests.PromoteChatMember) (bool, error)
+    ExportChatInviteLink(request *requests.ExportChatInviteLink) (string, error)
+    SetChatPhoto(request *requests.SetChatPhoto) (bool, error)
+    DeleteChatPhoto(request *requests.DeleteChatPhoto) (bool, error)
+    SetChatTitle(request *requests.SetChatTitle) (bool, error)
+    SetChatDescription(request *requests.SetChatDescription) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -189,6 +194,36 @@ func (b *bot) RestrictChatMember(request *requests.RestrictChatMember) (success 
 
 func (b *bot) PromoteChatMember(request *requests.PromoteChatMember) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("promoteChatMember"), request, &success)
+
+    return
+}
+
+func (b *bot) ExportChatInviteLink(request *requests.ExportChatInviteLink) (link string, err error) {
+    err = b.callMethod(b.getMethodURL("exportChatInviteLink"), request, &link)
+
+    return
+}
+
+func (b *bot) SetChatPhoto(request *requests.SetChatPhoto) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setChatPhoto"), request, &success)
+
+    return
+}
+
+func (b *bot) DeleteChatPhoto(request *requests.DeleteChatPhoto) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("deleteChatPhoto"), request, &success)
+
+    return
+}
+
+func (b *bot) SetChatTitle(request *requests.SetChatTitle) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setChatTitle"), request, &success)
+
+    return
+}
+
+func (b *bot) SetChatDescription(request *requests.SetChatDescription) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setChatDescription"), request, &success)
 
     return
 }
