@@ -38,6 +38,7 @@ type Bot interface {
     SendVenue(request *requests.SendVenue) (Message, error)
     SendContact(request *requests.SendContact) (Message, error)
     SendChatAction(request *requests.SendChatAction) (bool, error)
+    GetUserProfilePhotos(request *requests.GetUserProfilePhotos) (UserProfilePhotos, error)
 }
 
 func NewBot(token string) Bot {
@@ -147,6 +148,12 @@ func (b *bot) SendContact(request *requests.SendContact) (message Message, err e
 
 func (b *bot) SendChatAction(request *requests.SendChatAction) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("sendChatAction"), request, &success)
+
+    return
+}
+
+func (b *bot) GetUserProfilePhotos(request *requests.GetUserProfilePhotos) (photos UserProfilePhotos, err error) {
+    err = b.callMethod(b.getMethodURL("getUserProfilePhotos"), request, &photos)
 
     return
 }
