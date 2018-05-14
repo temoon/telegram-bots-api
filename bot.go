@@ -49,6 +49,16 @@ type Bot interface {
     DeleteChatPhoto(request *requests.DeleteChatPhoto) (bool, error)
     SetChatTitle(request *requests.SetChatTitle) (bool, error)
     SetChatDescription(request *requests.SetChatDescription) (bool, error)
+    PinChatMessage(request *requests.PinChatMessage) (bool, error)
+    UnpinChatMessage(request *requests.UnpinChatMessage) (bool, error)
+    LeaveChat(request *requests.LeaveChat) (bool, error)
+    GetChat(request *requests.GetChat) (Chat, error)
+    GetChatAdministrators(request *requests.GetChatAdministrators) ([]ChatMember, error)
+    GetChatMembersCount(request *requests.GetChatMembersCount) (int, error)
+    GetChatMember(request *requests.GetChatMember) (ChatMember, error)
+    SetChatStickerSet(request *requests.SetChatStickerSet) (bool, error)
+    DeleteChatStickerSet(request *requests.DeleteChatStickerSet) (bool, error)
+    AnswerCallbackQuery(request *requests.AnswerCallbackQuery) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -224,6 +234,66 @@ func (b *bot) SetChatTitle(request *requests.SetChatTitle) (success bool, err er
 
 func (b *bot) SetChatDescription(request *requests.SetChatDescription) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("setChatDescription"), request, &success)
+
+    return
+}
+
+func (b *bot) PinChatMessage(request *requests.PinChatMessage) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("pinChatMessage"), request, &success)
+
+    return
+}
+
+func (b *bot) UnpinChatMessage(request *requests.UnpinChatMessage) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("unpinChatMessage"), request, &success)
+
+    return
+}
+
+func (b *bot) LeaveChat(request *requests.LeaveChat) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("leaveChat"), request, &success)
+
+    return
+}
+
+func (b *bot) GetChat(request *requests.GetChat) (chat Chat, err error) {
+    err = b.callMethod(b.getMethodURL("getChat"), request, &chat)
+
+    return
+}
+
+func (b *bot) GetChatAdministrators(request *requests.GetChatAdministrators) (members []ChatMember, err error) {
+    err = b.callMethod(b.getMethodURL("getChatAdministrators"), request, &members)
+
+    return
+}
+
+func (b *bot) GetChatMembersCount(request *requests.GetChatMembersCount) (count int, err error) {
+    err = b.callMethod(b.getMethodURL("getChatMembersCount"), request, &count)
+
+    return
+}
+
+func (b *bot) GetChatMember(request *requests.GetChatMember) (member ChatMember, err error) {
+    err = b.callMethod(b.getMethodURL("setChatDescription"), request, &member)
+
+    return
+}
+
+func (b *bot) SetChatStickerSet(request *requests.SetChatStickerSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setChatStickerSet"), request, &success)
+
+    return
+}
+
+func (b *bot) DeleteChatStickerSet(request *requests.DeleteChatStickerSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("deleteChatStickerSet"), request, &success)
+
+    return
+}
+
+func (b *bot) AnswerCallbackQuery(request *requests.AnswerCallbackQuery) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("answerCallbackQuery"), request, &success)
 
     return
 }

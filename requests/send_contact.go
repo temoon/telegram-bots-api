@@ -39,7 +39,7 @@ func (r *SendContact) GetValues() (values map[string][]interface{}, err error) {
         values["last_name"] = []interface{}{r.LastName}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

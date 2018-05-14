@@ -68,11 +68,11 @@ func (r *SendVideo) GetValues() (values map[string][]interface{}, err error) {
         values["parse_mode"] = []interface{}{r.ParseMode}
     }
 
-    if r.SupportsStreaming == true {
+    if r.SupportsStreaming {
         values["supports_streaming"] = []interface{}{"1"}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

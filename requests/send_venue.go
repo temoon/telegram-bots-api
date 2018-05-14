@@ -43,7 +43,7 @@ func (r *SendVenue) GetValues() (values map[string][]interface{}, err error) {
         values["foursquare_id"] = []interface{}{r.FoursquareID}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

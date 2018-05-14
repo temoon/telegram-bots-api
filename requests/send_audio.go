@@ -67,7 +67,7 @@ func (r *SendAudio) GetValues() (values map[string][]interface{}, err error) {
         values["title"] = []interface{}{r.Title}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

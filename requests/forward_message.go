@@ -37,7 +37,7 @@ func (r *ForwardMessage) GetValues() (values map[string][]interface{}, err error
         return nil, errors.New("invalid from_chat_id")
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

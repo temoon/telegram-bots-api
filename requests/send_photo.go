@@ -52,7 +52,7 @@ func (r *SendPhoto) GetValues() (values map[string][]interface{}, err error) {
         values["parse_mode"] = []interface{}{r.ParseMode}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

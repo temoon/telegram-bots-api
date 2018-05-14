@@ -38,11 +38,11 @@ func (r *SendMessage) GetValues() (values map[string][]interface{}, err error) {
         values["parse_mode"] = []interface{}{r.ParseMode}
     }
 
-    if r.DisableWebPagePreview == true {
+    if r.DisableWebPagePreview {
         values["disable_web_page_preview"] = []interface{}{"1"}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

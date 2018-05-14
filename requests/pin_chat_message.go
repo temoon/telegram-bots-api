@@ -1,23 +1,21 @@
 package requests
 
 import (
-    "encoding/json"
     "errors"
     "strconv"
 )
 
-type SendMediaGroup struct {
+type PinChatMessage struct {
     ChatID              interface{}
-    Media               []interface{}
+    MessageID           int
     DisableNotification bool
-    ReplyToMessageID    int
 }
 
-func (r *SendMediaGroup) IsMultipart() bool {
+func (r *PinChatMessage) IsMultipart() bool {
     return false
 }
 
-func (r *SendMediaGroup) GetValues() (values map[string][]interface{}, err error) {
+func (r *PinChatMessage) GetValues() (values map[string][]interface{}, err error) {
     values = make(map[string][]interface{})
 
     switch r.ChatID.(type) {
@@ -29,18 +27,11 @@ func (r *SendMediaGroup) GetValues() (values map[string][]interface{}, err error
         return nil, errors.New("invalid chat_id")
     }
 
-    var data []byte
-    if data, err = json.Marshal(r.Media); err != nil {
-        return
-    }
-
-    values["media"] = []interface{}{string(data)}
+    values["message_id"] = []interface{}{strconv.Itoa(r.MessageID)}
 
     if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
-
-    values["reply_to_message_id"] = []interface{}{strconv.Itoa(r.ReplyToMessageID)}
 
     return
 }

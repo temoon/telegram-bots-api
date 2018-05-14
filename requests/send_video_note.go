@@ -52,7 +52,7 @@ func (r *SendVideoNote) GetValues() (values map[string][]interface{}, err error)
         values["length"] = []interface{}{strconv.Itoa(r.Length)}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

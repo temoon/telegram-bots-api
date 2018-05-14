@@ -39,7 +39,7 @@ func (r *SendLocation) GetValues() (values map[string][]interface{}, err error) 
         values["live_period"] = []interface{}{strconv.Itoa(r.LivePeriod)}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 

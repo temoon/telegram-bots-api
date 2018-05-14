@@ -37,19 +37,19 @@ func (r *RestrictChatMember) GetValues() (values map[string][]interface{}, err e
         values["until_date"] = []interface{}{strconv.Itoa(r.UntilDate)}
     }
 
-    if r.CanSendMessages == true {
+    if r.CanSendMessages {
         values["can_send_messages"] = []interface{}{"1"}
     }
 
-    if r.CanSendMediaMessages == true {
+    if r.CanSendMediaMessages {
         values["can_send_media_messages"] = []interface{}{"1"}
     }
 
-    if r.CanSendOtherMessages == true {
+    if r.CanSendOtherMessages {
         values["can_send_other_messages"] = []interface{}{"1"}
     }
 
-    if r.CanAddWebPagePreviews == true {
+    if r.CanAddWebPagePreviews {
         values["can_add_web_page_previews"] = []interface{}{"1"}
     }
 

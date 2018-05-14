@@ -36,35 +36,35 @@ func (r *PromoteChatMember) GetValues() (values map[string][]interface{}, err er
 
     values["user_id"] = []interface{}{strconv.Itoa(r.UserID)}
 
-    if r.CanChangeInfo == true {
+    if r.CanChangeInfo {
         values["can_change_info"] = []interface{}{"1"}
     }
 
-    if r.CanPostMessages == true {
+    if r.CanPostMessages {
         values["can_post_messages"] = []interface{}{"1"}
     }
 
-    if r.CanEditMessages == true {
+    if r.CanEditMessages {
         values["can_edit_messages"] = []interface{}{"1"}
     }
 
-    if r.CanDeleteMessages == true {
+    if r.CanDeleteMessages {
         values["can_delete_messages"] = []interface{}{"1"}
     }
 
-    if r.CanInviteUsers == true {
+    if r.CanInviteUsers {
         values["can_invite_users"] = []interface{}{"1"}
     }
 
-    if r.CanRestrictMembers == true {
+    if r.CanRestrictMembers {
         values["can_restrict_members"] = []interface{}{"1"}
     }
 
-    if r.CanPinMessages == true {
+    if r.CanPinMessages {
         values["can_pin_messages"] = []interface{}{"1"}
     }
 
-    if r.CanPromoteMembers == true {
+    if r.CanPromoteMembers {
         values["can_promote_members"] = []interface{}{"1"}
     }
 

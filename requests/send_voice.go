@@ -57,7 +57,7 @@ func (r *SendVoice) GetValues() (values map[string][]interface{}, err error) {
         values["duration"] = []interface{}{strconv.Itoa(r.Duration)}
     }
 
-    if r.DisableNotification == true {
+    if r.DisableNotification {
         values["disable_notification"] = []interface{}{"1"}
     }
 
