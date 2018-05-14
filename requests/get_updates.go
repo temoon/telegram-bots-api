@@ -5,16 +5,6 @@ import (
     "strconv"
 )
 
-const AllowedUpdatesMessage = "message"
-const AllowedUpdatesEditedMessage = "edited_message"
-const AllowedUpdatesChannelPost = "channel_post"
-const AllowedUpdatesEditedChannelPost = "edited_channel_post"
-const AllowedUpdatesInlineQuery = "inline_query"
-const AllowedUpdatesChosenInlineResult = "chosen_inline_result"
-const AllowedUpdatesCallbackQuery = "callback_query"
-const AllowedUpdatesShippingQuery = "shipping_query"
-const AllowedUpdatesPreCheckoutQuery = "pre_checkout_query"
-
 type GetUpdates struct {
     Offset         int
     Limit          int

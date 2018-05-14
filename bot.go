@@ -22,6 +22,9 @@ type bot struct {
 
 type Bot interface {
     GetUpdates(*requests.GetUpdates) ([]Update, error)
+    SetWebhook(*requests.SetWebhook) (bool, error)
+    DeleteWebhook() (bool, error)
+    GetWebhookInfo() (WebhookInfo, error)
     GetMe() (User, error)
     SendMessage(*requests.SendMessage) (Message, error)
     ForwardMessage(*requests.ForwardMessage) (Message, error)
@@ -72,6 +75,24 @@ func NewBot(token string) Bot {
 
 func (b *bot) GetUpdates(request *requests.GetUpdates) (updates []Update, err error) {
     err = b.callMethod(b.getMethodURL("getUpdates"), request, &updates)
+
+    return
+}
+
+func (b *bot) SetWebhook(request *requests.SetWebhook) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setWebhook"), request, &success)
+
+    return
+}
+
+func (b *bot) DeleteWebhook() (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("deleteWebhook"), nil, &success)
+
+    return
+}
+
+func (b *bot) GetWebhookInfo() (info WebhookInfo, err error) {
+    err = b.callMethod(b.getMethodURL("getWebhookInfo"), nil, &info)
 
     return
 }

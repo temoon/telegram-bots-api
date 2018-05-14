@@ -5,17 +5,6 @@ import (
     "strconv"
 )
 
-const ChatActionTyping = "typing"
-const ChatActionUploadPhoto = "upload_photo"
-const ChatActionRecordVideo = "record_video"
-const ChatActionUploadVideo = "upload_video"
-const ChatActionRecordAudio = "record_audio"
-const ChatActionUploadAudio = "upload_audio"
-const ChatActionUploadDocument = "upload_document"
-const ChatActionFindLocation = "find_location"
-const ChatActionRecordVideoNote = "record_video_note"
-const ChatActionUploadVideoNote = "upload_video_note"
-
 type SendChatAction struct {
     ChatID interface{}
     Action string
