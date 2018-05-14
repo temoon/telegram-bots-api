@@ -40,6 +40,10 @@ type Bot interface {
     SendChatAction(request *requests.SendChatAction) (bool, error)
     GetUserProfilePhotos(request *requests.GetUserProfilePhotos) (UserProfilePhotos, error)
     GetFile(request *requests.GetFile) (File, error)
+    KickChatMember(request *requests.KickChatMember) (bool, error)
+    UnbanChatMember(request *requests.UnbanChatMember) (bool, error)
+    RestrictChatMember(request *requests.RestrictChatMember) (bool, error)
+    PromoteChatMember(request *requests.PromoteChatMember) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -161,6 +165,30 @@ func (b *bot) GetUserProfilePhotos(request *requests.GetUserProfilePhotos) (phot
 
 func (b *bot) GetFile(request *requests.GetFile) (file File, err error) {
     err = b.callMethod(b.getMethodURL("getFile"), request, &file)
+
+    return
+}
+
+func (b *bot) KickChatMember(request *requests.KickChatMember) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("kickChatMember"), request, &success)
+
+    return
+}
+
+func (b *bot) UnbanChatMember(request *requests.UnbanChatMember) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("unbanChatMember"), request, &success)
+
+    return
+}
+
+func (b *bot) RestrictChatMember(request *requests.RestrictChatMember) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("restrictChatMember"), request, &success)
+
+    return
+}
+
+func (b *bot) PromoteChatMember(request *requests.PromoteChatMember) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("promoteChatMember"), request, &success)
 
     return
 }
