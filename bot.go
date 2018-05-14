@@ -37,6 +37,7 @@ type Bot interface {
     StopMessageLiveLocation(request *requests.StopMessageLiveLocation) (Message, error)
     SendVenue(request *requests.SendVenue) (Message, error)
     SendContact(request *requests.SendContact) (Message, error)
+    SendChatAction(request *requests.SendChatAction) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -140,6 +141,12 @@ func (b *bot) SendVenue(request *requests.SendVenue) (message Message, err error
 
 func (b *bot) SendContact(request *requests.SendContact) (message Message, err error) {
     err = b.callMethod(b.getMethodURL("sendContact"), request, &message)
+
+    return
+}
+
+func (b *bot) SendChatAction(request *requests.SendChatAction) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("sendChatAction"), request, &success)
 
     return
 }
