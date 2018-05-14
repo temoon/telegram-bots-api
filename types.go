@@ -2,7 +2,16 @@ package telegram
 
 import (
     "encoding/json"
+    "os"
 )
+
+const ParseModeMarkdown = "Markdown"
+const ParseModeHTML = "HTML"
+
+type Request interface {
+    IsMultipart() bool
+    GetValues() (map[string][]interface{}, error)
+}
 
 type Response struct {
     Ok          bool               `json:"ok"`
@@ -17,6 +26,19 @@ type ResponseParameters struct {
     RetryAfter      int   `json:"retry_after"`
 }
 
+type Update struct {
+    ID                 int                 `json:"update_id"`
+    Message            *Message            `json:"message"`
+    EditedMessage      *Message            `json:"edited_message"`
+    ChannelPost        *Message            `json:"channel_post"`
+    EditedChannelPost  *Message            `json:"edited_channel_post"`
+    InlineQuery        *InlineQuery        `json:"inline_query"`
+    ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result"`
+    CallbackQuery      *CallbackQuery      `json:"callback_query"`
+    ShippingQuery      *ShippingQuery      `json:"shipping_query"`
+    PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query"`
+}
+
 type User struct {
     ID           int    `json:"id"`
     IsBot        bool   `json:"is_bot"`
@@ -25,6 +47,11 @@ type User struct {
     Username     string `json:"username"`
     LanguageCode string `json:"language_code"`
 }
+
+const ChatTypePrivate = "private"
+const ChatTypeGroup = "group"
+const ChatTypeSupergroup = "supergroup"
+const ChatTypeChannel = "channel"
 
 type Chat struct {
     ID                          int64      `json:"id"`
@@ -86,6 +113,18 @@ type Message struct {
     SuccessfulPayment     *SuccessfulPayment `json:"successful_payment"`
     ConnectedWebsite      string             `json:"connected_website"`
 }
+
+const MessageEntityTypeMention = "mention"
+const MessageEntityTypeHashtag = "hashtag"
+const MessageEntityTypeBotCommand = "bot_command"
+const MessageEntityTypeURL = "url"
+const MessageEntityTypeEmail = "email"
+const MessageEntityTypeBold = "bold"
+const MessageEntityTypeItalic = "italic"
+const MessageEntityTypeCode = "code"
+const MessageEntityTypePre = "pre"
+const MessageEntityTypeTextLink = "text_link"
+const MessageEntityTypeTextMention = "text_mention"
 
 type MessageEntity struct {
     Type   string `json:"type"`
@@ -226,6 +265,13 @@ type ChatPhoto struct {
     BigFileID   string `json:"big_file_id"`
 }
 
+const ChatMemberStatusCreator = "creator"
+const ChatMemberStatusAdministrator = "administrator"
+const ChatMemberStatusMember = "member"
+const ChatMemberStatusRestricted = "restricted"
+const ChatMemberStatusLeft = "left"
+const ChatMemberStatusKicked = "kicked"
+
 type ChatMember struct {
     User                  User   `json:"user"`
     Status                string `json:"status"`
@@ -267,7 +313,7 @@ type InputMediaVideo struct {
     SupportsStreaming bool   `json:"supports_streaming"`
 }
 
-type InputFile interface{}
+type InputFile *os.File
 
 type Sticker struct {
     FileID       string        `json:"file_id"`
@@ -287,6 +333,11 @@ type StickerSet struct {
     Stickers      []Sticker `json:"stickers"`
 }
 
+const MaskPositionPointForehead = "forehead"
+const MaskPositionPointEyes = "eyes"
+const MaskPositionPointMouth = "mouth"
+const MaskPositionPointChin = "chin"
+
 type MaskPosition struct {
     Point  string  `json:"point"`
     XShift float64 `json:"x_shift"`
@@ -305,6 +356,14 @@ type InlineQuery struct {
 type InlineQueryResult interface{}
 
 // ...
+
+type ChosenInlineResult struct {
+    ID              string    `json:"result_id"`
+    From            User      `json:"from"`
+    Location        *Location `json:"location"`
+    InlineMessageID string    `json:"inline_message_id"`
+    Query           string    `json:"query"`
+}
 
 type LabeledPrice struct {
     Label  string `json:"label"`
