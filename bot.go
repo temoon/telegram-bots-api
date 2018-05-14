@@ -28,40 +28,44 @@ type Bot interface {
     GetMe() (User, error)
     SendMessage(*requests.SendMessage) (Message, error)
     ForwardMessage(*requests.ForwardMessage) (Message, error)
-    SendPhoto(request *requests.SendPhoto) (Message, error)
-    SendAudio(request *requests.SendAudio) (Message, error)
-    SendDocument(request *requests.SendDocument) (Message, error)
-    SendVideo(request *requests.SendVideo) (Message, error)
-    SendVoice(request *requests.SendVoice) (Message, error)
-    SendVideoNote(request *requests.SendVideoNote) (Message, error)
-    SendMediaGroup(request *requests.SendMediaGroup) (Message, error)
-    SendLocation(request *requests.SendLocation) (Message, error)
-    EditMessageLiveLocation(request *requests.EditMessageLiveLocation) (Message, error)
-    StopMessageLiveLocation(request *requests.StopMessageLiveLocation) (Message, error)
-    SendVenue(request *requests.SendVenue) (Message, error)
-    SendContact(request *requests.SendContact) (Message, error)
-    SendChatAction(request *requests.SendChatAction) (bool, error)
-    GetUserProfilePhotos(request *requests.GetUserProfilePhotos) (UserProfilePhotos, error)
-    GetFile(request *requests.GetFile) (File, error)
-    KickChatMember(request *requests.KickChatMember) (bool, error)
-    UnbanChatMember(request *requests.UnbanChatMember) (bool, error)
-    RestrictChatMember(request *requests.RestrictChatMember) (bool, error)
-    PromoteChatMember(request *requests.PromoteChatMember) (bool, error)
-    ExportChatInviteLink(request *requests.ExportChatInviteLink) (string, error)
-    SetChatPhoto(request *requests.SetChatPhoto) (bool, error)
-    DeleteChatPhoto(request *requests.DeleteChatPhoto) (bool, error)
-    SetChatTitle(request *requests.SetChatTitle) (bool, error)
-    SetChatDescription(request *requests.SetChatDescription) (bool, error)
-    PinChatMessage(request *requests.PinChatMessage) (bool, error)
-    UnpinChatMessage(request *requests.UnpinChatMessage) (bool, error)
-    LeaveChat(request *requests.LeaveChat) (bool, error)
-    GetChat(request *requests.GetChat) (Chat, error)
-    GetChatAdministrators(request *requests.GetChatAdministrators) ([]ChatMember, error)
-    GetChatMembersCount(request *requests.GetChatMembersCount) (int, error)
-    GetChatMember(request *requests.GetChatMember) (ChatMember, error)
-    SetChatStickerSet(request *requests.SetChatStickerSet) (bool, error)
-    DeleteChatStickerSet(request *requests.DeleteChatStickerSet) (bool, error)
-    AnswerCallbackQuery(request *requests.AnswerCallbackQuery) (bool, error)
+    SendPhoto(*requests.SendPhoto) (Message, error)
+    SendAudio(*requests.SendAudio) (Message, error)
+    SendDocument(*requests.SendDocument) (Message, error)
+    SendVideo(*requests.SendVideo) (Message, error)
+    SendVoice(*requests.SendVoice) (Message, error)
+    SendVideoNote(*requests.SendVideoNote) (Message, error)
+    SendMediaGroup(*requests.SendMediaGroup) (Message, error)
+    SendLocation(*requests.SendLocation) (Message, error)
+    EditMessageLiveLocation(*requests.EditMessageLiveLocation) (Message, error)
+    StopMessageLiveLocation(*requests.StopMessageLiveLocation) (Message, error)
+    SendVenue(*requests.SendVenue) (Message, error)
+    SendContact(*requests.SendContact) (Message, error)
+    SendChatAction(*requests.SendChatAction) (bool, error)
+    GetUserProfilePhotos(*requests.GetUserProfilePhotos) (UserProfilePhotos, error)
+    GetFile(*requests.GetFile) (File, error)
+    KickChatMember(*requests.KickChatMember) (bool, error)
+    UnbanChatMember(*requests.UnbanChatMember) (bool, error)
+    RestrictChatMember(*requests.RestrictChatMember) (bool, error)
+    PromoteChatMember(*requests.PromoteChatMember) (bool, error)
+    ExportChatInviteLink(*requests.ExportChatInviteLink) (string, error)
+    SetChatPhoto(*requests.SetChatPhoto) (bool, error)
+    DeleteChatPhoto(*requests.DeleteChatPhoto) (bool, error)
+    SetChatTitle(*requests.SetChatTitle) (bool, error)
+    SetChatDescription(*requests.SetChatDescription) (bool, error)
+    PinChatMessage(*requests.PinChatMessage) (bool, error)
+    UnpinChatMessage(*requests.UnpinChatMessage) (bool, error)
+    LeaveChat(*requests.LeaveChat) (bool, error)
+    GetChat(*requests.GetChat) (Chat, error)
+    GetChatAdministrators(*requests.GetChatAdministrators) ([]ChatMember, error)
+    GetChatMembersCount(*requests.GetChatMembersCount) (int, error)
+    GetChatMember(*requests.GetChatMember) (ChatMember, error)
+    SetChatStickerSet(*requests.SetChatStickerSet) (bool, error)
+    DeleteChatStickerSet(*requests.DeleteChatStickerSet) (bool, error)
+    AnswerCallbackQuery(*requests.AnswerCallbackQuery) (bool, error)
+    EditMessageText(*requests.EditMessageText) (Message, error)
+    EditMessageCaption(*requests.EditMessageCaption) (Message, error)
+    EditMessageReplyMarkup(*requests.EditMessageReplyMarkup) (Message, error)
+    DeleteMessage(*requests.DeleteMessage) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -315,6 +319,30 @@ func (b *bot) DeleteChatStickerSet(request *requests.DeleteChatStickerSet) (succ
 
 func (b *bot) AnswerCallbackQuery(request *requests.AnswerCallbackQuery) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("answerCallbackQuery"), request, &success)
+
+    return
+}
+
+func (b *bot) EditMessageText(request *requests.EditMessageText) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("editMessageText"), request, &message)
+
+    return
+}
+
+func (b *bot) EditMessageCaption(request *requests.EditMessageCaption) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("editMessageCaption"), request, &message)
+
+    return
+}
+
+func (b *bot) EditMessageReplyMarkup(request *requests.EditMessageReplyMarkup) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("editMessageReplyMarkup"), request, &message)
+
+    return
+}
+
+func (b *bot) DeleteMessage(request *requests.DeleteMessage) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("deleteMessage"), request, &success)
 
     return
 }
