@@ -32,6 +32,7 @@ type Bot interface {
     SendVoice(request *requests.SendVoice) (Message, error)
     SendVideoNote(request *requests.SendVideoNote) (Message, error)
     SendMediaGroup(request *requests.SendMediaGroup) (Message, error)
+    SendLocation(request *requests.SendLocation) (Message, error)
 }
 
 func NewBot(token string) Bot {
@@ -105,6 +106,12 @@ func (b *bot) SendVideoNote(request *requests.SendVideoNote) (message Message, e
 
 func (b *bot) SendMediaGroup(request *requests.SendMediaGroup) (message Message, err error) {
     err = b.callMethod(b.getMethodURL("sendMediaGroup"), request, &message)
+
+    return
+}
+
+func (b *bot) SendLocation(request *requests.SendLocation) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("sendLocation"), request, &message)
 
     return
 }
