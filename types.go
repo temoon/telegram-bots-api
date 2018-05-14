@@ -291,11 +291,7 @@ type ChatMember struct {
     CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
 }
 
-type InputMedia interface{}
-
 type InputMediaPhoto struct {
-    InputMedia
-
     Type      string `json:"type"`
     Media     string `json:"media"`
     Caption   string `json:"caption"`
@@ -352,8 +348,6 @@ type InlineQuery struct {
     Query    string    `json:"query"`
     Offset   string    `json:"offset"`
 }
-
-type InlineQueryResult interface{}
 
 // ...
 
