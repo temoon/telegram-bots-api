@@ -27,7 +27,7 @@ type ResponseParameters struct {
 }
 
 type Update struct {
-    ID                 int                 `json:"update_id"`
+    UpdateID           int                 `json:"update_id"`
     Message            *Message            `json:"message"`
     EditedMessage      *Message            `json:"edited_message"`
     ChannelPost        *Message            `json:"channel_post"`
@@ -70,7 +70,7 @@ type Chat struct {
 }
 
 type Message struct {
-    ID                    int                `json:"message_id"`
+    MessageID             int                `json:"message_id"`
     From                  *User              `json:"from"`
     Date                  int                `json:"date"`
     Chat                  Chat               `json:"chat"`
@@ -352,7 +352,7 @@ type InlineQuery struct {
 // ...
 
 type ChosenInlineResult struct {
-    ID              string    `json:"result_id"`
+    ResultID        string    `json:"result_id"`
     From            User      `json:"from"`
     Location        *Location `json:"location"`
     InlineMessageID string    `json:"inline_message_id"`
