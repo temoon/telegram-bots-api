@@ -10,7 +10,7 @@ type Request interface {
 }
 
 type Response struct {
-    Ok          bool                `json:"ok"`
+    OK          bool                `json:"ok"`
     Description string              `json:"description,omitempty"`
     Result      json.RawMessage     `json:"result,omitempty"`
     ErrorCode   int                 `json:"error_code,omitempty"`

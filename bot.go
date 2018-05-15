@@ -73,6 +73,9 @@ type Bot interface {
     AddStickerToSet(*requests.AddStickerToSet) (bool, error)
     SetStickerPositionInSet(*requests.SetStickerPositionInSet) (bool, error)
     DeleteStickerFromSet(*requests.DeleteStickerFromSet) (bool, error)
+    SendInvoice(*requests.SendInvoice) (Message, error)
+    AnswerShippingQuery(*requests.AnswerShippingQuery) (bool, error)
+    AnswerPreCheckoutQuery(*requests.AnswerPreCheckoutQuery) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -396,6 +399,24 @@ func (b *bot) DeleteStickerFromSet(request *requests.DeleteStickerFromSet) (succ
     return
 }
 
+func (b *bot) SendInvoice(request *requests.SendInvoice) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("sendInvoice"), request, &message)
+
+    return
+}
+
+func (b *bot) AnswerShippingQuery(request *requests.AnswerShippingQuery) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("answerShippingQuery"), request, &success)
+
+    return
+}
+
+func (b *bot) AnswerPreCheckoutQuery(request *requests.AnswerPreCheckoutQuery) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("answerPreCheckoutQuery"), request, &success)
+
+    return
+}
+
 func (b *bot) getMethodURL(method string) string {
     return "https://api.telegram.org/bot" + b.token + "/" + method
 }
@@ -430,7 +451,7 @@ func (b *bot) callMethod(methodUrl string, request Request, response interface{}
         return
     }
 
-    if !telegramResponse.Ok {
+    if !telegramResponse.OK {
         return errors.New(telegramResponse.Description)
     }
 
