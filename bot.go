@@ -11,7 +11,7 @@ import (
     "net/url"
     "os"
 
-    "go-telegram-bots-api/requests"
+    "github.com/temoon/go-telegram-bots-api/requests"
 )
 
 type bot struct {
