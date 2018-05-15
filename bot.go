@@ -76,6 +76,9 @@ type Bot interface {
     SendInvoice(*requests.SendInvoice) (Message, error)
     AnswerShippingQuery(*requests.AnswerShippingQuery) (bool, error)
     AnswerPreCheckoutQuery(*requests.AnswerPreCheckoutQuery) (bool, error)
+    SendGame(*requests.SendGame) (Message, error)
+    SetGameScore(*requests.SetGameScore) (Message, error)
+    GetGameHighScores(*requests.GetGameHighScores) ([]GameHighScore, error)
 }
 
 func NewBot(token string) Bot {
@@ -413,6 +416,24 @@ func (b *bot) AnswerShippingQuery(request *requests.AnswerShippingQuery) (succes
 
 func (b *bot) AnswerPreCheckoutQuery(request *requests.AnswerPreCheckoutQuery) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("answerPreCheckoutQuery"), request, &success)
+
+    return
+}
+
+func (b *bot) SendGame(request *requests.SendGame) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("sendGame"), request, &message)
+
+    return
+}
+
+func (b *bot) SetGameScore(request *requests.SetGameScore) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("setGameScore"), request, &message)
+
+    return
+}
+
+func (b *bot) GetGameHighScores(request *requests.GetGameHighScores) (highScores []GameHighScore, err error) {
+    err = b.callMethod(b.getMethodURL("getGameHighScores"), request, &highScores)
 
     return
 }
