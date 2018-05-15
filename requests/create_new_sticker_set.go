@@ -19,17 +19,17 @@ func (r *CreateNewStickerSet) IsMultipart() bool {
     return true
 }
 
-func (r *CreateNewStickerSet) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
-    values["user_id"] = []interface{}{strconv.Itoa(r.UserID)}
-    values["name"] = []interface{}{r.Name}
-    values["title"] = []interface{}{r.Title}
-    values["png_sticker"] = []interface{}{r.PNGSticker}
-    values["emojis"] = []interface{}{r.Emojis}
+    values["user_id"] = strconv.Itoa(r.UserID)
+    values["name"] = r.Name
+    values["title"] = r.Title
+    values["png_sticker"] = r.PNGSticker
+    values["emojis"] = r.Emojis
 
     if r.ContainsMasks {
-        values["contains_masks"] = []interface{}{"1"}
+        values["contains_masks"] = "1"
     }
 
     if r.MaskPosition != nil {
@@ -38,7 +38,7 @@ func (r *CreateNewStickerSet) GetValues() (values map[string][]interface{}, err 
             return
         }
 
-        values["mask_position"] = []interface{}{string(data)}
+        values["mask_position"] = string(data)
     }
 
     return

@@ -16,19 +16,19 @@ func (r *GetUpdates) IsMultipart() bool {
     return false
 }
 
-func (r *GetUpdates) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
     if r.Offset != 0 {
-        values["offset"] = []interface{}{strconv.Itoa(r.Offset)}
+        values["offset"] = strconv.Itoa(r.Offset)
     }
 
     if r.Limit != 0 {
-        values["limit"] = []interface{}{strconv.Itoa(r.Limit)}
+        values["limit"] = strconv.Itoa(r.Limit)
     }
 
     if r.Timeout != 0 {
-        values["timeout"] = []interface{}{strconv.Itoa(r.Timeout)}
+        values["timeout"] = strconv.Itoa(r.Timeout)
     }
 
     if r.AllowedUpdates != nil {
@@ -37,7 +37,7 @@ func (r *GetUpdates) GetValues() (values map[string][]interface{}, err error) {
             return
         }
 
-        values["allowed_updates"] = []interface{}{string(data)}
+        values["allowed_updates"] = string(data)
     }
 
     return

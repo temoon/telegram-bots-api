@@ -17,26 +17,26 @@ func (r *StopMessageLiveLocation) IsMultipart() bool {
     return false
 }
 
-func (r *StopMessageLiveLocation) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
     if r.ChatID != nil {
         switch r.ChatID.(type) {
         case int64:
-            values["chat_id"] = []interface{}{strconv.FormatInt(r.ChatID.(int64), 10)}
+            values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
         case string:
-            values["chat_id"] = []interface{}{r.ChatID.(string)}
+            values["chat_id"] = r.ChatID.(string)
         default:
             return nil, errors.New("invalid chat_id")
         }
     }
 
     if r.MessageID != 0 {
-        values["message_id"] = []interface{}{strconv.Itoa(r.MessageID)}
+        values["message_id"] = strconv.Itoa(r.MessageID)
     }
 
     if r.InlineMessageID != "" {
-        values["inline_message_id"] = []interface{}{r.InlineMessageID}
+        values["inline_message_id"] = r.InlineMessageID
     }
 
     if r.ReplyMarkup != nil {
@@ -45,7 +45,7 @@ func (r *StopMessageLiveLocation) GetValues() (values map[string][]interface{}, 
             return
         }
 
-        values["reply_markup"] = []interface{}{string(data)}
+        values["reply_markup"] = string(data)
     }
 
     return

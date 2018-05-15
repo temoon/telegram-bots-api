@@ -23,41 +23,41 @@ func (r *SendVideoNote) IsMultipart() bool {
     return ok
 }
 
-func (r *SendVideoNote) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
     case int64:
-        values["chat_id"] = []interface{}{strconv.FormatInt(r.ChatID.(int64), 10)}
+        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
     case string:
-        values["chat_id"] = []interface{}{r.ChatID.(string)}
+        values["chat_id"] = r.ChatID.(string)
     default:
         return nil, errors.New("invalid chat_id")
     }
 
     switch r.VideoNote.(type) {
     case string:
-        values["video_note"] = []interface{}{r.VideoNote.(string)}
+        values["video_note"] = r.VideoNote.(string)
     case *os.File:
-        values["video_note"] = []interface{}{r.VideoNote.(*os.File)}
+        values["video_note"] = r.VideoNote.(*os.File)
     default:
         return nil, errors.New("invalid video_note")
     }
 
     if r.Duration != 0 {
-        values["duration"] = []interface{}{strconv.Itoa(r.Duration)}
+        values["duration"] = strconv.Itoa(r.Duration)
     }
 
     if r.Length != 0 {
-        values["length"] = []interface{}{strconv.Itoa(r.Length)}
+        values["length"] = strconv.Itoa(r.Length)
     }
 
     if r.DisableNotification {
-        values["disable_notification"] = []interface{}{"1"}
+        values["disable_notification"] = "1"
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = []interface{}{strconv.Itoa(r.ReplyToMessageID)}
+        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
     }
 
     if r.ReplyMarkup != nil {
@@ -66,7 +66,7 @@ func (r *SendVideoNote) GetValues() (values map[string][]interface{}, err error)
             return
         }
 
-        values["reply_markup"] = []interface{}{string(data)}
+        values["reply_markup"] = string(data)
     }
 
     return

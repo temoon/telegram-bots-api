@@ -13,11 +13,11 @@ func (r *SetStickerPositionInSet) IsMultipart() bool {
     return false
 }
 
-func (r *SetStickerPositionInSet) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *SetStickerPositionInSet) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
-    values["sticker"] = []interface{}{r.Sticker}
-    values["position"] = []interface{}{strconv.Itoa(r.Position)}
+    values["sticker"] = r.Sticker
+    values["position"] = strconv.Itoa(r.Position)
 
     return
 }

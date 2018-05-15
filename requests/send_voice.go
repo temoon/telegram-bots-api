@@ -24,45 +24,45 @@ func (r *SendVoice) IsMultipart() bool {
     return ok
 }
 
-func (r *SendVoice) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
     case int64:
-        values["chat_id"] = []interface{}{strconv.FormatInt(r.ChatID.(int64), 10)}
+        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
     case string:
-        values["chat_id"] = []interface{}{r.ChatID.(string)}
+        values["chat_id"] = r.ChatID.(string)
     default:
         return nil, errors.New("invalid chat_id")
     }
 
     switch r.Voice.(type) {
     case string:
-        values["voice"] = []interface{}{r.Voice.(string)}
+        values["voice"] = r.Voice.(string)
     case *os.File:
-        values["voice"] = []interface{}{r.Voice.(*os.File)}
+        values["voice"] = r.Voice.(*os.File)
     default:
         return nil, errors.New("invalid voice")
     }
 
     if r.Caption != "" {
-        values["caption"] = []interface{}{r.Caption}
+        values["caption"] = r.Caption
     }
 
     if r.ParseMode != "" {
-        values["parse_mode"] = []interface{}{r.ParseMode}
+        values["parse_mode"] = r.ParseMode
     }
 
     if r.Duration != 0 {
-        values["duration"] = []interface{}{strconv.Itoa(r.Duration)}
+        values["duration"] = strconv.Itoa(r.Duration)
     }
 
     if r.DisableNotification {
-        values["disable_notification"] = []interface{}{"1"}
+        values["disable_notification"] = "1"
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = []interface{}{strconv.Itoa(r.ReplyToMessageID)}
+        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
     }
 
     if r.ReplyMarkup != nil {
@@ -71,7 +71,7 @@ func (r *SendVoice) GetValues() (values map[string][]interface{}, err error) {
             return
         }
 
-        values["reply_markup"] = []interface{}{string(data)}
+        values["reply_markup"] = string(data)
     }
 
     return

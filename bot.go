@@ -10,7 +10,6 @@ import (
     "net/http"
     "net/url"
     "os"
-    "strings"
 
     "go-telegram-bots-api/requests"
 )
@@ -73,6 +72,7 @@ type Bot interface {
     AddStickerToSet(*requests.AddStickerToSet) (bool, error)
     SetStickerPositionInSet(*requests.SetStickerPositionInSet) (bool, error)
     DeleteStickerFromSet(*requests.DeleteStickerFromSet) (bool, error)
+    AnswerInlineQuery(*requests.AnswerInlineQuery) (bool, error)
     SendInvoice(*requests.SendInvoice) (Message, error)
     AnswerShippingQuery(*requests.AnswerShippingQuery) (bool, error)
     AnswerPreCheckoutQuery(*requests.AnswerPreCheckoutQuery) (bool, error)
@@ -402,6 +402,12 @@ func (b *bot) DeleteStickerFromSet(request *requests.DeleteStickerFromSet) (succ
     return
 }
 
+func (b *bot) AnswerInlineQuery(request *requests.AnswerInlineQuery) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("answerInlineQuery"), request, &success)
+
+    return
+}
+
 func (b *bot) SendInvoice(request *requests.SendInvoice) (message Message, err error) {
     err = b.callMethod(b.getMethodURL("sendInvoice"), request, &message)
 
@@ -487,32 +493,26 @@ func (b *bot) getForm(request Request) (contentType string, query *bytes.Buffer,
         return
     }
 
-    var rv map[string][]interface{}
-    if rv, err = request.GetValues(); err != nil {
+    var values map[string]interface{}
+    if values, err = request.GetValues(); err != nil {
         return
     }
 
-    var prefix string
-
-    for key, values := range rv {
-        prefix = url.QueryEscape(key) + "="
-
-        for _, value := range values {
-            if query.Len() > 0 {
-                query.WriteByte('&')
-            }
-
-            query.WriteString(prefix)
-            query.WriteString(url.QueryEscape(value.(string)))
+    for key, value := range values {
+        if query.Len() > 0 {
+            query.WriteByte('&')
         }
+
+        query.WriteString(url.QueryEscape(key) + "=")
+        query.WriteString(url.QueryEscape(value.(string)))
     }
 
     return
 }
 
 func (b *bot) getFormMultipart(request Request) (contentType string, query *bytes.Buffer, err error) {
-    var rv map[string][]interface{}
-    if rv, err = request.GetValues(); err != nil {
+    var values map[string]interface{}
+    if values, err = request.GetValues(); err != nil {
         return
     }
 
@@ -521,26 +521,21 @@ func (b *bot) getFormMultipart(request Request) (contentType string, query *byte
     var mw = multipart.NewWriter(query)
     var fw io.Writer
 
-    for key, values := range rv {
-        for _, value := range values {
-            if file, ok := value.(*os.File); ok {
-                if fw, err = mw.CreateFormFile(key, file.Name()); err != nil {
-                    return
-                }
-            } else {
-                if fw, err = mw.CreateFormField(key); err != nil {
-                    return
-                }
-            }
-
-            reader, ok := value.(io.Reader)
-            if !ok {
-                reader = strings.NewReader(value.(string))
-            }
-
-            if _, err = io.Copy(fw, reader); err != nil {
+    for key, value := range values {
+        if file, ok := value.(*os.File); ok {
+            if fw, err = mw.CreateFormFile(key, file.Name()); err != nil {
                 return
             }
+
+            if _, err = io.Copy(fw, value.(io.Reader)); err != nil {
+                return
+            }
+        } else {
+            if fw, err = mw.CreateFormField(key); err != nil {
+                return
+            }
+
+            fw.Write([]byte(value.(string)))
         }
     }
 

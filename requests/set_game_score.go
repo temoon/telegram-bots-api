@@ -18,30 +18,30 @@ func (r *SetGameScore) IsMultipart() bool {
     return false
 }
 
-func (r *SetGameScore) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
-    values["user_id"] = []interface{}{strconv.Itoa(r.UserID)}
-    values["score"] = []interface{}{strconv.Itoa(r.Score)}
+    values["user_id"] = strconv.Itoa(r.UserID)
+    values["score"] = strconv.Itoa(r.Score)
 
     if r.Force {
-        values["force"] = []interface{}{"1"}
+        values["force"] = "1"
     }
 
     if r.DisableEditMessage {
-        values["disable_edit_message"] = []interface{}{"1"}
+        values["disable_edit_message"] = "1"
     }
 
     if r.ChatID != 0 {
-        values["chat_id"] = []interface{}{strconv.FormatInt(r.ChatID, 10)}
+        values["chat_id"] = strconv.FormatInt(r.ChatID, 10)
     }
 
     if r.MessageID != 0 {
-        values["message_id"] = []interface{}{strconv.Itoa(r.MessageID)}
+        values["message_id"] = strconv.Itoa(r.MessageID)
     }
 
     if r.InlineMessageID != "" {
-        values["inline_message_id"] = []interface{}{r.InlineMessageID}
+        values["inline_message_id"] = r.InlineMessageID
     }
 
     return

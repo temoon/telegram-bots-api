@@ -15,15 +15,15 @@ func (r *AnswerShippingQuery) IsMultipart() bool {
     return false
 }
 
-func (r *AnswerShippingQuery) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
-    values["shipping_query_id"] = []interface{}{r.ShippingQueryID}
+    values["shipping_query_id"] = r.ShippingQueryID
 
     if r.OK {
-        values["ok"] = []interface{}{"1"}
+        values["ok"] = "1"
     } else {
-        values["ok"] = []interface{}{"0"}
+        values["ok"] = "0"
     }
 
     if r.ShippingOptions != nil {
@@ -32,11 +32,11 @@ func (r *AnswerShippingQuery) GetValues() (values map[string][]interface{}, err 
             return
         }
 
-        values["shipping_options"] = []interface{}{string(data)}
+        values["shipping_options"] = string(data)
     }
 
     if r.ErrorMessage != "" {
-        values["error_message"] = []interface{}{r.ErrorMessage}
+        values["error_message"] = r.ErrorMessage
     }
 
     return

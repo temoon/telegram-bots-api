@@ -10,19 +10,19 @@ func (r *AnswerPreCheckoutQuery) IsMultipart() bool {
     return false
 }
 
-func (r *AnswerPreCheckoutQuery) GetValues() (values map[string][]interface{}, err error) {
-    values = make(map[string][]interface{})
+func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]interface{}, err error) {
+    values = make(map[string]interface{})
 
-    values["shipping_query_id"] = []interface{}{r.PreCheckoutQueryID}
+    values["shipping_query_id"] = r.PreCheckoutQueryID
 
     if r.OK {
-        values["ok"] = []interface{}{"1"}
+        values["ok"] = "1"
     } else {
-        values["ok"] = []interface{}{"0"}
+        values["ok"] = "0"
     }
 
     if r.ErrorMessage != "" {
-        values["error_message"] = []interface{}{r.ErrorMessage}
+        values["error_message"] = r.ErrorMessage
     }
 
     return
