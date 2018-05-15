@@ -66,6 +66,13 @@ type Bot interface {
     EditMessageCaption(*requests.EditMessageCaption) (Message, error)
     EditMessageReplyMarkup(*requests.EditMessageReplyMarkup) (Message, error)
     DeleteMessage(*requests.DeleteMessage) (bool, error)
+    SendSticker(*requests.SendSticker) (Message, error)
+    GetStickerSet(*requests.GetStickerSet) (StickerSet, error)
+    UploadStickerFile(*requests.UploadStickerFile) (File, error)
+    CreateNewStickerSet(*requests.CreateNewStickerSet) (bool, error)
+    AddStickerToSet(*requests.AddStickerToSet) (bool, error)
+    SetStickerPositionInSet(*requests.SetStickerPositionInSet) (bool, error)
+    DeleteStickerFromSet(*requests.DeleteStickerFromSet) (bool, error)
 }
 
 func NewBot(token string) Bot {
@@ -343,6 +350,48 @@ func (b *bot) EditMessageReplyMarkup(request *requests.EditMessageReplyMarkup) (
 
 func (b *bot) DeleteMessage(request *requests.DeleteMessage) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("deleteMessage"), request, &success)
+
+    return
+}
+
+func (b *bot) SendSticker(request *requests.SendSticker) (message Message, err error) {
+    err = b.callMethod(b.getMethodURL("sendSticker"), request, &message)
+
+    return
+}
+
+func (b *bot) GetStickerSet(request *requests.GetStickerSet) (set StickerSet, err error) {
+    err = b.callMethod(b.getMethodURL("getStickerSet"), request, &set)
+
+    return
+}
+
+func (b *bot) UploadStickerFile(request *requests.UploadStickerFile) (file File, err error) {
+    err = b.callMethod(b.getMethodURL("uploadStickerFile"), request, &file)
+
+    return
+}
+
+func (b *bot) CreateNewStickerSet(request *requests.CreateNewStickerSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("createNewStickerSet"), request, &success)
+
+    return
+}
+
+func (b *bot) AddStickerToSet(request *requests.AddStickerToSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("addStickerToSet"), request, &success)
+
+    return
+}
+
+func (b *bot) SetStickerPositionInSet(request *requests.SetStickerPositionInSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setStickerPositionInSet"), request, &success)
+
+    return
+}
+
+func (b *bot) DeleteStickerFromSet(request *requests.DeleteStickerFromSet) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("deleteStickerFromSet"), request, &success)
 
     return
 }
