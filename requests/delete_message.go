@@ -7,7 +7,7 @@ import (
 
 type DeleteMessage struct {
     ChatID    interface{}
-    MessageID int
+    MessageID uint32
 }
 
 func (r *DeleteMessage) IsMultipart() bool {
@@ -18,8 +18,8 @@ func (r *DeleteMessage) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -27,7 +27,7 @@ func (r *DeleteMessage) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.MessageID != 0 {
-        values["message_id"] = strconv.Itoa(r.MessageID)
+        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
     }
 
     return

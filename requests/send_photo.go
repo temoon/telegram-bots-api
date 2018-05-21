@@ -13,7 +13,7 @@ type SendPhoto struct {
     Caption             string
     ParseMode           string
     DisableNotification bool
-    ReplyToMessageID    int
+    ReplyToMessageID    uint32
     ReplyMarkup         interface{}
 }
 
@@ -27,8 +27,8 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -57,7 +57,7 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
     }
 
     if r.ReplyMarkup != nil {

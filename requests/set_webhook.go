@@ -9,7 +9,7 @@ import (
 type SetWebhook struct {
     URL            string
     Certificate    *os.File
-    MaxConnections int
+    MaxConnections uint32
     AllowedUpdates []string
 }
 
@@ -27,7 +27,7 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.MaxConnections != 0 {
-        values["max_connections"] = strconv.Itoa(r.MaxConnections)
+        values["max_connections"] = strconv.FormatUint(uint64(r.MaxConnections), 10)
     }
 
     if r.AllowedUpdates != nil {

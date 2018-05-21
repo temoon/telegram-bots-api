@@ -7,8 +7,8 @@ import (
 
 type KickChatMember struct {
     ChatID    interface{}
-    UserID    int
-    UntilDate int
+    UserID    uint32
+    UntilDate uint32
 }
 
 func (r *KickChatMember) IsMultipart() bool {
@@ -19,18 +19,18 @@ func (r *KickChatMember) GetValues() (values map[string]interface{}, err error) 
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    values["user_id"] = strconv.Itoa(r.UserID)
+    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
 
     if r.UntilDate != 0 {
-        values["until_date"] = strconv.Itoa(r.UntilDate)
+        values["until_date"] = strconv.FormatUint(uint64(r.UntilDate), 10)
     }
 
     return

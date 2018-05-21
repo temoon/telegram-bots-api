@@ -8,7 +8,7 @@ import (
 type AnswerInlineQuery struct {
     InlineQueryID     string
     Results           []interface{}
-    CacheTime         int
+    CacheTime         uint32
     IsPersonal        bool
     NextOffset        string
     SwitchPMText      string
@@ -32,7 +32,7 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
     values["results"] = string(data)
 
     if r.CacheTime != 0 {
-        values["cache_time"] = strconv.Itoa(r.CacheTime)
+        values["cache_time"] = strconv.FormatUint(uint64(r.CacheTime), 10)
     }
 
     if r.IsPersonal {

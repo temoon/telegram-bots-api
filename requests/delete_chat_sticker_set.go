@@ -17,8 +17,8 @@ func (r *DeleteChatStickerSet) GetValues() (values map[string]interface{}, err e
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:

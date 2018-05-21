@@ -6,7 +6,7 @@ import (
 )
 
 type CreateNewStickerSet struct {
-    UserID        int
+    UserID        uint32
     Name          string
     Title         string
     PNGSticker    interface{}
@@ -22,7 +22,7 @@ func (r *CreateNewStickerSet) IsMultipart() bool {
 func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    values["user_id"] = strconv.Itoa(r.UserID)
+    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
     values["name"] = r.Name
     values["title"] = r.Title
     values["png_sticker"] = r.PNGSticker

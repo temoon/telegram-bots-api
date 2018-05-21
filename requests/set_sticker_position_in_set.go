@@ -6,7 +6,7 @@ import (
 
 type SetStickerPositionInSet struct {
     Sticker  string
-    Position int
+    Position uint32
 }
 
 func (r *SetStickerPositionInSet) IsMultipart() bool {
@@ -17,7 +17,7 @@ func (r *SetStickerPositionInSet) GetValues() (values map[string]interface{}, er
     values = make(map[string]interface{})
 
     values["sticker"] = r.Sticker
-    values["position"] = strconv.Itoa(r.Position)
+    values["position"] = strconv.FormatUint(uint64(r.Position), 10)
 
     return
 }

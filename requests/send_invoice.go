@@ -16,9 +16,9 @@ type SendInvoice struct {
     Prices                    []interface{}
     ProviderData              string
     PhotoURL                  string
-    PhotoSize                 int
-    PhotoWidth                int
-    PhotoHeight               int
+    PhotoSize                 uint32
+    PhotoWidth                uint32
+    PhotoHeight               uint32
     NeedName                  bool
     NeedPhoneNumber           bool
     NeedEmail                 bool
@@ -27,7 +27,7 @@ type SendInvoice struct {
     SendEmailToProvider       bool
     IsFlexible                bool
     DisableNotification       bool
-    ReplyToMessageID          int
+    ReplyToMessageID          uint32
     ReplyMarkup               interface{}
 }
 
@@ -62,15 +62,15 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.PhotoSize != 0 {
-        values["photo_size"] = strconv.Itoa(r.PhotoSize)
+        values["photo_size"] = strconv.FormatUint(uint64(r.PhotoSize), 10)
     }
 
     if r.PhotoWidth != 0 {
-        values["photo_width"] = strconv.Itoa(r.PhotoWidth)
+        values["photo_width"] = strconv.FormatUint(uint64(r.PhotoWidth), 10)
     }
 
     if r.PhotoHeight != 0 {
-        values["photo_height"] = strconv.Itoa(r.PhotoHeight)
+        values["photo_height"] = strconv.FormatUint(uint64(r.PhotoHeight), 10)
     }
 
     if r.NeedName {
@@ -106,7 +106,7 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
     }
 
     if r.ReplyMarkup != nil {

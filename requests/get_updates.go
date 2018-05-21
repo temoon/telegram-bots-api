@@ -6,9 +6,9 @@ import (
 )
 
 type GetUpdates struct {
-    Offset         int
-    Limit          int
-    Timeout        int
+    Offset         uint32
+    Limit          uint32
+    Timeout        uint32
     AllowedUpdates []string
 }
 
@@ -20,15 +20,15 @@ func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     if r.Offset != 0 {
-        values["offset"] = strconv.Itoa(r.Offset)
+        values["offset"] = strconv.FormatUint(uint64(r.Offset), 10)
     }
 
     if r.Limit != 0 {
-        values["limit"] = strconv.Itoa(r.Limit)
+        values["limit"] = strconv.FormatUint(uint64(r.Limit), 10)
     }
 
     if r.Timeout != 0 {
-        values["timeout"] = strconv.Itoa(r.Timeout)
+        values["timeout"] = strconv.FormatUint(uint64(r.Timeout), 10)
     }
 
     if r.AllowedUpdates != nil {

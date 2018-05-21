@@ -6,7 +6,7 @@ import (
 )
 
 type UploadStickerFile struct {
-    UserID     int
+    UserID     uint32
     PNGSticker *os.File
 }
 
@@ -17,7 +17,7 @@ func (r *UploadStickerFile) IsMultipart() bool {
 func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    values["user_id"] = strconv.Itoa(r.UserID)
+    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
     values["png_sticker"] = r.PNGSticker
 
     return

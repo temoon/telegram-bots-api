@@ -10,14 +10,14 @@ import (
 type SendVideo struct {
     ChatID              interface{}
     Video               interface{}
-    Duration            int
-    Width               int
-    Height              int
+    Duration            uint32
+    Width               uint32
+    Height              uint32
     Caption             string
     ParseMode           string
     SupportsStreaming   bool
     DisableNotification bool
-    ReplyToMessageID    int
+    ReplyToMessageID    uint32
     ReplyMarkup         interface{}
 }
 
@@ -31,8 +31,8 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -49,15 +49,15 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.Duration != 0 {
-        values["duration"] = strconv.Itoa(r.Duration)
+        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
     }
 
     if r.Width != 0 {
-        values["width"] = strconv.Itoa(r.Width)
+        values["width"] = strconv.FormatUint(uint64(r.Width), 10)
     }
 
     if r.Height != 0 {
-        values["height"] = strconv.Itoa(r.Height)
+        values["height"] = strconv.FormatUint(uint64(r.Height), 10)
     }
 
     if r.Caption != "" {
@@ -77,7 +77,7 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
     }
 
     if r.ReplyMarkup != nil {

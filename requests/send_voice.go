@@ -12,9 +12,9 @@ type SendVoice struct {
     Voice               interface{}
     Caption             string
     ParseMode           string
-    Duration            int
+    Duration            uint32
     DisableNotification bool
-    ReplyToMessageID    int
+    ReplyToMessageID    uint32
     ReplyMarkup         interface{}
 }
 
@@ -28,8 +28,8 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -54,7 +54,7 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.Duration != 0 {
-        values["duration"] = strconv.Itoa(r.Duration)
+        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
     }
 
     if r.DisableNotification {
@@ -62,7 +62,7 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
     }
 
     if r.ReplyMarkup != nil {

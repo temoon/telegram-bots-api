@@ -14,7 +14,7 @@ type SendVenue struct {
     Address             string
     FoursquareID        string
     DisableNotification bool
-    ReplyToMessageID    int
+    ReplyToMessageID    uint32
     ReplyMarkup         interface{}
 }
 
@@ -26,8 +26,8 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -47,7 +47,7 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
         values["disable_notification"] = "1"
     }
 
-    values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+    values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
 
     if r.ReplyMarkup != nil {
         var data []byte

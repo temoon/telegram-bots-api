@@ -9,7 +9,7 @@ type AnswerCallbackQuery struct {
     Text            string
     ShowAlert       bool
     URL             string
-    CacheTime       int
+    CacheTime       uint32
 }
 
 func (r *AnswerCallbackQuery) IsMultipart() bool {
@@ -34,7 +34,7 @@ func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err er
     }
 
     if r.CacheTime != 0 {
-        values["cache_time"] = strconv.Itoa(r.CacheTime)
+        values["cache_time"] = strconv.FormatUint(uint64(r.CacheTime), 10)
     }
 
     return

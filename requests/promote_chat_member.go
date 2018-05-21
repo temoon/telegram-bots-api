@@ -7,7 +7,7 @@ import (
 
 type PromoteChatMember struct {
     ChatID             interface{}
-    UserID             int
+    UserID             uint32
     CanChangeInfo      bool
     CanPostMessages    bool
     CanEditMessages    bool
@@ -26,15 +26,15 @@ func (r *PromoteChatMember) GetValues() (values map[string]interface{}, err erro
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    values["user_id"] = strconv.Itoa(r.UserID)
+    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
 
     if r.CanChangeInfo {
         values["can_change_info"] = "1"

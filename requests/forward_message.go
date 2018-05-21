@@ -9,7 +9,7 @@ type ForwardMessage struct {
     ChatID              interface{}
     FromChatID          interface{}
     DisableNotification bool
-    MessageID           int
+    MessageID           uint32
 }
 
 func (r *ForwardMessage) IsMultipart() bool {
@@ -20,8 +20,8 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -29,8 +29,8 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
     }
 
     switch r.FromChatID.(type) {
-    case int64:
-        values["from_chat_id"] = strconv.FormatInt(r.FromChatID.(int64), 10)
+    case uint64:
+        values["from_chat_id"] = strconv.FormatUint(r.FromChatID.(uint64), 10)
     case string:
         values["from_chat_id"] = r.FromChatID.(string)
     default:
@@ -41,7 +41,7 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
         values["disable_notification"] = "1"
     }
 
-    values["message_id"] = strconv.Itoa(r.MessageID)
+    values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
 
     return
 }

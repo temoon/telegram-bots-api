@@ -5,12 +5,12 @@ import (
 )
 
 type SetGameScore struct {
-    UserID             int
-    Score              int
+    UserID             uint32
+    Score              uint32
     Force              bool
     DisableEditMessage bool
     ChatID             int64
-    MessageID          int
+    MessageID          uint32
     InlineMessageID    string
 }
 
@@ -21,8 +21,8 @@ func (r *SetGameScore) IsMultipart() bool {
 func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    values["user_id"] = strconv.Itoa(r.UserID)
-    values["score"] = strconv.Itoa(r.Score)
+    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
+    values["score"] = strconv.FormatUint(uint64(r.Score), 10)
 
     if r.Force {
         values["force"] = "1"
@@ -37,7 +37,7 @@ func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.MessageID != 0 {
-        values["message_id"] = strconv.Itoa(r.MessageID)
+        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
     }
 
     if r.InlineMessageID != "" {

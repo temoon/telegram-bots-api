@@ -10,10 +10,10 @@ import (
 type SendVideoNote struct {
     ChatID              interface{}
     VideoNote           interface{}
-    Duration            int
-    Length              int
+    Duration            uint32
+    Length              uint32
     DisableNotification bool
-    ReplyToMessageID    int
+    ReplyToMessageID    uint32
     ReplyMarkup         interface{}
 }
 
@@ -27,8 +27,8 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
     switch r.ChatID.(type) {
-    case int64:
-        values["chat_id"] = strconv.FormatInt(r.ChatID.(int64), 10)
+    case uint64:
+        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
     case string:
         values["chat_id"] = r.ChatID.(string)
     default:
@@ -45,11 +45,11 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.Duration != 0 {
-        values["duration"] = strconv.Itoa(r.Duration)
+        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
     }
 
     if r.Length != 0 {
-        values["length"] = strconv.Itoa(r.Length)
+        values["length"] = strconv.FormatUint(uint64(r.Length), 10)
     }
 
     if r.DisableNotification {
@@ -57,7 +57,7 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
     }
 
     if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.Itoa(r.ReplyToMessageID)
+        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
     }
 
     if r.ReplyMarkup != nil {
