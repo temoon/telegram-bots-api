@@ -26,20 +26,20 @@ func (r *SendVideoNote) IsMultipart() bool {
 func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.VideoNote.(type) {
+    switch videoNote := r.VideoNote.(type) {
     case string:
-        values["video_note"] = r.VideoNote.(string)
+        values["video_note"] = videoNote
     case *os.File:
-        values["video_note"] = r.VideoNote.(*os.File)
+        values["video_note"] = videoNote
     default:
         return nil, errors.New("invalid video_note")
     }

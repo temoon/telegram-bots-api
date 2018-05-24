@@ -26,20 +26,20 @@ func (r *SendDocument) IsMultipart() bool {
 func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.Document.(type) {
+    switch document := r.Document.(type) {
     case string:
-        values["document"] = r.Document.(string)
+        values["document"] = document
     case *os.File:
-        values["document"] = r.Document.(*os.File)
+        values["document"] = document
     default:
         return nil, errors.New("invalid document")
     }

@@ -26,20 +26,20 @@ func (r *SendPhoto) IsMultipart() bool {
 func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.Photo.(type) {
+    switch photo := r.Photo.(type) {
     case string:
-        values["photo"] = r.Photo.(string)
+        values["photo"] = photo
     case *os.File:
-        values["photo"] = r.Photo.(*os.File)
+        values["photo"] = photo
     default:
         return nil, errors.New("invalid photo")
     }

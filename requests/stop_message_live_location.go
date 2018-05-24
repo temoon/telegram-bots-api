@@ -21,11 +21,11 @@ func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, er
     values = make(map[string]interface{})
 
     if r.ChatID != nil {
-        switch r.ChatID.(type) {
+        switch chatID := r.ChatID.(type) {
         case uint64:
-            values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+            values["chat_id"] = strconv.FormatUint(chatID, 10)
         case string:
-            values["chat_id"] = r.ChatID.(string)
+            values["chat_id"] = chatID
         default:
             return nil, errors.New("invalid chat_id")
         }

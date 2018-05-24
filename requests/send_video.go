@@ -30,20 +30,20 @@ func (r *SendVideo) IsMultipart() bool {
 func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.Video.(type) {
+    switch video := r.Video.(type) {
     case string:
-        values["video"] = r.Video.(string)
+        values["video"] = video
     case *os.File:
-        values["video"] = r.Video.(*os.File)
+        values["video"] = video
     default:
         return nil, errors.New("invalid video")
     }

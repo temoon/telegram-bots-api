@@ -27,20 +27,20 @@ func (r *SendVoice) IsMultipart() bool {
 func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.Voice.(type) {
+    switch voice := r.Voice.(type) {
     case string:
-        values["voice"] = r.Voice.(string)
+        values["voice"] = voice
     case *os.File:
-        values["voice"] = r.Voice.(*os.File)
+        values["voice"] = voice
     default:
         return nil, errors.New("invalid voice")
     }

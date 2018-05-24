@@ -19,20 +19,20 @@ func (r *ForwardMessage) IsMultipart() bool {
 func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    switch r.ChatID.(type) {
+    switch chatID := r.ChatID.(type) {
     case uint64:
-        values["chat_id"] = strconv.FormatUint(r.ChatID.(uint64), 10)
+        values["chat_id"] = strconv.FormatUint(chatID, 10)
     case string:
-        values["chat_id"] = r.ChatID.(string)
+        values["chat_id"] = chatID
     default:
         return nil, errors.New("invalid chat_id")
     }
 
-    switch r.FromChatID.(type) {
+    switch fromChatID := r.FromChatID.(type) {
     case uint64:
-        values["from_chat_id"] = strconv.FormatUint(r.FromChatID.(uint64), 10)
+        values["from_chat_id"] = strconv.FormatUint(fromChatID, 10)
     case string:
-        values["from_chat_id"] = r.FromChatID.(string)
+        values["from_chat_id"] = fromChatID
     default:
         return nil, errors.New("invalid from_chat_id")
     }
