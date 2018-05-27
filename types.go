@@ -102,8 +102,8 @@ type Message struct {
     GroupChatCreated      bool               `json:"group_chat_created,omitempty"`
     SupergroupChatCreated bool               `json:"supergroup_chat_created,omitempty"`
     ChannelChatCreated    bool               `json:"channel_chat_created,omitempty"`
-    MigrateToChatID       uint32             `json:"migrate_to_chat_id,omitempty"`
-    MigrateFromChatID     uint32             `json:"migrate_from_chat_id,omitempty"`
+    MigrateToChatID       uint64             `json:"migrate_to_chat_id,omitempty"`
+    MigrateFromChatID     uint64             `json:"migrate_from_chat_id,omitempty"`
     PinnedMessage         *Message           `json:"pinned_message,omitempty"`
     Invoice               *Invoice           `json:"invoice,omitempty"`
     SuccessfulPayment     *SuccessfulPayment `json:"successful_payment,omitempty"`
