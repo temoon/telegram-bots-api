@@ -6,7 +6,7 @@ import (
 )
 
 type SendInvoice struct {
-    ChatID                    int64
+    ChatID                    uint64
     Title                     string
     Description               string
     Payload                   string
@@ -38,7 +38,7 @@ func (r *SendInvoice) IsMultipart() bool {
 func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
     values = make(map[string]interface{})
 
-    values["chat_id"] = strconv.FormatInt(r.ChatID, 10)
+    values["chat_id"] = strconv.FormatUint(r.ChatID, 10)
     values["title"] = r.Title
     values["description"] = r.Description
     values["payload"] = r.Payload
