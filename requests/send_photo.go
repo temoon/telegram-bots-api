@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -18,7 +18,7 @@ type SendPhoto struct {
 }
 
 func (r *SendPhoto) IsMultipart() bool {
-    _, ok := r.Photo.(*os.File)
+    _, ok := r.Photo.(io.Reader)
 
     return ok
 }
@@ -38,7 +38,7 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
     switch photo := r.Photo.(type) {
     case string:
         values["photo"] = photo
-    case *os.File:
+    case io.Reader:
         values["photo"] = photo
     default:
         return nil, errors.New("invalid photo")

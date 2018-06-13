@@ -2,13 +2,13 @@ package requests
 
 import (
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
 type SetChatPhoto struct {
     ChatID interface{}
-    Photo  *os.File
+    Photo  io.Reader
 }
 
 func (r *SetChatPhoto) IsMultipart() bool {

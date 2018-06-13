@@ -2,13 +2,13 @@ package requests
 
 import (
     "encoding/json"
-    "os"
+    "io"
     "strconv"
 )
 
 type SetWebhook struct {
     URL            string
-    Certificate    *os.File
+    Certificate    io.Reader
     MaxConnections uint32
     AllowedUpdates []string
 }

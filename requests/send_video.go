@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -22,7 +22,7 @@ type SendVideo struct {
 }
 
 func (r *SendVideo) IsMultipart() bool {
-    _, ok := r.Video.(*os.File)
+    _, ok := r.Video.(io.Reader)
 
     return ok
 }
@@ -42,7 +42,7 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
     switch video := r.Video.(type) {
     case string:
         values["video"] = video
-    case *os.File:
+    case io.Reader:
         values["video"] = video
     default:
         return nil, errors.New("invalid video")

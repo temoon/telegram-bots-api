@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -21,7 +21,7 @@ type SendAudio struct {
 }
 
 func (r *SendAudio) IsMultipart() bool {
-    _, ok := r.Audio.(*os.File)
+    _, ok := r.Audio.(io.Reader)
 
     return ok
 }
@@ -41,7 +41,7 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
     switch audio := r.Audio.(type) {
     case string:
         values["audio"] = audio
-    case *os.File:
+    case io.Reader:
         values["audio"] = audio
     default:
         return nil, errors.New("invalid audio")

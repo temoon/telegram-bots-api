@@ -1,13 +1,13 @@
 package requests
 
 import (
-    "os"
+    "io"
     "strconv"
 )
 
 type UploadStickerFile struct {
     UserID     uint32
-    PNGSticker *os.File
+    PNGSticker io.Reader
 }
 
 func (r *UploadStickerFile) IsMultipart() bool {

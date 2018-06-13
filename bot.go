@@ -9,7 +9,6 @@ import (
     "mime/multipart"
     "net/http"
     "net/url"
-    "os"
 
     . "github.com/temoon/go-telegram-bots-api/requests"
 )
@@ -522,12 +521,12 @@ func (b *bot) getFormMultipart(request Request) (contentType string, query *byte
     var fw io.Writer
 
     for key, value := range values {
-        if file, ok := value.(*os.File); ok {
-            if fw, err = mw.CreateFormFile(key, file.Name()); err != nil {
+        if data, ok := value.(io.Reader); ok {
+            if fw, err = mw.CreateFormFile(key, key); err != nil {
                 return
             }
 
-            if _, err = io.Copy(fw, value.(io.Reader)); err != nil {
+            if _, err = io.Copy(fw, data); err != nil {
                 return
             }
         } else {

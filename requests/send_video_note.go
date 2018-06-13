@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -18,7 +18,7 @@ type SendVideoNote struct {
 }
 
 func (r *SendVideoNote) IsMultipart() bool {
-    _, ok := r.VideoNote.(*os.File)
+    _, ok := r.VideoNote.(io.Reader)
 
     return ok
 }
@@ -38,7 +38,7 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
     switch videoNote := r.VideoNote.(type) {
     case string:
         values["video_note"] = videoNote
-    case *os.File:
+    case io.Reader:
         values["video_note"] = videoNote
     default:
         return nil, errors.New("invalid video_note")

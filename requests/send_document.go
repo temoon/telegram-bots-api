@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -18,7 +18,7 @@ type SendDocument struct {
 }
 
 func (r *SendDocument) IsMultipart() bool {
-    _, ok := r.Document.(*os.File)
+    _, ok := r.Document.(io.Reader)
 
     return ok
 }
@@ -38,7 +38,7 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
     switch document := r.Document.(type) {
     case string:
         values["document"] = document
-    case *os.File:
+    case io.Reader:
         values["document"] = document
     default:
         return nil, errors.New("invalid document")

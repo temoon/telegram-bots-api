@@ -3,7 +3,7 @@ package requests
 import (
     "encoding/json"
     "errors"
-    "os"
+    "io"
     "strconv"
 )
 
@@ -16,7 +16,7 @@ type SendSticker struct {
 }
 
 func (r *SendSticker) IsMultipart() bool {
-    _, ok := r.Sticker.(*os.File)
+    _, ok := r.Sticker.(io.Reader)
 
     return ok
 }
