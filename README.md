@@ -10,15 +10,18 @@ Listens to messages and replies to it immediately.
 package main
 
 import (
-    "log"
     "os"
+    "log"
 
     "github.com/temoon/go-telegram-bots-api"
     "github.com/temoon/go-telegram-bots-api/requests"
 )
 
 func main() {
-    bot := telegram.NewBot(os.Getenv("TOKEN"))
+    opts := new(BotOpts)
+    opts.Token = os.Getenv("TOKEN")
+
+    bot := telegram.NewBot(opts)
 
     me, err := bot.GetMe()
     if err != nil {
