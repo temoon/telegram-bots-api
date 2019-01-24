@@ -79,6 +79,7 @@ type BotAPI interface {
     SendInvoice(*SendInvoice) (*Message, error)
     AnswerShippingQuery(*AnswerShippingQuery) (bool, error)
     AnswerPreCheckoutQuery(*AnswerPreCheckoutQuery) (bool, error)
+    SetPassportDataErrors(*SetPassportDataErrors) (bool, error)
     SendGame(*SendGame) (*Message, error)
     SetGameScore(*SetGameScore) (*Message, error)
     GetGameHighScores(*GetGameHighScores) ([]GameHighScore, error)
@@ -454,6 +455,12 @@ func (b *Bot) AnswerShippingQuery(request *AnswerShippingQuery) (success bool, e
 
 func (b *Bot) AnswerPreCheckoutQuery(request *AnswerPreCheckoutQuery) (success bool, err error) {
     err = b.callMethod(b.getMethodURL("answerPreCheckoutQuery"), request, &success)
+
+    return
+}
+
+func (b *Bot) SetPassportDataErrors(request *SetPassportDataErrors) (success bool, err error) {
+    err = b.callMethod(b.getMethodURL("setPassportDataErrors"), request, &success)
 
     return
 }
