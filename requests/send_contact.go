@@ -11,6 +11,7 @@ type SendContact struct {
     PhoneNumber         string
     FirstName           string
     LastName            string
+    VCard               string
     DisableNotification bool
     ReplyToMessageID    uint32
     ReplyMarkup         interface{}
@@ -37,6 +38,10 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 
     if r.LastName != "" {
         values["last_name"] = r.LastName
+    }
+
+    if r.VCard != "" {
+        values["vcard"] = r.VCard
     }
 
     if r.DisableNotification {

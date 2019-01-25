@@ -84,6 +84,7 @@ type Message struct {
     CaptionEntities       *[]MessageEntity   `json:"caption_entities,omitempty"`
     Audio                 *Audio             `json:"audio,omitempty"`
     Document              *Document          `json:"document,omitempty"`
+    Animation             *Animation         `json:"animation,omitempty"`
     Game                  *Game              `json:"game,omitempty"`
     Photo                 *[]PhotoSize       `json:"photo,omitempty"`
     Sticker               *Sticker           `json:"sticker,omitempty"`
@@ -126,12 +127,13 @@ type PhotoSize struct {
 }
 
 type Audio struct {
-    FileID    string `json:"file_id"`
-    Duration  uint32 `json:"duration"`
-    Performer string `json:"performer,omitempty"`
-    Title     string `json:"title,omitempty"`
-    MimeType  string `json:"mime_type,omitempty"`
-    FileSize  uint32 `json:"file_size,omitempty"`
+    FileID    string     `json:"file_id"`
+    Duration  uint32     `json:"duration"`
+    Performer string     `json:"performer,omitempty"`
+    Title     string     `json:"title,omitempty"`
+    MimeType  string     `json:"mime_type,omitempty"`
+    FileSize  uint32     `json:"file_size,omitempty"`
+    Thumb     *PhotoSize `json:"thumb,omitempty"`
 }
 
 type Document struct {
@@ -172,6 +174,7 @@ type Contact struct {
     FirstName   string `json:"first_name"`
     LastName    string `json:"last_name,omitempty"`
     UserID      uint32 `json:"user_id,omitempty"`
+    VCard       string `json:"vcard,omitempty"`
 }
 
 type Location struct {
@@ -180,10 +183,11 @@ type Location struct {
 }
 
 type Venue struct {
-    Location     *Location `json:"location"`
-    Title        string    `json:"title"`
-    Address      string    `json:"address"`
-    FoursquareID string    `json:"foursquare_id,omitempty"`
+    Location       *Location `json:"location"`
+    Title          string    `json:"title"`
+    Address        string    `json:"address"`
+    FoursquareID   string    `json:"foursquare_id,omitempty"`
+    FoursquareType string    `json:"foursquare_type,omitempty"`
 }
 
 type UserProfilePhotos struct {
@@ -283,14 +287,45 @@ type InputMediaPhoto struct {
 }
 
 type InputMediaVideo struct {
-    Type              string `json:"type"`
-    Media             string `json:"media"`
-    Caption           string `json:"caption,omitempty"`
-    ParseMode         string `json:"parse_mode,omitempty"`
-    Width             uint32 `json:"width,omitempty"`
-    Height            uint32 `json:"height,omitempty"`
-    Duration          uint32 `json:"duration,omitempty"`
-    SupportsStreaming bool   `json:"supports_streaming,omitempty"`
+    Type              string      `json:"type"`
+    Media             string      `json:"media"`
+    Thumb             interface{} `json:"thumb,omitempty"`
+    Caption           string      `json:"caption,omitempty"`
+    ParseMode         string      `json:"parse_mode,omitempty"`
+    Width             uint32      `json:"width,omitempty"`
+    Height            uint32      `json:"height,omitempty"`
+    Duration          uint32      `json:"duration,omitempty"`
+    SupportsStreaming bool        `json:"supports_streaming,omitempty"`
+}
+
+type InputMediaAnimation struct {
+    Type      string      `json:"type"`
+    Media     string      `json:"media"`
+    Thumb     interface{} `json:"thumb,omitempty"`
+    Caption   string      `json:"caption,omitempty"`
+    ParseMode string      `json:"parse_mode,omitempty"`
+    Width     uint32      `json:"width,omitempty"`
+    Height    uint32      `json:"height,omitempty"`
+    Duration  uint32      `json:"duration,omitempty"`
+}
+
+type InputMediaAudio struct {
+    Type      string      `json:"type"`
+    Media     string      `json:"media"`
+    Thumb     interface{} `json:"thumb,omitempty"`
+    Caption   string      `json:"caption,omitempty"`
+    ParseMode string      `json:"parse_mode,omitempty"`
+    Duration  uint32      `json:"duration,omitempty"`
+    Performer string      `json:"performer,omitempty"`
+    Title     string      `json:"title,omitempty"`
+}
+
+type InputMediaDocument struct {
+    Type      string      `json:"type"`
+    Media     string      `json:"media"`
+    Thumb     interface{} `json:"thumb,omitempty"`
+    Caption   string      `json:"caption,omitempty"`
+    ParseMode string      `json:"parse_mode,omitempty"`
 }
 
 type Sticker struct {
@@ -467,6 +502,7 @@ type InlineQueryResultVenue struct {
     Title               string                `json:"title"`
     Address             string                `json:"address"`
     FoursquareID        string                `json:"foursquare_id,omitempty"`
+    FoursquareType      string                `json:"foursquare_type,omitempty"`
     ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
     InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
     ThumbURL            string                `json:"thumb_url,omitempty"`
@@ -480,6 +516,7 @@ type InlineQueryResultContact struct {
     PhoneNumber         string                `json:"phone_number"`
     FirstName           string                `json:"first_name"`
     LastName            string                `json:"last_name,omitempty"`
+    VCard               string                `json:"vcard,omitempty"`
     ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
     InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
     ThumbURL            string                `json:"thumb_url,omitempty"`
@@ -596,17 +633,19 @@ type InputLocationMessageContent struct {
 }
 
 type InputVenueMessageContent struct {
-    Latitude     float64 `json:"latitude"`
-    Longitude    float64 `json:"longitude"`
-    Title        string  `json:"title"`
-    Address      string  `json:"address"`
-    FoursquareID string  `json:"foursquare_id,omitempty"`
+    Latitude       float64 `json:"latitude"`
+    Longitude      float64 `json:"longitude"`
+    Title          string  `json:"title"`
+    Address        string  `json:"address"`
+    FoursquareID   string  `json:"foursquare_id,omitempty"`
+    FoursquareType string  `json:"foursquare_type,omitempty"`
 }
 
 type InputContactMessageContent struct {
     PhoneNumber string `json:"phone_number"`
     FirstName   string `json:"first_name"`
     LastName    string `json:"last_name,omitempty"`
+    VCard       string `json:"vcard,omitempty"`
 }
 
 type ChosenInlineResult struct {

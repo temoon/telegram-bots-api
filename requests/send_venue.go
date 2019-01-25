@@ -13,6 +13,7 @@ type SendVenue struct {
     Title               string
     Address             string
     FoursquareID        string
+    FoursquareType      string
     DisableNotification bool
     ReplyToMessageID    uint32
     ReplyMarkup         interface{}
@@ -41,6 +42,10 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
     if r.FoursquareID != "" {
         values["foursquare_id"] = r.FoursquareID
+    }
+
+    if r.FoursquareType != "" {
+        values["foursquare_type"] = r.FoursquareType
     }
 
     if r.DisableNotification {

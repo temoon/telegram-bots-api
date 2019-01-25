@@ -19,6 +19,8 @@ const MessageEntityTypeCode = "code"
 const MessageEntityTypePre = "pre"
 const MessageEntityTypeTextLink = "text_link"
 const MessageEntityTypeTextMention = "text_mention"
+const MessageEntityTypeCashtag = "cashtag"
+const MessageEntityTypePhoneNumber = "phone_number"
 
 const ChatMemberStatusCreator = "creator"
 const ChatMemberStatusAdministrator = "administrator"
