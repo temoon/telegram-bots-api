@@ -1,30 +1,32 @@
 package requests
 
 import (
-    "encoding/json"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SetPassportDataErrors struct {
-    UserID uint32
-    Errors []interface{}
+	Errors []interface{}
+	UserId uint64
 }
 
 func (r *SetPassportDataErrors) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
+	if r.Errors != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Errors); err != nil {
+			return
+		}
 
-    var data []byte
-    if data, err = json.Marshal(r.Errors); err != nil {
-        return
-    }
+		values["errors"] = string(data)
+	}
 
-    values["errors"] = string(data)
+	values["user_id"] = strconv.FormatUint(r.UserId, 10)
 
-    return
+	return
 }

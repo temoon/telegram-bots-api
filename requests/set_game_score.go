@@ -1,48 +1,49 @@
 package requests
 
 import (
-    "strconv"
+	"strconv"
 )
 
 type SetGameScore struct {
-    UserID             uint32
-    Score              uint32
-    Force              bool
-    DisableEditMessage bool
-    ChatID             int64
-    MessageID          uint32
-    InlineMessageID    string
+	ChatId             uint64
+	DisableEditMessage bool
+	Force              bool
+	InlineMessageId    string
+	MessageId          uint64
+	Score              uint64
+	UserId             uint64
 }
 
 func (r *SetGameScore) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
-    values["score"] = strconv.FormatUint(uint64(r.Score), 10)
+	if r.ChatId != 0 {
+		values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
+	}
 
-    if r.Force {
-        values["force"] = "1"
-    }
+	if r.DisableEditMessage {
+		values["disable_edit_message"] = "1"
+	}
 
-    if r.DisableEditMessage {
-        values["disable_edit_message"] = "1"
-    }
+	if r.Force {
+		values["force"] = "1"
+	}
 
-    if r.ChatID != 0 {
-        values["chat_id"] = strconv.FormatInt(r.ChatID, 10)
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	values["score"] = strconv.FormatUint(r.Score, 10)
 
-    return
+	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+
+	return
 }

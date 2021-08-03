@@ -1,73 +1,111 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SendPhoto struct {
-    ChatID              interface{}
-    Photo               interface{}
-    Caption             string
-    ParseMode           string
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	Caption                  string
+	CaptionEntities          []interface{}
+	ChatId                   interface{}
+	DisableNotification      bool
+	ParseMode                string
+	Photo                    interface{}
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
 }
 
 func (r *SendPhoto) IsMultipart() bool {
-    _, ok := r.Photo.(io.Reader)
-
-    return ok
+	return true
 }
 
 func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    switch photo := r.Photo.(type) {
-    case string:
-        values["photo"] = photo
-    case io.Reader:
-        values["photo"] = photo
-    default:
-        return nil, errors.New("invalid photo")
-    }
+	if r.Caption != "" {
+		values["caption"] = r.Caption
+	}
 
-    if r.Caption != "" {
-        values["caption"] = r.Caption
-    }
+	if r.CaptionEntities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+		values["caption_entities"] = string(data)
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	switch value := r.Photo.(type) {
+	case io.Reader:
+		values["photo"] = value
+	case string:
+		values["photo"] = value
+	}
 
-    return
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	return
 }

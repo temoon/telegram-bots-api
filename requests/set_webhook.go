@@ -1,43 +1,53 @@
 package requests
 
 import (
-    "encoding/json"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SetWebhook struct {
-    URL            string
-    Certificate    io.Reader
-    MaxConnections uint32
-    AllowedUpdates []string
+	AllowedUpdates     []string
+	Certificate        interface{}
+	DropPendingUpdates bool
+	IpAddress          string
+	MaxConnections     uint64
+	Url                string
 }
 
 func (r *SetWebhook) IsMultipart() bool {
-    return r.Certificate != nil
+	return true
 }
 
 func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["url"] = r.URL
+	if r.AllowedUpdates != nil {
+		var data []byte
+		if data, err = json.Marshal(r.AllowedUpdates); err != nil {
+			return
+		}
 
-    if r.Certificate != nil {
-        values["certificate"] = r.Certificate
-    }
+		values["allowed_updates"] = string(data)
+	}
 
-    if r.MaxConnections != 0 {
-        values["max_connections"] = strconv.FormatUint(uint64(r.MaxConnections), 10)
-    }
+	if r.Certificate != nil {
+		values["certificate"] = r.Certificate
+	}
 
-    if r.AllowedUpdates != nil {
-        var data []byte
-        if data, err = json.Marshal(r.AllowedUpdates); err != nil {
-            return
-        }
+	if r.DropPendingUpdates {
+		values["drop_pending_updates"] = "1"
+	}
 
-        values["allowed_updates"] = string(data)
-    }
+	if r.IpAddress != "" {
+		values["ip_address"] = r.IpAddress
+	}
 
-    return
+	if r.MaxConnections != 0 {
+		values["max_connections"] = strconv.FormatUint(r.MaxConnections, 10)
+	}
+
+	values["url"] = r.Url
+
+	return
 }

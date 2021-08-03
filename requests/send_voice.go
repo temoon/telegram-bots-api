@@ -1,78 +1,116 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SendVoice struct {
-    ChatID              interface{}
-    Voice               interface{}
-    Caption             string
-    ParseMode           string
-    Duration            uint32
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	Caption                  string
+	CaptionEntities          []interface{}
+	ChatId                   interface{}
+	DisableNotification      bool
+	Duration                 uint64
+	ParseMode                string
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
+	Voice                    interface{}
 }
 
 func (r *SendVoice) IsMultipart() bool {
-    _, ok := r.Voice.(io.Reader)
-
-    return ok
+	return true
 }
 
 func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    switch voice := r.Voice.(type) {
-    case string:
-        values["voice"] = voice
-    case io.Reader:
-        values["voice"] = voice
-    default:
-        return nil, errors.New("invalid voice")
-    }
+	if r.Caption != "" {
+		values["caption"] = r.Caption
+	}
 
-    if r.Caption != "" {
-        values["caption"] = r.Caption
-    }
+	if r.CaptionEntities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+		values["caption_entities"] = string(data)
+	}
 
-    if r.Duration != 0 {
-        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+	if r.Duration != 0 {
+		values["duration"] = strconv.FormatUint(r.Duration, 10)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	switch value := r.Voice.(type) {
+	case io.Reader:
+		values["voice"] = value
+	case string:
+		values["voice"] = value
+	}
+
+	return
 }

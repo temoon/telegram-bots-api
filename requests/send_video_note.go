@@ -1,73 +1,109 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SendVideoNote struct {
-    ChatID              interface{}
-    VideoNote           interface{}
-    Duration            uint32
-    Length              uint32
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	ChatId                   interface{}
+	DisableNotification      bool
+	Duration                 uint64
+	Length                   uint64
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
+	Thumb                    interface{}
+	VideoNote                interface{}
 }
 
 func (r *SendVideoNote) IsMultipart() bool {
-    _, ok := r.VideoNote.(io.Reader)
-
-    return ok
+	return true
 }
 
 func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    switch videoNote := r.VideoNote.(type) {
-    case string:
-        values["video_note"] = videoNote
-    case io.Reader:
-        values["video_note"] = videoNote
-    default:
-        return nil, errors.New("invalid video_note")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.Duration != 0 {
-        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.Length != 0 {
-        values["length"] = strconv.FormatUint(uint64(r.Length), 10)
-    }
+	if r.Duration != 0 {
+		values["duration"] = strconv.FormatUint(r.Duration, 10)
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Length != 0 {
+		values["length"] = strconv.FormatUint(r.Length, 10)
+	}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-        values["reply_markup"] = string(data)
-    }
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	switch value := r.Thumb.(type) {
+	case io.Reader:
+		values["thumb"] = value
+	case string:
+		values["thumb"] = value
+	}
+
+	switch value := r.VideoNote.(type) {
+	case io.Reader:
+		values["video_note"] = value
+	case string:
+		values["video_note"] = value
+	}
+
+	return
 }

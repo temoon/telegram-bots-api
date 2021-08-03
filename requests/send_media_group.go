@@ -1,46 +1,52 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SendMediaGroup struct {
-    ChatID              interface{}
-    Media               []interface{}
-    DisableNotification bool
-    ReplyToMessageID    uint32
+	AllowSendingWithoutReply bool
+	ChatId                   interface{}
+	DisableNotification      bool
+	Media                    []interface{}
+	ReplyToMessageId         uint64
 }
 
 func (r *SendMediaGroup) IsMultipart() bool {
-    return false
+	return true
 }
 
 func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    var data []byte
-    if data, err = json.Marshal(r.Media); err != nil {
-        return
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    values["media"] = string(data)
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Media != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Media); err != nil {
+			return
+		}
 
-    values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
+		values["media"] = string(data)
+	}
 
-    return
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	return
 }

@@ -1,58 +1,105 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type EditMessageMedia struct {
-    ChatID          interface{}
-    MessageID       uint32
-    InlineMessageID string
-    Media           interface{}
-    ReplyMarkup     interface{}
+	ChatId          interface{}
+	InlineMessageId string
+	Media           interface{}
+	MessageId       uint64
+	ReplyMarkup     interface{}
 }
 
 func (r *EditMessageMedia) IsMultipart() bool {
-    return false
+	return true
 }
 
 func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	if r.Media != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Media); err != nil {
+			return
+		}
 
-    var data []byte
+		values["media"] = string(data)
+	}
 
-    if data, err = json.Marshal(r.Media); err != nil {
-        return
-    }
+	switch value := r.Media.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    values["media"] = string(data)
+			values["media"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    if r.ReplyMarkup != nil {
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+			values["media"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-        values["reply_markup"] = string(data)
-    }
+			values["media"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["media"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["media"] = string(data)
+		}
+	}
+
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
+
+	if r.ReplyMarkup != nil {
+		var data []byte
+		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(data)
+	}
+
+	return
 }

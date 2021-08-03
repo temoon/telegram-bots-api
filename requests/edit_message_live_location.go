@@ -1,57 +1,60 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type EditMessageLiveLocation struct {
-    ChatID          interface{}
-    MessageID       uint32
-    InlineMessageID string
-    Latitude        float64
-    Longitude       float64
-    ReplyMarkup     interface{}
+	ChatId               interface{}
+	Heading              uint64
+	HorizontalAccuracy   float64
+	InlineMessageId      string
+	Latitude             float64
+	Longitude            float64
+	MessageId            uint64
+	ProximityAlertRadius uint64
+	ReplyMarkup          interface{}
 }
 
 func (r *EditMessageLiveLocation) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    if r.ChatID != nil {
-        switch chatID := r.ChatID.(type) {
-        case uint64:
-            values["chat_id"] = strconv.FormatUint(chatID, 10)
-        case string:
-            values["chat_id"] = chatID
-        default:
-            return nil, errors.New("invalid chat_id")
-        }
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.Heading != 0 {
+		values["heading"] = strconv.FormatUint(r.Heading, 10)
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    values["latitude"] = strconv.FormatFloat(r.Latitude, 'f', -1, 64)
-    values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ProximityAlertRadius != 0 {
+		values["proximity_alert_radius"] = strconv.FormatUint(r.ProximityAlertRadius, 10)
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	if r.ReplyMarkup != nil {
+		var data []byte
+		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
 
-    return
+		values["reply_markup"] = string(data)
+	}
+
+	return
 }

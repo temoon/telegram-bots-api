@@ -1,63 +1,105 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SendMessage struct {
-    ChatID                interface{}
-    Text                  string
-    ParseMode             string
-    DisableWebPagePreview bool
-    DisableNotification   bool
-    ReplyToMessageID      uint32
-    ReplyMarkup           interface{}
+	AllowSendingWithoutReply bool
+	ChatId                   interface{}
+	DisableNotification      bool
+	DisableWebPagePreview    bool
+	Entities                 []interface{}
+	ParseMode                string
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
+	Text                     string
 }
 
 func (r *SendMessage) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    values["text"] = r.Text
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.DisableWebPagePreview {
-        values["disable_web_page_preview"] = "1"
-    }
+	if r.DisableWebPagePreview {
+		values["disable_web_page_preview"] = "1"
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Entities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Entities); err != nil {
+			return
+		}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+		values["entities"] = string(data)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	values["text"] = r.Text
+
+	return
 }

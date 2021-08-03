@@ -1,73 +1,124 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SendDocument struct {
-    ChatID              interface{}
-    Document            interface{}
-    Caption             string
-    ParseMode           string
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply    bool
+	Caption                     string
+	CaptionEntities             []interface{}
+	ChatId                      interface{}
+	DisableContentTypeDetection bool
+	DisableNotification         bool
+	Document                    interface{}
+	ParseMode                   string
+	ReplyMarkup                 interface{}
+	ReplyToMessageId            uint64
+	Thumb                       interface{}
 }
 
 func (r *SendDocument) IsMultipart() bool {
-    _, ok := r.Document.(io.Reader)
-
-    return ok
+	return true
 }
 
 func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    switch document := r.Document.(type) {
-    case string:
-        values["document"] = document
-    case io.Reader:
-        values["document"] = document
-    default:
-        return nil, errors.New("invalid document")
-    }
+	if r.Caption != "" {
+		values["caption"] = r.Caption
+	}
 
-    if r.Caption != "" {
-        values["caption"] = r.Caption
-    }
+	if r.CaptionEntities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+		values["caption_entities"] = string(data)
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+	if r.DisableContentTypeDetection {
+		values["disable_content_type_detection"] = "1"
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	switch value := r.Document.(type) {
+	case io.Reader:
+		values["document"] = value
+	case string:
+		values["document"] = value
+	}
 
-    return
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
+
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	switch value := r.Thumb.(type) {
+	case io.Reader:
+		values["thumb"] = value
+	case string:
+		values["thumb"] = value
+	}
+
+	return
 }

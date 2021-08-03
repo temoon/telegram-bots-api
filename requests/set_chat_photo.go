@@ -1,33 +1,30 @@
 package requests
 
 import (
-    "errors"
-    "io"
-    "strconv"
+	"io"
+	"strconv"
 )
 
 type SetChatPhoto struct {
-    ChatID interface{}
-    Photo  io.Reader
+	ChatId interface{}
+	Photo  interface{}
 }
 
 func (r *SetChatPhoto) IsMultipart() bool {
-    return true
+	return true
 }
 
 func (r *SetChatPhoto) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    values["photo"] = r.Photo
+	values["photo"] = r.Photo
 
-    return
+	return
 }

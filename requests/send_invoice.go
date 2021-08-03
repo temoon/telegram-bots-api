@@ -1,121 +1,135 @@
 package requests
 
 import (
-    "encoding/json"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SendInvoice struct {
-    ChatID                    uint64
-    Title                     string
-    Description               string
-    Payload                   string
-    ProviderToken             string
-    StartParameter            string
-    Currency                  string
-    Prices                    []interface{}
-    ProviderData              string
-    PhotoURL                  string
-    PhotoSize                 uint32
-    PhotoWidth                uint32
-    PhotoHeight               uint32
-    NeedName                  bool
-    NeedPhoneNumber           bool
-    NeedEmail                 bool
-    NeedShippingAddress       bool
-    SendPhoneNumberToProvider bool
-    SendEmailToProvider       bool
-    IsFlexible                bool
-    DisableNotification       bool
-    ReplyToMessageID          uint32
-    ReplyMarkup               interface{}
+	AllowSendingWithoutReply  bool
+	ChatId                    uint64
+	Currency                  string
+	Description               string
+	DisableNotification       bool
+	IsFlexible                bool
+	NeedEmail                 bool
+	NeedName                  bool
+	NeedPhoneNumber           bool
+	NeedShippingAddress       bool
+	Payload                   string
+	PhotoHeight               uint64
+	PhotoSize                 uint64
+	PhotoUrl                  string
+	PhotoWidth                uint64
+	Prices                    []interface{}
+	ProviderData              string
+	ProviderToken             string
+	ReplyMarkup               interface{}
+	ReplyToMessageId          uint64
+	SendEmailToProvider       bool
+	SendPhoneNumberToProvider bool
+	StartParameter            string
+	Title                     string
 }
 
 func (r *SendInvoice) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["chat_id"] = strconv.FormatUint(r.ChatID, 10)
-    values["title"] = r.Title
-    values["description"] = r.Description
-    values["payload"] = r.Payload
-    values["provider_token"] = r.ProviderToken
-    values["start_parameter"] = r.StartParameter
-    values["currency"] = r.Currency
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    var data []byte
-    if data, err = json.Marshal(r.Prices); err != nil {
-        return
-    }
+	values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
 
-    values["prices"] = string(data)
+	values["currency"] = r.Currency
 
-    if r.ProviderData != "" {
-        values["provider_data"] = r.ProviderData
-    }
+	values["description"] = r.Description
 
-    if r.PhotoURL != "" {
-        values["photo_url"] = r.PhotoURL
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.PhotoSize != 0 {
-        values["photo_size"] = strconv.FormatUint(uint64(r.PhotoSize), 10)
-    }
+	if r.IsFlexible {
+		values["is_flexible"] = "1"
+	}
 
-    if r.PhotoWidth != 0 {
-        values["photo_width"] = strconv.FormatUint(uint64(r.PhotoWidth), 10)
-    }
+	if r.NeedEmail {
+		values["need_email"] = "1"
+	}
 
-    if r.PhotoHeight != 0 {
-        values["photo_height"] = strconv.FormatUint(uint64(r.PhotoHeight), 10)
-    }
+	if r.NeedName {
+		values["need_name"] = "1"
+	}
 
-    if r.NeedName {
-        values["need_name"] = "1"
-    }
+	if r.NeedPhoneNumber {
+		values["need_phone_number"] = "1"
+	}
 
-    if r.NeedPhoneNumber {
-        values["need_phone_number"] = "1"
-    }
+	if r.NeedShippingAddress {
+		values["need_shipping_address"] = "1"
+	}
 
-    if r.NeedEmail {
-        values["need_email"] = "1"
-    }
+	values["payload"] = r.Payload
 
-    if r.NeedShippingAddress {
-        values["need_shipping_address"] = "1"
-    }
+	if r.PhotoHeight != 0 {
+		values["photo_height"] = strconv.FormatUint(r.PhotoHeight, 10)
+	}
 
-    if r.SendPhoneNumberToProvider {
-        values["send_phone_number_to_provider"] = "1"
-    }
+	if r.PhotoSize != 0 {
+		values["photo_size"] = strconv.FormatUint(r.PhotoSize, 10)
+	}
 
-    if r.SendEmailToProvider {
-        values["send_email_to_provider"] = "1"
-    }
+	if r.PhotoUrl != "" {
+		values["photo_url"] = r.PhotoUrl
+	}
 
-    if r.IsFlexible {
-        values["is_flexible"] = "1"
-    }
+	if r.PhotoWidth != 0 {
+		values["photo_width"] = strconv.FormatUint(r.PhotoWidth, 10)
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Prices != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Prices); err != nil {
+			return
+		}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+		values["prices"] = string(data)
+	}
 
-    if r.ReplyMarkup != nil {
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ProviderData != "" {
+		values["provider_data"] = r.ProviderData
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	values["provider_token"] = r.ProviderToken
 
-    return
+	if r.ReplyMarkup != nil {
+		var data []byte
+		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(data)
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	if r.SendEmailToProvider {
+		values["send_email_to_provider"] = "1"
+	}
+
+	if r.SendPhoneNumberToProvider {
+		values["send_phone_number_to_provider"] = "1"
+	}
+
+	values["start_parameter"] = r.StartParameter
+
+	values["title"] = r.Title
+
+	return
 }

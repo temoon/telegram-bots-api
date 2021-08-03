@@ -1,0 +1,9 @@
+package telegram
+
+{{if len . -}}
+import (
+{{range $import, $_ := . -}}
+	"{{$import}}"
+{{end -}}
+)
+{{end -}}

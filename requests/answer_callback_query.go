@@ -1,41 +1,41 @@
 package requests
 
 import (
-    "strconv"
+	"strconv"
 )
 
 type AnswerCallbackQuery struct {
-    CallbackQueryID string
-    Text            string
-    ShowAlert       bool
-    URL             string
-    CacheTime       uint32
+	CacheTime       uint64
+	CallbackQueryId string
+	ShowAlert       bool
+	Text            string
+	Url             string
 }
 
 func (r *AnswerCallbackQuery) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["callback_query_id"] = r.CallbackQueryID
+	if r.CacheTime != 0 {
+		values["cache_time"] = strconv.FormatUint(r.CacheTime, 10)
+	}
 
-    if r.Text != "" {
-        values["text"] = r.Text
-    }
+	values["callback_query_id"] = r.CallbackQueryId
 
-    if r.ShowAlert {
-        values["show_alert"] = "1"
-    }
+	if r.ShowAlert {
+		values["show_alert"] = "1"
+	}
 
-    if r.URL != "" {
-        values["url"] = r.URL
-    }
+	if r.Text != "" {
+		values["text"] = r.Text
+	}
 
-    if r.CacheTime != 0 {
-        values["cache_time"] = strconv.FormatUint(uint64(r.CacheTime), 10)
-    }
+	if r.Url != "" {
+		values["url"] = r.Url
+	}
 
-    return
+	return
 }

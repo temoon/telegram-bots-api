@@ -1,57 +1,45 @@
 package requests
 
 import (
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type RestrictChatMember struct {
-    ChatID                interface{}
-    UserID                uint32
-    UntilDate             uint32
-    CanSendMessages       bool
-    CanSendMediaMessages  bool
-    CanSendOtherMessages  bool
-    CanAddWebPagePreviews bool
+	ChatId      interface{}
+	Permissions interface{}
+	UntilDate   uint64
+	UserId      uint64
 }
 
 func (r *RestrictChatMember) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
+	if r.Permissions != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Permissions); err != nil {
+			return
+		}
 
-    if r.UntilDate != 0 {
-        values["until_date"] = strconv.FormatUint(uint64(r.UntilDate), 10)
-    }
+		values["permissions"] = string(data)
+	}
 
-    if r.CanSendMessages {
-        values["can_send_messages"] = "1"
-    }
+	if r.UntilDate != 0 {
+		values["until_date"] = strconv.FormatUint(r.UntilDate, 10)
+	}
 
-    if r.CanSendMediaMessages {
-        values["can_send_media_messages"] = "1"
-    }
+	values["user_id"] = strconv.FormatUint(r.UserId, 10)
 
-    if r.CanSendOtherMessages {
-        values["can_send_other_messages"] = "1"
-    }
-
-    if r.CanAddWebPagePreviews {
-        values["can_add_web_page_previews"] = "1"
-    }
-
-    return
+	return
 }

@@ -1,17 +1,17 @@
 package requests
 
 type DeleteStickerFromSet struct {
-    Sticker string
+	Sticker string
 }
 
 func (r *DeleteStickerFromSet) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *DeleteStickerFromSet) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["sticker"] = r.Sticker
+	values["sticker"] = r.Sticker
 
-    return
+	return
 }

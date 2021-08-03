@@ -1,36 +1,36 @@
 package requests
 
 import (
-    "strconv"
+	"strconv"
 )
 
 type GetGameHighScores struct {
-    UserID          uint32
-    ChatID          int64
-    MessageID       uint32
-    InlineMessageID string
+	ChatId          uint64
+	InlineMessageId string
+	MessageId       uint64
+	UserId          uint64
 }
 
 func (r *GetGameHighScores) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *GetGameHighScores) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
+	if r.ChatId != 0 {
+		values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
+	}
 
-    if r.ChatID != 0 {
-        values["chat_id"] = strconv.FormatInt(r.ChatID, 10)
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	values["user_id"] = strconv.FormatUint(r.UserId, 10)
 
-    return
+	return
 }

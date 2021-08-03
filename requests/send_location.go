@@ -1,58 +1,100 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SendLocation struct {
-    ChatID              interface{}
-    Latitude            float64
-    Longitude           float64
-    LivePeriod          uint32
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	ChatId                   interface{}
+	DisableNotification      bool
+	Heading                  uint64
+	HorizontalAccuracy       float64
+	Latitude                 float64
+	LivePeriod               uint64
+	Longitude                float64
+	ProximityAlertRadius     uint64
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
 }
 
 func (r *SendLocation) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SendLocation) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    values["latitude"] = strconv.FormatFloat(r.Latitude, 'f', -1, 64)
-    values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.LivePeriod != 0 {
-        values["live_period"] = strconv.FormatUint(uint64(r.LivePeriod), 10)
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Heading != 0 {
+		values["heading"] = strconv.FormatUint(r.Heading, 10)
+	}
 
-    values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
+	if r.LivePeriod != 0 {
+		values["live_period"] = strconv.FormatUint(r.LivePeriod, 10)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ProximityAlertRadius != 0 {
+		values["proximity_alert_radius"] = strconv.FormatUint(r.ProximityAlertRadius, 10)
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	return
 }

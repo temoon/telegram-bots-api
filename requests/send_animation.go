@@ -1,99 +1,134 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type SendAnimation struct {
-    ChatID              interface{}
-    Animation           interface{}
-    Duration            uint32
-    Width               uint32
-    Height              uint32
-    Thumb               interface{}
-    Caption             string
-    ParseMode           string
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	Animation                interface{}
+	Caption                  string
+	CaptionEntities          []interface{}
+	ChatId                   interface{}
+	DisableNotification      bool
+	Duration                 uint64
+	Height                   uint64
+	ParseMode                string
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
+	Thumb                    interface{}
+	Width                    uint64
 }
 
 func (r *SendAnimation) IsMultipart() bool {
-    _, okAnimation := r.Animation.(io.Reader)
-    _, okThumb := r.Thumb.(io.Reader)
-
-    return okAnimation || okThumb
+	return true
 }
 
 func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    switch animation := r.Animation.(type) {
-    case string:
-        values["animation"] = animation
-    case io.Reader:
-        values["animation"] = animation
-    default:
-        return nil, errors.New("invalid animation")
-    }
+	switch value := r.Animation.(type) {
+	case io.Reader:
+		values["animation"] = value
+	case string:
+		values["animation"] = value
+	}
 
-    if r.Duration != 0 {
-        values["duration"] = strconv.FormatUint(uint64(r.Duration), 10)
-    }
+	if r.Caption != "" {
+		values["caption"] = r.Caption
+	}
 
-    if r.Width != 0 {
-        values["width"] = strconv.FormatUint(uint64(r.Width), 10)
-    }
+	if r.CaptionEntities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
 
-    if r.Height != 0 {
-        values["height"] = strconv.FormatUint(uint64(r.Height), 10)
-    }
+		values["caption_entities"] = string(data)
+	}
 
-    switch thumb := r.Thumb.(type) {
-    case string:
-        values["thumb"] = thumb
-    case io.Reader:
-        values["thumb"] = thumb
-    default:
-        return nil, errors.New("invalid thumb")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.Caption != "" {
-        values["caption"] = r.Caption
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+	if r.Duration != 0 {
+		values["duration"] = strconv.FormatUint(r.Duration, 10)
+	}
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.Height != 0 {
+		values["height"] = strconv.FormatUint(r.Height, 10)
+	}
 
-    if r.ReplyToMessageID != 0 {
-        values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
-    }
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-        values["reply_markup"] = string(data)
-    }
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	switch value := r.Thumb.(type) {
+	case io.Reader:
+		values["thumb"] = value
+	case string:
+		values["thumb"] = value
+	}
+
+	if r.Width != 0 {
+		values["width"] = strconv.FormatUint(r.Width, 10)
+	}
+
+	return
 }

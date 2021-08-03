@@ -1,52 +1,47 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type StopMessageLiveLocation struct {
-    ChatID          interface{}
-    MessageID       uint32
-    InlineMessageID string
-    ReplyMarkup     interface{}
+	ChatId          interface{}
+	InlineMessageId string
+	MessageId       uint64
+	ReplyMarkup     interface{}
 }
 
 func (r *StopMessageLiveLocation) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    if r.ChatID != nil {
-        switch chatID := r.ChatID.(type) {
-        case uint64:
-            values["chat_id"] = strconv.FormatUint(chatID, 10)
-        case string:
-            values["chat_id"] = chatID
-        default:
-            return nil, errors.New("invalid chat_id")
-        }
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ReplyMarkup != nil {
+		var data []byte
+		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
 
-        values["reply_markup"] = string(data)
-    }
+		values["reply_markup"] = string(data)
+	}
 
-    return
+	return
 }

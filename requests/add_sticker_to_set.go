@@ -1,50 +1,52 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "io"
-    "strconv"
+	"encoding/json"
+	"io"
+	"strconv"
 )
 
 type AddStickerToSet struct {
-    UserID       uint32
-    Name         string
-    PNGSticker   interface{}
-    Emojis       string
-    MaskPosition interface{}
+	Emojis       string
+	MaskPosition interface{}
+	Name         string
+	PngSticker   interface{}
+	TgsSticker   interface{}
+	UserId       uint64
 }
 
 func (r *AddStickerToSet) IsMultipart() bool {
-    return true
+	return true
 }
 
 func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["user_id"] = strconv.FormatUint(uint64(r.UserID), 10)
-    values["name"] = r.Name
+	values["emojis"] = r.Emojis
 
-    switch inputFile := r.PNGSticker.(type) {
-    case string:
-        values["png_sticker"] = inputFile
-    case io.Reader:
-        values["png_sticker"] = inputFile
-    default:
-        return nil, errors.New("invalid photo")
-    }
+	if r.MaskPosition != nil {
+		var data []byte
+		if data, err = json.Marshal(r.MaskPosition); err != nil {
+			return
+		}
 
-    values["emojis"] = r.Emojis
+		values["mask_position"] = string(data)
+	}
 
-    if r.MaskPosition != nil {
-        var data []byte
+	values["name"] = r.Name
 
-        if data, err = json.Marshal(r.MaskPosition); err != nil {
-            return
-        }
+	switch value := r.PngSticker.(type) {
+	case io.Reader:
+		values["png_sticker"] = value
+	case string:
+		values["png_sticker"] = value
+	}
 
-        values["mask_position"] = string(data)
-    }
+	if r.TgsSticker != nil {
+		values["tgs_sticker"] = r.TgsSticker
+	}
 
-    return
+	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+
+	return
 }

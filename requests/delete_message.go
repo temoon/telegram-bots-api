@@ -1,34 +1,29 @@
 package requests
 
 import (
-    "errors"
-    "strconv"
+	"strconv"
 )
 
 type DeleteMessage struct {
-    ChatID    interface{}
-    MessageID uint32
+	ChatId    interface{}
+	MessageId uint64
 }
 
 func (r *DeleteMessage) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *DeleteMessage) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	values["message_id"] = strconv.FormatUint(r.MessageId, 10)
 
-    return
+	return
 }

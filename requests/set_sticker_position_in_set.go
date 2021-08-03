@@ -1,23 +1,24 @@
 package requests
 
 import (
-    "strconv"
+	"strconv"
 )
 
 type SetStickerPositionInSet struct {
-    Sticker  string
-    Position uint32
+	Position uint64
+	Sticker  string
 }
 
 func (r *SetStickerPositionInSet) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SetStickerPositionInSet) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    values["sticker"] = r.Sticker
-    values["position"] = strconv.FormatUint(uint64(r.Position), 10)
+	values["position"] = strconv.FormatUint(r.Position, 10)
 
-    return
+	values["sticker"] = r.Sticker
+
+	return
 }

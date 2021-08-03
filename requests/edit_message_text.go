@@ -1,63 +1,70 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type EditMessageText struct {
-    ChatID                interface{}
-    MessageID             uint32
-    InlineMessageID       string
-    Text                  string
-    ParseMode             string
-    DisableWebPagePreview bool
-    ReplyMarkup           interface{}
+	ChatId                interface{}
+	DisableWebPagePreview bool
+	Entities              []interface{}
+	InlineMessageId       string
+	MessageId             uint64
+	ParseMode             string
+	ReplyMarkup           interface{}
+	Text                  string
 }
 
 func (r *EditMessageText) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *EditMessageText) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.MessageID != 0 {
-        values["message_id"] = strconv.FormatUint(uint64(r.MessageID), 10)
-    }
+	if r.DisableWebPagePreview {
+		values["disable_web_page_preview"] = "1"
+	}
 
-    if r.InlineMessageID != "" {
-        values["inline_message_id"] = r.InlineMessageID
-    }
+	if r.Entities != nil {
+		var data []byte
+		if data, err = json.Marshal(r.Entities); err != nil {
+			return
+		}
 
-    values["text"] = r.Text
+		values["entities"] = string(data)
+	}
 
-    if r.ParseMode != "" {
-        values["parse_mode"] = r.ParseMode
-    }
+	if r.InlineMessageId != "" {
+		values["inline_message_id"] = r.InlineMessageId
+	}
 
-    if r.DisableWebPagePreview {
-        values["disable_web_page_preview"] = "1"
-    }
+	if r.MessageId != 0 {
+		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+	}
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	if r.ParseMode != "" {
+		values["parse_mode"] = r.ParseMode
+	}
 
-        values["reply_markup"] = string(data)
-    }
+	if r.ReplyMarkup != nil {
+		var data []byte
+		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
 
-    return
+		values["reply_markup"] = string(data)
+	}
+
+	values["text"] = r.Text
+
+	return
 }

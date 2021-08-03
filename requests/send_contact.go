@@ -1,63 +1,98 @@
 package requests
 
 import (
-    "encoding/json"
-    "errors"
-    "strconv"
+	"encoding/json"
+	"strconv"
 )
 
 type SendContact struct {
-    ChatID              interface{}
-    PhoneNumber         string
-    FirstName           string
-    LastName            string
-    VCard               string
-    DisableNotification bool
-    ReplyToMessageID    uint32
-    ReplyMarkup         interface{}
+	AllowSendingWithoutReply bool
+	ChatId                   interface{}
+	DisableNotification      bool
+	FirstName                string
+	LastName                 string
+	PhoneNumber              string
+	ReplyMarkup              interface{}
+	ReplyToMessageId         uint64
+	Vcard                    string
 }
 
 func (r *SendContact) IsMultipart() bool {
-    return false
+	return false
 }
 
 func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
-    values = make(map[string]interface{})
+	values = make(map[string]interface{})
 
-    switch chatID := r.ChatID.(type) {
-    case uint64:
-        values["chat_id"] = strconv.FormatUint(chatID, 10)
-    case string:
-        values["chat_id"] = chatID
-    default:
-        return nil, errors.New("invalid chat_id")
-    }
+	if r.AllowSendingWithoutReply {
+		values["allow_sending_without_reply"] = "1"
+	}
 
-    values["phone_number"] = r.PhoneNumber
-    values["first_name"] = r.FirstName
+	switch value := r.ChatId.(type) {
+	case uint64:
+		values["chat_id"] = strconv.FormatUint(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
-    if r.LastName != "" {
-        values["last_name"] = r.LastName
-    }
+	if r.DisableNotification {
+		values["disable_notification"] = "1"
+	}
 
-    if r.VCard != "" {
-        values["vcard"] = r.VCard
-    }
+	values["first_name"] = r.FirstName
 
-    if r.DisableNotification {
-        values["disable_notification"] = "1"
-    }
+	if r.LastName != "" {
+		values["last_name"] = r.LastName
+	}
 
-    values["reply_to_message_id"] = strconv.FormatUint(uint64(r.ReplyToMessageID), 10)
+	values["phone_number"] = r.PhoneNumber
 
-    if r.ReplyMarkup != nil {
-        var data []byte
-        if data, err = json.Marshal(r.ReplyMarkup); err != nil {
-            return
-        }
+	switch value := r.ReplyMarkup.(type) {
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-        values["reply_markup"] = string(data)
-    }
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
 
-    return
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	default:
+		if value != nil {
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		}
+	}
+
+	if r.ReplyToMessageId != 0 {
+		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+	}
+
+	if r.Vcard != "" {
+		values["vcard"] = r.Vcard
+	}
+
+	return
 }

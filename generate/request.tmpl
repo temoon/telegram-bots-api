@@ -1,0 +1,125 @@
+package requests
+
+{{if len .Imports -}}
+import (
+{{range $import, $_ := .Imports -}}
+	"{{$import}}"
+{{end -}}
+)
+{{end -}}
+
+type {{.Type}} struct {
+{{range $_, $f := .Fields -}}
+    {{$f.Name}} {{$f.Type}}
+{{end -}}
+}
+
+func (r *{{.Type}}) IsMultipart() bool {
+	return {{.IsMultipart}}
+}
+
+func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
+	values = make(map[string]interface{})
+
+	{{range $k, $f := .Fields -}}
+        {{if eq $f.RawType "string" -}}
+            {{if not $f.IsRequired -}}
+				if r.{{$f.Name}} != "" {
+            {{end -}}
+			values["{{$k}}"] = r.{{$f.Name}}
+            {{if not $f.IsRequired -}}
+				}
+            {{end -}}
+        {{end}}
+
+		{{if eq $f.RawType "integer" -}}
+			{{if not $f.IsRequired -}}
+			if r.{{$f.Name}} != 0 {
+			{{end -}}
+			{{if eq $f.RawTypeFormat "int32" -}}
+			values["{{$k}}"] = strconv.FormatUint(uint64(r.{{$f.Name}}), 10)
+			{{else -}}
+			values["{{$k}}"] = strconv.FormatUint(r.{{$f.Name}}, 10)
+			{{end -}}
+            {{if not $f.IsRequired -}}
+			}
+            {{end -}}
+		{{end}}
+
+		{{if eq $f.RawType "boolean" -}}
+			if r.{{$f.Name}} {
+				values["{{$k}}"] = "1"
+			}
+		{{end}}
+
+		{{if or $f.IsRef (eq $f.RawType "array") -}}
+			if r.{{$f.Name}} != nil {
+				var data []byte
+				if data, err = json.Marshal(r.{{$f.Name}}); err != nil {
+					return
+				}
+
+				values["{{$k}}"] = string(data)
+			}
+        {{end}}
+
+		{{if $f.IsInputFile}}
+            {{if not $f.IsRequired -}}
+			if r.{{$f.Name}} != nil {
+            {{end -}}
+			values["{{$k}}"] = r.{{$f.Name}}
+            {{if not $f.IsRequired -}}
+			}
+            {{end -}}
+		{{end}}
+
+		{{if len $f.Variants}}
+			switch value := r.{{$f.Name}}.(type) {
+			{{range $v := $f.Variants -}}
+				{{if eq $v.RawType "string" -}}
+				case string:
+					values["{{$k}}"] = value
+				{{end -}}
+
+				{{if eq $v.RawType "integer" -}}
+					{{if eq $v.Type "int32" -}}
+					case uint32:
+						values["{{$k}}"] = strconv.FormatUint(uint64(value), 10)
+					{{else -}}
+					case uint64:
+						values["{{$k}}"] = strconv.FormatUint(value, 10)
+                    {{end -}}
+				{{end -}}
+
+				{{if eq $v.RawType "boolean" -}}
+				case bool:
+					if value {
+						values["{{$k}}"] = "1"
+					} else {
+						values["{{$k}}"] = "0"
+					}
+				{{end -}}
+
+                {{if $v.IsInputFile -}}
+				case io.Reader:
+					values["{{$k}}"] = value
+                {{end -}}
+
+                {{if or $v.IsRef (eq $v.RawType "array") -}}
+				default:
+					if value != nil {
+						var data []byte
+						if data, err = json.Marshal(value); err != nil {
+							return
+						}
+
+						values["{{$k}}"] = string(data)
+					}
+                {{end -}}
+            {{end -}}
+			}
+		{{end}}
+	{{end}}
+
+	return
+}
