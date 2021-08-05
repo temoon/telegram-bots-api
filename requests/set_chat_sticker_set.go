@@ -1,6 +1,8 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -9,7 +11,13 @@ type SetChatStickerSet struct {
 	StickerSetName string
 }
 
-func (r *SetChatStickerSet) IsMultipart() bool {
+func (r *SetChatStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "setChatStickerSet", r, response)
+	return
+}
+
+func (r *SetChatStickerSet) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -17,8 +25,8 @@ func (r *SetChatStickerSet) GetValues() (values map[string]interface{}, err erro
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}

@@ -1,16 +1,24 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type GetUserProfilePhotos struct {
-	Limit  uint64
-	Offset uint64
-	UserId uint64
+	Limit  int32
+	Offset int32
+	UserId int64
 }
 
-func (r *GetUserProfilePhotos) IsMultipart() bool {
+func (r *GetUserProfilePhotos) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.UserProfilePhotos)
+	err = b.CallMethod(ctx, "getUserProfilePhotos", r, response)
+	return
+}
+
+func (r *GetUserProfilePhotos) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -18,14 +26,14 @@ func (r *GetUserProfilePhotos) GetValues() (values map[string]interface{}, err e
 	values = make(map[string]interface{})
 
 	if r.Limit != 0 {
-		values["limit"] = strconv.FormatUint(r.Limit, 10)
+		values["limit"] = strconv.FormatInt(int64(r.Limit), 10)
 	}
 
 	if r.Offset != 0 {
-		values["offset"] = strconv.FormatUint(r.Offset, 10)
+		values["offset"] = strconv.FormatInt(int64(r.Offset), 10)
 	}
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

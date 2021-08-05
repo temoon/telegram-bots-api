@@ -1,7 +1,9 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -9,11 +11,17 @@ type EditMessageMedia struct {
 	ChatId          interface{}
 	InlineMessageId string
 	Media           interface{}
-	MessageId       uint64
-	ReplyMarkup     interface{}
+	MessageId       int32
+	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
-func (r *EditMessageMedia) IsMultipart() bool {
+func (r *EditMessageMedia) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(interface{})
+	err = b.CallMethod(ctx, "editMessageMedia", r, response)
+	return
+}
+
+func (r *EditMessageMedia) IsMultipart() (multipart bool) {
 	return true
 }
 
@@ -21,8 +29,8 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
@@ -31,38 +39,55 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 		values["inline_message_id"] = r.InlineMessageId
 	}
 
-	if r.Media != nil {
-		var data []byte
-		if data, err = json.Marshal(r.Media); err != nil {
-			return
-		}
-
-		values["media"] = string(data)
-	}
-
 	switch value := r.Media.(type) {
-	default:
-
-		var data []byte
-		if data, err = json.Marshal(value); err != nil {
+	case telegram.InputMediaAnimation:
+		var dataInputMediaAnimation []byte
+		if dataInputMediaAnimation, err = json.Marshal(value); err != nil {
 			return
 		}
 
-		values["media"] = string(data)
+		values["media"] = string(dataInputMediaAnimation)
+	case telegram.InputMediaDocument:
+		var dataInputMediaDocument []byte
+		if dataInputMediaDocument, err = json.Marshal(value); err != nil {
+			return
+		}
 
+		values["media"] = string(dataInputMediaDocument)
+	case telegram.InputMediaAudio:
+		var dataInputMediaAudio []byte
+		if dataInputMediaAudio, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["media"] = string(dataInputMediaAudio)
+	case telegram.InputMediaPhoto:
+		var dataInputMediaPhoto []byte
+		if dataInputMediaPhoto, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["media"] = string(dataInputMediaPhoto)
+	case telegram.InputMediaVideo:
+		var dataInputMediaVideo []byte
+		if dataInputMediaVideo, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["media"] = string(dataInputMediaVideo)
 	}
 
 	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 	}
 
 	if r.ReplyMarkup != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
 	return

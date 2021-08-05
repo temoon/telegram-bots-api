@@ -1,32 +1,38 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type SetPassportDataErrors struct {
-	Errors []interface{}
-	UserId uint64
+	Errors []telegram.PassportElementError
+	UserId int64
 }
 
-func (r *SetPassportDataErrors) IsMultipart() bool {
+func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "setPassportDataErrors", r, response)
+	return
+}
+
+func (r *SetPassportDataErrors) IsMultipart() (multipart bool) {
 	return false
 }
 
 func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Errors != nil {
-		var data []byte
-		if data, err = json.Marshal(r.Errors); err != nil {
-			return
-		}
-
-		values["errors"] = string(data)
+	var dataErrors []byte
+	if dataErrors, err = json.Marshal(r.Errors); err != nil {
+		return
 	}
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["errors"] = string(dataErrors)
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

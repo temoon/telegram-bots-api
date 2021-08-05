@@ -1,6 +1,8 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"io"
 	"strconv"
 )
@@ -8,10 +10,16 @@ import (
 type SetStickerSetThumb struct {
 	Name   string
 	Thumb  interface{}
-	UserId uint64
+	UserId int64
 }
 
-func (r *SetStickerSetThumb) IsMultipart() bool {
+func (r *SetStickerSetThumb) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "setStickerSetThumb", r, response)
+	return
+}
+
+func (r *SetStickerSetThumb) IsMultipart() (multipart bool) {
 	return true
 }
 
@@ -27,7 +35,7 @@ func (r *SetStickerSetThumb) GetValues() (values map[string]interface{}, err err
 		values["thumb"] = value
 	}
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

@@ -1,7 +1,9 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"io"
 	"strconv"
 )
@@ -9,15 +11,21 @@ import (
 type CreateNewStickerSet struct {
 	ContainsMasks bool
 	Emojis        string
-	MaskPosition  interface{}
+	MaskPosition  *telegram.MaskPosition
 	Name          string
 	PngSticker    interface{}
 	TgsSticker    interface{}
 	Title         string
-	UserId        uint64
+	UserId        int64
 }
 
-func (r *CreateNewStickerSet) IsMultipart() bool {
+func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "createNewStickerSet", r, response)
+	return
+}
+
+func (r *CreateNewStickerSet) IsMultipart() (multipart bool) {
 	return true
 }
 
@@ -31,12 +39,12 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 	values["emojis"] = r.Emojis
 
 	if r.MaskPosition != nil {
-		var data []byte
-		if data, err = json.Marshal(r.MaskPosition); err != nil {
+		var dataMaskPosition []byte
+		if dataMaskPosition, err = json.Marshal(r.MaskPosition); err != nil {
 			return
 		}
 
-		values["mask_position"] = string(data)
+		values["mask_position"] = string(dataMaskPosition)
 	}
 
 	values["name"] = r.Name
@@ -54,7 +62,7 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 
 	values["title"] = r.Title
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

@@ -1,9 +1,0 @@
-package telegram
-
-{{if len . -}}
-import (
-{{range $_, $import := . -}}
-	"{{$import}}"
-{{end -}}
-)
-{{end -}}

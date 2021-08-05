@@ -1,12 +1,23 @@
 package requests
 
+import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
+)
+
 type AnswerPreCheckoutQuery struct {
 	ErrorMessage       string
 	Ok                 bool
 	PreCheckoutQueryId string
 }
 
-func (r *AnswerPreCheckoutQuery) IsMultipart() bool {
+func (r *AnswerPreCheckoutQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "answerPreCheckoutQuery", r, response)
+	return
+}
+
+func (r *AnswerPreCheckoutQuery) IsMultipart() (multipart bool) {
 	return false
 }
 

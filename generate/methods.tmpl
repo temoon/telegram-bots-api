@@ -1,8 +1,0 @@
-
-func (b *Bot) {{.Name}}({{if .HasRequest}}request *requests.{{.Name}}{{end}}) (response {{if .IsResponseRef}}*{{end}}{{.ResponseType}}, err error) {
-	{{if .IsResponseRef -}}
-	response = new({{.ResponseType}})
-	{{end -}}
-	err = b.callMethod(b.getMethodURL("{{.Method}}"), {{if .HasRequest}}request{{else}}nil{{end}}, {{if not .IsResponseRef}}&{{end}}response)
-	return
-}

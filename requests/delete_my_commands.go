@@ -6,31 +6,23 @@ import (
 	"github.com/temoon/go-telegram-bots-api"
 )
 
-type SetMyCommands struct {
-	Commands     []telegram.BotCommand
+type DeleteMyCommands struct {
 	LanguageCode string
 	Scope        interface{}
 }
 
-func (r *SetMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(bool)
-	err = b.CallMethod(ctx, "setMyCommands", r, response)
+func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new([]telegram.BotCommand)
+	err = b.CallMethod(ctx, "deleteMyCommands", r, response)
 	return
 }
 
-func (r *SetMyCommands) IsMultipart() (multipart bool) {
+func (r *DeleteMyCommands) IsMultipart() (multipart bool) {
 	return false
 }
 
-func (r *SetMyCommands) GetValues() (values map[string]interface{}, err error) {
+func (r *DeleteMyCommands) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	var dataCommands []byte
-	if dataCommands, err = json.Marshal(r.Commands); err != nil {
-		return
-	}
-
-	values["commands"] = string(dataCommands)
 
 	if r.LanguageCode != "" {
 		values["language_code"] = r.LanguageCode

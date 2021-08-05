@@ -1,24 +1,35 @@
 package requests
 
-{{if len .Imports -}}
 import (
-{{range $import, $_ := .Imports -}}
+{{range $_, $import := .Imports -}}
 	"{{$import}}"
 {{end -}}
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 )
-{{end -}}
 
 type {{.Type}} struct {
 {{range $_, $f := .Fields -}}
-    {{$f.Name}} {{$f.Type}}
+    {{$f.Name}} {{if or $f.IsInputFile (len $f.Variants)}}interface{}{{else}}{{$f.Type}}{{end}}
 {{end -}}
 }
 
-func (r *{{.Type}}) IsMultipart() bool {
+func (r *{{.Type}}) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new({{.ResponseType}})
+	err = b.CallMethod(ctx, "{{.Method}}", {{if .HasRequest}}r{{else}}nil{{end}}, response)
+	return
+}
+
+func (r *{{.Type}}) IsMultipart() (multipart bool) {
+	{{if .HasRequest -}}
 	return {{.IsMultipart}}
+	{{else -}}
+	return
+	{{end -}}
 }
 
 func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
+	{{if .HasRequest -}}
 	values = make(map[string]interface{})
 
 	{{range $k, $f := .Fields -}}
@@ -36,10 +47,10 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 			{{if not $f.IsRequired -}}
 			if r.{{$f.Name}} != 0 {
 			{{end -}}
-			{{if eq $f.RawTypeFormat "int32" -}}
-			values["{{$k}}"] = strconv.FormatUint(uint64(r.{{$f.Name}}), 10)
+			{{if eq $f.RawTypeFormat "int64" -}}
+			values["{{$k}}"] = strconv.FormatInt(r.{{$f.Name}}, 10)
 			{{else -}}
-			values["{{$k}}"] = strconv.FormatUint(r.{{$f.Name}}, 10)
+			values["{{$k}}"] = strconv.FormatInt(int64(r.{{$f.Name}}), 10)
 			{{end -}}
             {{if not $f.IsRequired -}}
 			}
@@ -52,15 +63,19 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 			}
 		{{end}}
 
-		{{if or $f.IsRef (eq $f.RawType "array") -}}
+		{{if and (or $f.IsRef (eq $f.RawType "array")) (not (len $f.Variants)) -}}
+            {{if not $f.IsRequired -}}
 			if r.{{$f.Name}} != nil {
-				var data []byte
-				if data, err = json.Marshal(r.{{$f.Name}}); err != nil {
-					return
-				}
-
-				values["{{$k}}"] = string(data)
+			{{end -}}
+			var data{{$f.Name}} []byte
+			if data{{$f.Name}}, err = json.Marshal(r.{{$f.Name}}); err != nil {
+				return
 			}
+
+			values["{{$k}}"] = string(data{{$f.Name}})
+            {{if not $f.IsRequired -}}
+			}
+			{{end -}}
         {{end}}
 
 		{{if $f.IsInputFile}}
@@ -83,11 +98,11 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 
 				{{if eq $v.RawType "integer" -}}
 					{{if eq $v.Type "int32" -}}
-					case uint32:
-						values["{{$k}}"] = strconv.FormatUint(uint64(value), 10)
+					case int32:
+						values["{{$k}}"] = strconv.FormatInt(int64(value), 10)
 					{{else -}}
-					case uint64:
-						values["{{$k}}"] = strconv.FormatUint(value, 10)
+					case int64:
+						values["{{$k}}"] = strconv.FormatInt(value, 10)
                     {{end -}}
 				{{end -}}
 
@@ -105,25 +120,42 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 					values["{{$k}}"] = value
                 {{end -}}
 
-                {{if or $v.IsRef (eq $v.RawType "array") -}}
-				default:
-					{{if not $v.IsRequired}}
+				{{if $v.IsRef -}}
+				case {{if not $f.IsRequired}}*{{end}}{{$v.Type}}:
+					{{if not $v.IsRequired -}}
 					if value != nil {
-					{{end}}
+					{{end -}}
+					var data{{$v.Name}} []byte
+					if data{{$v.Name}}, err = json.Marshal(value); err != nil {
+						return
+					}
+
+					values["{{$k}}"] = string(data{{$v.Name}})
+					{{if not $v.IsRequired -}}
+					}
+					{{end -}}
+				{{end -}}
+
+                {{if eq $v.RawType "array" -}}
+				default:
+					{{if not $v.IsRequired -}}
+					if value != nil {
+					{{end -}}
 					var data []byte
 					if data, err = json.Marshal(value); err != nil {
 						return
 					}
 
 					values["{{$k}}"] = string(data)
-					{{if not $v.IsRequired}}
+					{{if not $v.IsRequired -}}
 					}
-					{{end}}
+					{{end -}}
                 {{end -}}
             {{end -}}
 			}
 		{{end}}
-	{{end}}
+	{{end -}}
+    {{end -}}
 
 	return
 }

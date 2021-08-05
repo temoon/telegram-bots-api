@@ -12,14 +12,14 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-const TypeInputFile = "InputFile"
 const RefInputFile = "#/components/schemas/InputFile"
+
+const TemplatesDir = "generate/templates/"
+
 const TypesHeaderTemplate = "types_header.tmpl"
 const TypesTemplate = "types.tmpl"
 const TypesFile = "types.go"
-const MethodsHeaderTemplate = "methods_header.tmpl"
-const MethodsTemplate = "methods.tmpl"
-const MethodsFile = "methods.go"
+
 const RequestFileTemplate = "request.tmpl"
 
 type Type struct {
@@ -34,19 +34,14 @@ type TypeField struct {
 	IsRequired bool
 }
 
-type Method struct {
-	Method        string
-	Name          string
-	HasRequest    bool
-	ResponseType  string
-	IsResponseRef bool
-}
-
 type Request struct {
-	Imports     map[string]bool
-	Type        string
-	Fields      map[string]RequestField
-	IsMultipart bool
+	Imports      []string
+	Method       string
+	Type         string
+	Fields       map[string]RequestField
+	HasRequest   bool
+	ResponseType string
+	IsMultipart  bool
 }
 
 type RequestField struct {
@@ -76,10 +71,6 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	if err = GenerateMethods(doc); err != nil {
-		log.Fatalln(err)
-	}
-
 	if err = GenerateRequests(doc); err != nil {
 		log.Fatalln(err)
 	}
@@ -94,7 +85,7 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	defer file.Close()
 
 	var t *template.Template
-	if t, err = template.ParseFiles("generate/"+TypesHeaderTemplate, "generate/"+TypesTemplate); err != nil {
+	if t, err = template.ParseFiles(TemplatesDir+TypesHeaderTemplate, TemplatesDir+TypesTemplate); err != nil {
 		return
 	}
 
@@ -103,16 +94,12 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	}
 
 	schemas := make([]string, 0, len(doc.Components.Schemas))
-	for name, _ := range doc.Components.Schemas {
+	for name := range doc.Components.Schemas {
 		schemas = append(schemas, name)
 	}
 	sort.Strings(schemas)
 
 	for _, name := range schemas {
-		if name == TypeInputFile {
-			continue
-		}
-
 		schema := doc.Components.Schemas[name]
 
 		required := make(map[string]bool)
@@ -125,7 +112,7 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 			field := TypeField{
 				Key:        key,
 				Name:       strcase.ToCamel(key),
-				Type:       GenerateValueType(value, required[key], true),
+				Type:       GenerateValueType(value, required[key], ""),
 				IsRequired: required[key],
 			}
 
@@ -158,61 +145,16 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	return
 }
 
-func GenerateMethods(doc *openapi3.T) (err error) {
-	var file *os.File
-	if file, err = os.Create(MethodsFile); err != nil {
-		return
-	}
-	//goland:noinspection GoUnhandledErrorResult
-	defer file.Close()
-
-	var t *template.Template
-	if t, err = template.ParseFiles("generate/"+MethodsHeaderTemplate, "generate/"+MethodsTemplate); err != nil {
-		return
-	}
-
-	imports := []string{
-		"github.com/temoon/go-telegram-bots-api/requests",
-	}
-
-	if err = t.ExecuteTemplate(file, MethodsHeaderTemplate, imports); err != nil {
-		return
-	}
-
-	methods := make([]string, 0, len(doc.Paths))
-	for method, _ := range doc.Paths {
-		methods = append(methods, method)
-	}
-	sort.Strings(methods)
-
-	for _, method := range methods {
-		path := doc.Paths[method]
-		response := path.Post.Responses["200"].Value.Content.Get("application/json").Schema.Value.Properties["result"]
-
-		data := Method{
-			Method:        method[1:],
-			Name:          strings.Title(method[1:]),
-			HasRequest:    path.Post.RequestBody != nil,
-			ResponseType:  GenerateValueType(response, true, true),
-			IsResponseRef: response.Ref != "",
-		}
-
-		if err = t.ExecuteTemplate(file, MethodsTemplate, &data); err != nil {
-			return
-		}
-	}
-
-	return
-}
-
 func GenerateRequests(doc *openapi3.T) (err error) {
 	var t *template.Template
-	if t, err = template.ParseFiles("generate/" + RequestFileTemplate); err != nil {
+	if t, err = template.ParseFiles(TemplatesDir + RequestFileTemplate); err != nil {
 		return
 	}
 
 	for method, path := range doc.Paths {
-		if err = GenerateRequestFile(t, method, path.Post.RequestBody); err != nil {
+		response := path.Post.Responses["200"].Value.Content.Get("application/json").Schema.Value.Properties["result"]
+
+		if err = GenerateRequestFile(t, method, path.Post.RequestBody, response); err != nil {
 			return
 		}
 	}
@@ -220,11 +162,7 @@ func GenerateRequests(doc *openapi3.T) (err error) {
 	return
 }
 
-func GenerateRequestFile(t *template.Template, method string, requestBody *openapi3.RequestBodyRef) (err error) {
-	if requestBody == nil {
-		return
-	}
-
+func GenerateRequestFile(t *template.Template, method string, requestBody *openapi3.RequestBodyRef, response *openapi3.SchemaRef) (err error) {
 	var file *os.File
 	if file, err = os.Create("requests/" + strcase.ToSnake(method[1:]) + ".go"); err != nil {
 		return
@@ -233,72 +171,75 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 	defer file.Close()
 
 	data := Request{
-		Imports: make(map[string]bool),
-		Type:    strings.Title(method[1:]),
+		Method:       method[1:],
+		Type:         strings.Title(method[1:]),
+		Fields:       make(map[string]RequestField),
+		HasRequest:   requestBody != nil,
+		ResponseType: GenerateValueType(response, true, "telegram"),
 	}
 
-	form := requestBody.Value.Content.Get("application/x-www-form-urlencoded")
-	if form == nil {
-		data.IsMultipart = true
-		form = requestBody.Value.Content.Get("multipart/form-data")
-	}
+	imports := make(map[string]bool)
+	if requestBody != nil {
+		form := requestBody.Value.Content.Get("application/x-www-form-urlencoded")
+		if form == nil {
+			data.IsMultipart = true
+			form = requestBody.Value.Content.Get("multipart/form-data")
+		}
 
-	required := make(map[string]bool)
-	for _, key := range form.Schema.Value.Required {
-		required[key] = true
-	}
+		required := make(map[string]bool)
+		for _, key := range form.Schema.Value.Required {
+			required[key] = true
+		}
 
-	data.Fields = make(map[string]RequestField)
-	for key, value := range form.Schema.Value.Properties {
-		variants := make([]RequestField, 0)
+		for key, value := range form.Schema.Value.Properties {
+			variants := make([]RequestField, 0)
 
-		if value.Value.Type == "integer" {
-			data.Imports["strconv"] = true
-		} else if len(value.Value.AnyOf) != 0 {
-			hasRef := false
-			for _, ref := range value.Value.AnyOf {
-				if ref.Ref != "" && ref.Ref != RefInputFile || ref.Value.Type == "array" {
-					if hasRef {
-						continue
+			if value.Value.Type == "integer" {
+				imports["strconv"] = true
+			} else if len(value.Value.AnyOf) != 0 {
+				for _, ref := range value.Value.AnyOf {
+					if ref.Ref != "" && ref.Ref != RefInputFile || ref.Value.Type == "array" {
+						imports["encoding/json"] = true
+					} else if ref.Ref == RefInputFile {
+						imports["io"] = true
+					} else if ref.Value.Type == "integer" {
+						imports["strconv"] = true
 					}
 
-					hasRef = true
-					data.Imports["encoding/json"] = true
-				} else if ref.Ref == RefInputFile {
-					data.Imports["io"] = true
-				} else if ref.Value.Type == "integer" {
-					data.Imports["strconv"] = true
-				}
+					variant := RequestField{
+						IsRequired:    true,
+						IsRef:         ref.Ref != "" && ref.Ref != RefInputFile,
+						IsInputFile:   ref.Ref == RefInputFile,
+						Name:          GenerateValueType(ref, true, ""),
+						Type:          GenerateValueType(ref, true, "telegram"),
+						RawType:       ref.Value.Type,
+						RawTypeFormat: ref.Value.Format,
+					}
 
-				variant := RequestField{
-					IsRequired:    true,
-					IsRef:         ref.Ref != "" && ref.Ref != RefInputFile,
-					IsInputFile:   ref.Ref == RefInputFile,
-					Name:          "",
-					Type:          "",
-					RawType:       ref.Value.Type,
-					RawTypeFormat: ref.Value.Format,
+					variants = append(variants, variant)
 				}
-
-				variants = append(variants, variant)
+			} else if value.Ref != "" && value.Ref != RefInputFile || value.Value.Type == "array" {
+				imports["encoding/json"] = true
 			}
-		} else if value.Ref == RefInputFile {
-			data.Imports["io"] = true
-		} else if value.Ref != "" || value.Value.Type == "array" {
-			data.Imports["encoding/json"] = true
-		}
 
-		data.Fields[key] = RequestField{
-			IsRequired:    required[key],
-			IsRef:         value.Ref != "" && value.Ref != RefInputFile,
-			IsInputFile:   value.Ref == RefInputFile,
-			Name:          strcase.ToCamel(key),
-			Type:          GenerateValueType(value, true, false),
-			RawType:       value.Value.Type,
-			RawTypeFormat: value.Value.Format,
-			Variants:      variants,
+			data.Fields[key] = RequestField{
+				IsRequired:    required[key],
+				IsRef:         value.Ref != "" && value.Ref != RefInputFile,
+				IsInputFile:   value.Ref == RefInputFile,
+				Name:          strcase.ToCamel(key),
+				Type:          GenerateValueType(value, required[key], "telegram"),
+				RawType:       value.Value.Type,
+				RawTypeFormat: value.Value.Format,
+				Variants:      variants,
+			}
 		}
 	}
+
+	data.Imports = make([]string, 0)
+	for str := range imports {
+		data.Imports = append(data.Imports, str)
+	}
+	sort.Strings(data.Imports)
 
 	if err = t.ExecuteTemplate(file, RequestFileTemplate, &data); err != nil {
 		return
@@ -307,11 +248,15 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 	return
 }
 
-func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, allowRef bool) (t string) {
-	if allowRef && value.Ref != "" {
+func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (t string) {
+	if value.Ref != "" {
 		path := strings.Split(value.Ref, "/")
 
 		t = path[len(path)-1]
+		if pkg != "" {
+			t = pkg + "." + t
+		}
+
 		if !isRequired {
 			t = "*" + t
 		}
@@ -323,15 +268,15 @@ func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, allowRef bool
 			t = "float64"
 		case "integer":
 			switch value.Value.Format {
-			case "int32":
-				t = "uint32"
+			case "int64":
+				t = "int64"
 			default:
-				t = "uint64"
+				t = "int32"
 			}
 		case "string":
 			t = value.Value.Type
 		case "array":
-			t = "[]" + GenerateValueType(value.Value.Items, true, allowRef)
+			t = "[]" + GenerateValueType(value.Value.Items, true, pkg)
 		default:
 			t = "interface{}"
 		}

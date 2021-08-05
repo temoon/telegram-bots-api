@@ -1,16 +1,24 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type SetChatAdministratorCustomTitle struct {
 	ChatId      interface{}
 	CustomTitle string
-	UserId      uint64
+	UserId      int64
 }
 
-func (r *SetChatAdministratorCustomTitle) IsMultipart() bool {
+func (r *SetChatAdministratorCustomTitle) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "setChatAdministratorCustomTitle", r, response)
+	return
+}
+
+func (r *SetChatAdministratorCustomTitle) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -18,15 +26,15 @@ func (r *SetChatAdministratorCustomTitle) GetValues() (values map[string]interfa
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
 
 	values["custom_title"] = r.CustomTitle
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

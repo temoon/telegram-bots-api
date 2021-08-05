@@ -1,20 +1,28 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type SetGameScore struct {
-	ChatId             uint64
+	ChatId             int64
 	DisableEditMessage bool
 	Force              bool
 	InlineMessageId    string
-	MessageId          uint64
-	Score              uint64
-	UserId             uint64
+	MessageId          int32
+	Score              int32
+	UserId             int64
 }
 
-func (r *SetGameScore) IsMultipart() bool {
+func (r *SetGameScore) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(interface{})
+	err = b.CallMethod(ctx, "setGameScore", r, response)
+	return
+}
+
+func (r *SetGameScore) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -22,7 +30,7 @@ func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	if r.ChatId != 0 {
-		values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
+		values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 	}
 
 	if r.DisableEditMessage {
@@ -38,12 +46,12 @@ func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 	}
 
-	values["score"] = strconv.FormatUint(r.Score, 10)
+	values["score"] = strconv.FormatInt(int64(r.Score), 10)
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

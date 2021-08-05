@@ -1,18 +1,26 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type EditMessageReplyMarkup struct {
 	ChatId          interface{}
 	InlineMessageId string
-	MessageId       uint64
-	ReplyMarkup     interface{}
+	MessageId       int32
+	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
-func (r *EditMessageReplyMarkup) IsMultipart() bool {
+func (r *EditMessageReplyMarkup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(interface{})
+	err = b.CallMethod(ctx, "editMessageReplyMarkup", r, response)
+	return
+}
+
+func (r *EditMessageReplyMarkup) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -20,8 +28,8 @@ func (r *EditMessageReplyMarkup) GetValues() (values map[string]interface{}, err
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
@@ -31,16 +39,16 @@ func (r *EditMessageReplyMarkup) GetValues() (values map[string]interface{}, err
 	}
 
 	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 	}
 
 	if r.ReplyMarkup != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
 	return

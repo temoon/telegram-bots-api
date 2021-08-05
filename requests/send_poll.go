@@ -1,7 +1,9 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -9,23 +11,29 @@ type SendPoll struct {
 	AllowSendingWithoutReply bool
 	AllowsMultipleAnswers    bool
 	ChatId                   interface{}
-	CloseDate                uint64
-	CorrectOptionId          uint64
+	CloseDate                int32
+	CorrectOptionId          int32
 	DisableNotification      bool
 	Explanation              string
-	ExplanationEntities      []interface{}
+	ExplanationEntities      []telegram.MessageEntity
 	ExplanationParseMode     string
 	IsAnonymous              bool
 	IsClosed                 bool
-	OpenPeriod               uint64
+	OpenPeriod               int32
 	Options                  []string
 	Question                 string
 	ReplyMarkup              interface{}
-	ReplyToMessageId         uint64
+	ReplyToMessageId         int32
 	Type                     string
 }
 
-func (r *SendPoll) IsMultipart() bool {
+func (r *SendPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.Message)
+	err = b.CallMethod(ctx, "sendPoll", r, response)
+	return
+}
+
+func (r *SendPoll) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -41,18 +49,18 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
 
 	if r.CloseDate != 0 {
-		values["close_date"] = strconv.FormatUint(r.CloseDate, 10)
+		values["close_date"] = strconv.FormatInt(int64(r.CloseDate), 10)
 	}
 
 	if r.CorrectOptionId != 0 {
-		values["correct_option_id"] = strconv.FormatUint(r.CorrectOptionId, 10)
+		values["correct_option_id"] = strconv.FormatInt(int64(r.CorrectOptionId), 10)
 	}
 
 	if r.DisableNotification {
@@ -64,12 +72,12 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.ExplanationEntities != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ExplanationEntities); err != nil {
+		var dataExplanationEntities []byte
+		if dataExplanationEntities, err = json.Marshal(r.ExplanationEntities); err != nil {
 			return
 		}
 
-		values["explanation_entities"] = string(data)
+		values["explanation_entities"] = string(dataExplanationEntities)
 	}
 
 	if r.ExplanationParseMode != "" {
@@ -85,34 +93,51 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.OpenPeriod != 0 {
-		values["open_period"] = strconv.FormatUint(r.OpenPeriod, 10)
+		values["open_period"] = strconv.FormatInt(int64(r.OpenPeriod), 10)
 	}
 
-	if r.Options != nil {
-		var data []byte
-		if data, err = json.Marshal(r.Options); err != nil {
-			return
-		}
-
-		values["options"] = string(data)
+	var dataOptions []byte
+	if dataOptions, err = json.Marshal(r.Options); err != nil {
+		return
 	}
+
+	values["options"] = string(dataOptions)
 
 	values["question"] = r.Question
 
 	switch value := r.ReplyMarkup.(type) {
-	default:
-
-		var data []byte
-		if data, err = json.Marshal(value); err != nil {
+	case *telegram.InlineKeyboardMarkup:
+		var dataInlineKeyboardMarkup []byte
+		if dataInlineKeyboardMarkup, err = json.Marshal(value); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataInlineKeyboardMarkup)
+	case *telegram.ReplyKeyboardMarkup:
+		var dataReplyKeyboardMarkup []byte
+		if dataReplyKeyboardMarkup, err = json.Marshal(value); err != nil {
+			return
+		}
 
+		values["reply_markup"] = string(dataReplyKeyboardMarkup)
+	case *telegram.ReplyKeyboardRemove:
+		var dataReplyKeyboardRemove []byte
+		if dataReplyKeyboardRemove, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(dataReplyKeyboardRemove)
+	case *telegram.ForceReply:
+		var dataForceReply []byte
+		if dataForceReply, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(dataForceReply)
 	}
 
 	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
 	}
 
 	if r.Type != "" {

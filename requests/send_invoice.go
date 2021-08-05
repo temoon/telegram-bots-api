@@ -1,40 +1,48 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type SendInvoice struct {
 	AllowSendingWithoutReply  bool
-	ChatId                    uint64
+	ChatId                    int64
 	Currency                  string
 	Description               string
 	DisableNotification       bool
 	IsFlexible                bool
-	MaxTipAmount              uint64
+	MaxTipAmount              int32
 	NeedEmail                 bool
 	NeedName                  bool
 	NeedPhoneNumber           bool
 	NeedShippingAddress       bool
 	Payload                   string
-	PhotoHeight               uint64
-	PhotoSize                 uint64
+	PhotoHeight               int32
+	PhotoSize                 int32
 	PhotoUrl                  string
-	PhotoWidth                uint64
-	Prices                    []interface{}
+	PhotoWidth                int32
+	Prices                    []telegram.LabeledPrice
 	ProviderData              string
 	ProviderToken             string
-	ReplyMarkup               interface{}
-	ReplyToMessageId          uint64
+	ReplyMarkup               *telegram.InlineKeyboardMarkup
+	ReplyToMessageId          int32
 	SendEmailToProvider       bool
 	SendPhoneNumberToProvider bool
 	StartParameter            string
-	SuggestedTipAmounts       []uint64
+	SuggestedTipAmounts       []int32
 	Title                     string
 }
 
-func (r *SendInvoice) IsMultipart() bool {
+func (r *SendInvoice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.Message)
+	err = b.CallMethod(ctx, "sendInvoice", r, response)
+	return
+}
+
+func (r *SendInvoice) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -45,7 +53,7 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		values["allow_sending_without_reply"] = "1"
 	}
 
-	values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
+	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 
 	values["currency"] = r.Currency
 
@@ -60,7 +68,7 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.MaxTipAmount != 0 {
-		values["max_tip_amount"] = strconv.FormatUint(r.MaxTipAmount, 10)
+		values["max_tip_amount"] = strconv.FormatInt(int64(r.MaxTipAmount), 10)
 	}
 
 	if r.NeedEmail {
@@ -82,11 +90,11 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	values["payload"] = r.Payload
 
 	if r.PhotoHeight != 0 {
-		values["photo_height"] = strconv.FormatUint(r.PhotoHeight, 10)
+		values["photo_height"] = strconv.FormatInt(int64(r.PhotoHeight), 10)
 	}
 
 	if r.PhotoSize != 0 {
-		values["photo_size"] = strconv.FormatUint(r.PhotoSize, 10)
+		values["photo_size"] = strconv.FormatInt(int64(r.PhotoSize), 10)
 	}
 
 	if r.PhotoUrl != "" {
@@ -94,17 +102,15 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.PhotoWidth != 0 {
-		values["photo_width"] = strconv.FormatUint(r.PhotoWidth, 10)
+		values["photo_width"] = strconv.FormatInt(int64(r.PhotoWidth), 10)
 	}
 
-	if r.Prices != nil {
-		var data []byte
-		if data, err = json.Marshal(r.Prices); err != nil {
-			return
-		}
-
-		values["prices"] = string(data)
+	var dataPrices []byte
+	if dataPrices, err = json.Marshal(r.Prices); err != nil {
+		return
 	}
+
+	values["prices"] = string(dataPrices)
 
 	if r.ProviderData != "" {
 		values["provider_data"] = r.ProviderData
@@ -113,16 +119,16 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	values["provider_token"] = r.ProviderToken
 
 	if r.ReplyMarkup != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
 	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
 	}
 
 	if r.SendEmailToProvider {
@@ -138,12 +144,12 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.SuggestedTipAmounts != nil {
-		var data []byte
-		if data, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
+		var dataSuggestedTipAmounts []byte
+		if dataSuggestedTipAmounts, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
 			return
 		}
 
-		values["suggested_tip_amounts"] = string(data)
+		values["suggested_tip_amounts"] = string(dataSuggestedTipAmounts)
 	}
 
 	values["title"] = r.Title

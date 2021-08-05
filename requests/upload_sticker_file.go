@@ -1,16 +1,23 @@
 package requests
 
 import (
-	"io"
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type UploadStickerFile struct {
 	PngSticker interface{}
-	UserId     uint64
+	UserId     int64
 }
 
-func (r *UploadStickerFile) IsMultipart() bool {
+func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.File)
+	err = b.CallMethod(ctx, "uploadStickerFile", r, response)
+	return
+}
+
+func (r *UploadStickerFile) IsMultipart() (multipart bool) {
 	return true
 }
 
@@ -19,7 +26,7 @@ func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err erro
 
 	values["png_sticker"] = r.PngSticker
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

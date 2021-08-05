@@ -1,17 +1,25 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type AnswerShippingQuery struct {
 	ErrorMessage    string
 	Ok              bool
-	ShippingOptions []interface{}
+	ShippingOptions []telegram.ShippingOption
 	ShippingQueryId string
 }
 
-func (r *AnswerShippingQuery) IsMultipart() bool {
+func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "answerShippingQuery", r, response)
+	return
+}
+
+func (r *AnswerShippingQuery) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -27,12 +35,12 @@ func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err er
 	}
 
 	if r.ShippingOptions != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ShippingOptions); err != nil {
+		var dataShippingOptions []byte
+		if dataShippingOptions, err = json.Marshal(r.ShippingOptions); err != nil {
 			return
 		}
 
-		values["shipping_options"] = string(data)
+		values["shipping_options"] = string(dataShippingOptions)
 	}
 
 	values["shipping_query_id"] = r.ShippingQueryId

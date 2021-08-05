@@ -1,10 +1,21 @@
 package requests
 
+import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
+)
+
 type DeleteStickerFromSet struct {
 	Sticker string
 }
 
-func (r *DeleteStickerFromSet) IsMultipart() bool {
+func (r *DeleteStickerFromSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "deleteStickerFromSet", r, response)
+	return
+}
+
+func (r *DeleteStickerFromSet) IsMultipart() (multipart bool) {
 	return false
 }
 

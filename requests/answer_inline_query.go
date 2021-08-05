@@ -1,21 +1,29 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type AnswerInlineQuery struct {
-	CacheTime         uint64
+	CacheTime         int32
 	InlineQueryId     string
 	IsPersonal        bool
 	NextOffset        string
-	Results           []interface{}
+	Results           []telegram.InlineQueryResult
 	SwitchPmParameter string
 	SwitchPmText      string
 }
 
-func (r *AnswerInlineQuery) IsMultipart() bool {
+func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "answerInlineQuery", r, response)
+	return
+}
+
+func (r *AnswerInlineQuery) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -23,7 +31,7 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 	values = make(map[string]interface{})
 
 	if r.CacheTime != 0 {
-		values["cache_time"] = strconv.FormatUint(r.CacheTime, 10)
+		values["cache_time"] = strconv.FormatInt(int64(r.CacheTime), 10)
 	}
 
 	values["inline_query_id"] = r.InlineQueryId
@@ -36,14 +44,12 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 		values["next_offset"] = r.NextOffset
 	}
 
-	if r.Results != nil {
-		var data []byte
-		if data, err = json.Marshal(r.Results); err != nil {
-			return
-		}
-
-		values["results"] = string(data)
+	var dataResults []byte
+	if dataResults, err = json.Marshal(r.Results); err != nil {
+		return
 	}
+
+	values["results"] = string(dataResults)
 
 	if r.SwitchPmParameter != "" {
 		values["switch_pm_parameter"] = r.SwitchPmParameter

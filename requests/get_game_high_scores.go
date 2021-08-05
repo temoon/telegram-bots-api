@@ -1,17 +1,25 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type GetGameHighScores struct {
-	ChatId          uint64
+	ChatId          int64
 	InlineMessageId string
-	MessageId       uint64
-	UserId          uint64
+	MessageId       int32
+	UserId          int64
 }
 
-func (r *GetGameHighScores) IsMultipart() bool {
+func (r *GetGameHighScores) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new([]telegram.GameHighScore)
+	err = b.CallMethod(ctx, "getGameHighScores", r, response)
+	return
+}
+
+func (r *GetGameHighScores) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -19,7 +27,7 @@ func (r *GetGameHighScores) GetValues() (values map[string]interface{}, err erro
 	values = make(map[string]interface{})
 
 	if r.ChatId != 0 {
-		values["chat_id"] = strconv.FormatUint(r.ChatId, 10)
+		values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 	}
 
 	if r.InlineMessageId != "" {
@@ -27,10 +35,10 @@ func (r *GetGameHighScores) GetValues() (values map[string]interface{}, err erro
 	}
 
 	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 	}
 
-	values["user_id"] = strconv.FormatUint(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

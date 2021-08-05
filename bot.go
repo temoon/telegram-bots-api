@@ -2,11 +2,11 @@ package telegram
 
 //go:generate go run generate/generate.go
 //go:generate gofmt -w types.go
-//go:generate gofmt -w methods.go
 //go:generate gofmt -w requests
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"io"
@@ -26,6 +26,7 @@ type BotOpts struct {
 }
 
 type Request interface {
+	Call(context.Context, *Bot) (interface{}, error)
 	IsMultipart() bool
 	GetValues() (map[string]interface{}, error)
 }
@@ -49,11 +50,7 @@ func NewBot(opts *BotOpts) (bot *Bot) {
 	return
 }
 
-func (b *Bot) getMethodURL(method string) string {
-	return "https://api.telegram.org/bot" + b.opts.Token + "/" + method
-}
-
-func (b *Bot) callMethod(methodUrl string, request Request, response interface{}) (err error) {
+func (b *Bot) CallMethod(ctx context.Context, method string, request Request, response interface{}) (err error) {
 	var contentType string
 	var query *bytes.Buffer
 
@@ -67,8 +64,16 @@ func (b *Bot) callMethod(methodUrl string, request Request, response interface{}
 		return
 	}
 
+	methodUrl := "https://api.telegram.org/bot" + b.opts.Token + "/" + method
+
+	var httpRequest *http.Request
+	if httpRequest, err = http.NewRequestWithContext(ctx, "POST", methodUrl, query); err != nil {
+		return
+	}
+	httpRequest.Header.Set("Content-Type", contentType)
+
 	var httpResponse *http.Response
-	if httpResponse, err = b.opts.Client.Post(methodUrl, contentType, query); err != nil {
+	if httpResponse, err = b.opts.Client.Do(httpRequest); err != nil {
 		return
 	}
 	//goland:noinspection GoUnhandledErrorResult

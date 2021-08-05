@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Telegram Bot API
   description: Auto-generated OpenAPI schema
-  version: 5.2.0
+  version: 5.3.0
 servers:
   - url: 'https://api.telegram.org/bot{token}'
     variables:
@@ -489,6 +489,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 text:
                   description: >-
@@ -553,6 +554,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 text:
                   description: >-
@@ -617,6 +619,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 text:
                   description: >-
@@ -713,6 +716,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -721,6 +725,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 disable_notification:
                   description: >-
@@ -745,6 +750,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -753,6 +759,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 disable_notification:
                   description: >-
@@ -777,6 +784,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -785,6 +793,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 disable_notification:
                   description: >-
@@ -845,6 +854,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -853,6 +863,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
@@ -918,6 +929,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -926,6 +938,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
@@ -991,6 +1004,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 from_chat_id:
                   description: >-
@@ -999,6 +1013,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
@@ -1096,6 +1111,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 photo:
                   description: >-
@@ -1211,6 +1227,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 audio:
                   description: >-
@@ -1340,6 +1357,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 document:
                   description: >-
@@ -1469,6 +1487,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 video:
                   description: >-
@@ -1604,6 +1623,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 animation:
                   description: >-
@@ -1739,6 +1759,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 voice:
                   description: >-
@@ -1848,6 +1869,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 video_note:
                   description: >-
@@ -1958,6 +1980,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 media:
                   description: >-
@@ -2031,6 +2054,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the location
@@ -2103,6 +2127,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the location
@@ -2175,6 +2200,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the location
@@ -2285,6 +2311,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2334,6 +2361,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2383,6 +2411,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2469,6 +2498,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2493,6 +2523,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2517,6 +2548,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -2575,6 +2607,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the venue
@@ -2649,6 +2682,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the venue
@@ -2723,6 +2757,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 latitude:
                   description: Latitude of the venue
@@ -2829,6 +2864,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 phone_number:
                   description: Contact's phone number
@@ -2886,6 +2922,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 phone_number:
                   description: Contact's phone number
@@ -2943,6 +2980,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 phone_number:
                   description: Contact's phone number
@@ -3032,6 +3070,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 question:
                   description: 'Poll question, 1-300 characters'
@@ -3138,6 +3177,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 question:
                   description: 'Poll question, 1-300 characters'
@@ -3244,6 +3284,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 question:
                   description: 'Poll question, 1-300 characters'
@@ -3383,6 +3424,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 emoji:
                   description: "Emoji on which the dice throw animation is based. Currently, must be one of “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />”, “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, or “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Dice can have values 1-6 for “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />” and “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, values 1-5 for “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />” and “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, and values 1-64 for “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Defaults to “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”"
@@ -3435,6 +3477,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 emoji:
                   description: "Emoji on which the dice throw animation is based. Currently, must be one of “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />”, “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, or “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Dice can have values 1-6 for “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />” and “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, values 1-5 for “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />” and “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, and values 1-64 for “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Defaults to “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”"
@@ -3487,6 +3530,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 emoji:
                   description: "Emoji on which the dice throw animation is based. Currently, must be one of “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />”, “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, or “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Dice can have values 1-6 for “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />” and “<img alt=\"\U0001F3AF\" src=\"//telegram.org/img/emoji/40/F09F8EAF.png\" height=\"20\" width=\"20\" />”, values 1-5 for “<img alt=\"\U0001F3C0\" src=\"//telegram.org/img/emoji/40/F09F8F80.png\" height=\"20\" width=\"20\" />” and “<img alt=\"⚽\" src=\"//telegram.org/img/emoji/40/E29ABD.png\" height=\"20\" width=\"20\" />”, and values 1-64 for “<img alt=\"\U0001F3B0\" src=\"//telegram.org/img/emoji/40/F09F8EB0.png\" height=\"20\" width=\"20\" />”. Defaults to “<img alt=\"\U0001F3B2\" src=\"//telegram.org/img/emoji/40/F09F8EB2.png\" height=\"20\" width=\"20\" />”"
@@ -3585,6 +3629,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 action:
                   description: >-
@@ -3617,6 +3662,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 action:
                   description: >-
@@ -3649,6 +3695,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 action:
                   description: >-
@@ -3712,6 +3759,7 @@ paths:
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 offset:
                   description: >-
                     Sequential number of the first photo to be returned. By
@@ -3734,6 +3782,7 @@ paths:
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 offset:
                   description: >-
                     Sequential number of the first photo to be returned. By
@@ -3756,6 +3805,7 @@ paths:
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 offset:
                   description: >-
                     Sequential number of the first photo to be returned. By
@@ -3860,17 +3910,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /kickChatMember:
+  /banChatMember:
     post:
       description: >-
-        Use this method to kick a user from a group, a supergroup or a channel.
-        In the case of supergroups and channels, the user will not be able to
-        return to the group on their own using invite links, etc., unless
-        [unbanned](https://core.telegram.org/bots/api/#unbanchatmember) first.
-        The bot must be an administrator in the chat for this to work and must
-        have the appropriate admin rights. Returns *True* on success.
+        Use this method to ban a user in a group, a supergroup or a channel. In the case of supergroups and channels,
+        the user will not be able to return to the chat on their own using invite links, etc., unless
+        [unbanned](https://core.telegram.org/bots/api#unbanchatmember) first. The bot must be an administrator in the
+        chat for this to work and must have the appropriate admin rights. Returns *True* on success.
       externalDocs:
-        url: 'https://core.telegram.org/bots/api/#kickchatmember'
+        url: 'https://core.telegram.org/bots/api#banchatmember'
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -3884,10 +3932,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 until_date:
                   description: >-
                     Date when the user will be unbanned, unix time. If user is
@@ -3914,10 +3964,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 until_date:
                   description: >-
                     Date when the user will be unbanned, unix time. If user is
@@ -3938,10 +3990,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 until_date:
                   description: >-
                     Date when the user will be unbanned, unix time. If user is
@@ -4000,10 +4054,12 @@ paths:
                     target supergroup or channel (in the format `@username`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 only_if_banned:
                   description: Do nothing if the user is not banned
                   type: boolean
@@ -4020,10 +4076,12 @@ paths:
                     target supergroup or channel (in the format `@username`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 only_if_banned:
                   description: Do nothing if the user is not banned
                   type: boolean
@@ -4040,10 +4098,12 @@ paths:
                     target supergroup or channel (in the format `@username`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 only_if_banned:
                   description: Do nothing if the user is not banned
                   type: boolean
@@ -4095,10 +4155,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
                 until_date:
@@ -4122,10 +4184,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
                 until_date:
@@ -4149,10 +4213,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
                 until_date:
@@ -4211,10 +4277,12 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 is_anonymous:
                   description: >-
                     Pass *True*, if the administrator's presence in the chat is
@@ -4285,10 +4353,12 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 is_anonymous:
                   description: >-
                     Pass *True*, if the administrator's presence in the chat is
@@ -4355,10 +4425,12 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 is_anonymous:
                   description: >-
                     Pass *True*, if the administrator's presence in the chat is
@@ -4458,10 +4530,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 custom_title:
                   description: >-
                     New custom title for the administrator; 0-16 characters,
@@ -4481,10 +4555,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 custom_title:
                   description: >-
                     New custom title for the administrator; 0-16 characters,
@@ -4504,10 +4580,12 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
                 custom_title:
                   description: >-
                     New custom title for the administrator; 0-16 characters,
@@ -4562,6 +4640,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
@@ -4578,6 +4657,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
@@ -4594,6 +4674,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
@@ -4645,6 +4726,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -4658,6 +4740,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -4671,6 +4754,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -4718,6 +4802,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 expire_date:
                   description: >-
@@ -4742,6 +4827,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 expire_date:
                   description: >-
@@ -4766,6 +4852,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 expire_date:
                   description: >-
@@ -4823,6 +4910,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -4852,6 +4940,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -4881,6 +4970,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -4944,6 +5034,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -4962,6 +5053,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -4980,6 +5072,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 invite_link:
                   description: >-
@@ -5032,6 +5125,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 photo:
                   $ref: '#/components/schemas/InputFile'
@@ -5083,6 +5177,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5096,6 +5191,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5109,6 +5205,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5157,6 +5254,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 title:
                   description: 'New chat title, 1-255 characters'
@@ -5174,6 +5272,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 title:
                   description: 'New chat title, 1-255 characters'
@@ -5191,6 +5290,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 title:
                   description: 'New chat title, 1-255 characters'
@@ -5242,6 +5342,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 description:
                   description: 'New chat description, 0-255 characters'
@@ -5258,6 +5359,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 description:
                   description: 'New chat description, 0-255 characters'
@@ -5274,6 +5376,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 description:
                   description: 'New chat description, 0-255 characters'
@@ -5327,6 +5430,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of a message to pin
@@ -5351,6 +5455,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of a message to pin
@@ -5375,6 +5480,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of a message to pin
@@ -5436,6 +5542,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -5454,6 +5561,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -5472,6 +5580,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -5526,6 +5635,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5539,6 +5649,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5552,6 +5663,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5599,6 +5711,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5613,6 +5726,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5627,6 +5741,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5676,6 +5791,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5690,6 +5806,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5704,6 +5821,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5754,6 +5872,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5768,6 +5887,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5782,6 +5902,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5810,13 +5931,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /getChatMembersCount:
+  /getChatMemberCount:
     post:
       description: >-
         Use this method to get the number of members in a chat. Returns *Int* on
         success.
       externalDocs:
-        url: 'https://core.telegram.org/bots/api/#getchatmemberscount'
+        url: 'https://core.telegram.org/bots/api#getchatmembercount'
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -5830,6 +5951,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5844,6 +5966,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5858,6 +5981,7 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -5905,10 +6029,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
               required:
                 - chat_id
                 - user_id
@@ -5923,10 +6049,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
               required:
                 - chat_id
                 - user_id
@@ -5941,10 +6069,12 @@ paths:
                     `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 user_id:
                   description: Unique identifier of the target user
                   type: integer
+                  format: int64
               required:
                 - chat_id
                 - user_id
@@ -5994,6 +6124,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 sticker_set_name:
                   description: Name of the sticker set to be set as the group sticker set
@@ -6011,6 +6142,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 sticker_set_name:
                   description: Name of the sticker set to be set as the group sticker set
@@ -6028,6 +6160,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 sticker_set_name:
                   description: Name of the sticker set to be set as the group sticker set
@@ -6082,6 +6215,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -6095,6 +6229,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -6108,6 +6243,7 @@ paths:
                     target supergroup (in the format `@supergroupusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
               required:
                 - chat_id
@@ -6327,6 +6463,13 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/BotCommand'
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given
+                    scope, for whose language there are no dedicated commands
+                  type: string
               required:
                 - commands
           multipart/form-data:
@@ -6341,6 +6484,13 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/BotCommand'
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given
+                    scope, for whose language there are no dedicated commands
+                  type: string
               required:
                 - commands
           application/json:
@@ -6355,6 +6505,13 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/BotCommand'
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the given
+                    scope, for whose language there are no dedicated commands
+                  type: string
               required:
                 - commands
         required: true
@@ -6381,6 +6538,73 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /deleteMyCommands:
+    post:
+      description: >-
+        Use this method to delete the list of the bot's commands for the given scope and user language.
+        After deletion, [higher level commands](https://core.telegram.org/bots/api#determining-list-of-commands)
+        will be shown to affected users. Returns *True* on success.
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#deletemycommands'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
+                    given scope, for whose language there are no dedicated commands
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
+                    given scope, for whose language there are no dedicated commands
+                  type: string
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: >-
+                    A two-letter ISO 639-1 language code. If empty, commands will be applied to all users from the
+                    given scope, for whose language there are no dedicated commands
+                  type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BotCommand'
+                required:
+                  - ok
+                  - result
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   /getMyCommands:
     post:
       description: >-
@@ -6389,6 +6613,35 @@ paths:
         [BotCommand](https://core.telegram.org/bots/api/#botcommand) on success.
       externalDocs:
         url: 'https://core.telegram.org/bots/api/#getmycommands'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: A two-letter ISO 639-1 language code or an empty string
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: A two-letter ISO 639-1 language code or an empty string
+                  type: string
+          application/json:
+            schema:
+              type: object
+              properties:
+                scope:
+                  $ref: '#/components/schemas/BotCommandScope'
+                language_code:
+                  description: A two-letter ISO 639-1 language code or an empty string
+                  type: string
       responses:
         '200':
           description: ''
@@ -6436,6 +6689,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6484,6 +6738,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6532,6 +6787,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6617,6 +6873,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6660,6 +6917,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6703,6 +6961,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6788,6 +7047,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6853,6 +7113,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6877,6 +7138,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6901,6 +7163,7 @@ paths:
                     channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: >-
@@ -6960,6 +7223,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the original message with the poll
@@ -6979,6 +7243,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the original message with the poll
@@ -6998,6 +7263,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the original message with the poll
@@ -7071,6 +7337,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the message to delete
@@ -7088,6 +7355,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the message to delete
@@ -7105,6 +7373,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 message_id:
                   description: Identifier of the message to delete
@@ -7157,6 +7426,7 @@ paths:
                     target channel (in the format `@channelusername`)
                   anyOf:
                     - type: integer
+                      format: int64
                     - type: string
                 sticker:
                   description: >-
@@ -7301,6 +7571,7 @@ paths:
                 user_id:
                   description: User identifier of sticker file owner
                   type: integer
+                  format: int64
                 png_sticker:
                   $ref: '#/components/schemas/InputFile'
               required:
@@ -7347,6 +7618,7 @@ paths:
                 user_id:
                   description: User identifier of created sticker set owner
                   type: integer
+                  format: int64
                 name:
                   description: >-
                     Short name of sticker set, to be used in `t.me/addstickers/`
@@ -7430,6 +7702,7 @@ paths:
                 user_id:
                   description: User identifier of sticker set owner
                   type: integer
+                  format: int64
                 name:
                   description: Sticker set name
                   type: string
@@ -7633,6 +7906,7 @@ paths:
                 user_id:
                   description: User identifier of the sticker set owner
                   type: integer
+                  format: int64
                 thumb:
                   description: >-
                     A **PNG** image with the thumbnail, must be up to 128
@@ -7912,6 +8186,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target private chat
                   type: integer
+                  format: int64
                 title:
                   description: 'Product name, 1-32 characters'
                   type: string
@@ -8050,6 +8325,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target private chat
                   type: integer
+                  format: int64
                 title:
                   description: 'Product name, 1-32 characters'
                   type: string
@@ -8188,6 +8464,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target private chat
                   type: integer
+                  format: int64
                 title:
                   description: 'Product name, 1-32 characters'
                   type: string
@@ -8609,6 +8886,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 errors:
                   description: A JSON-serialized array describing the errors
                   type: array
@@ -8624,6 +8902,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 errors:
                   description: A JSON-serialized array describing the errors
                   type: array
@@ -8639,6 +8918,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 errors:
                   description: A JSON-serialized array describing the errors
                   type: array
@@ -8687,6 +8967,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target chat
                   type: integer
+                  format: int64
                 game_short_name:
                   description: >-
                     Short name of the game, serves as the unique identifier for
@@ -8719,6 +9000,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target chat
                   type: integer
+                  format: int64
                 game_short_name:
                   description: >-
                     Short name of the game, serves as the unique identifier for
@@ -8751,6 +9033,7 @@ paths:
                 chat_id:
                   description: Unique identifier for the target chat
                   type: integer
+                  format: int64
                 game_short_name:
                   description: >-
                     Short name of the game, serves as the unique identifier for
@@ -8818,6 +9101,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 score:
                   description: 'New score, must be non-negative'
                   type: integer
@@ -8836,6 +9120,7 @@ paths:
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -8856,6 +9141,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 score:
                   description: 'New score, must be non-negative'
                   type: integer
@@ -8874,6 +9160,7 @@ paths:
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -8894,6 +9181,7 @@ paths:
                 user_id:
                   description: User identifier
                   type: integer
+                  format: int64
                 score:
                   description: 'New score, must be non-negative'
                   type: integer
@@ -8912,6 +9200,7 @@ paths:
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -8976,11 +9265,13 @@ paths:
                 user_id:
                   description: Target user id
                   type: integer
+                  format: int64
                 chat_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -9000,11 +9291,13 @@ paths:
                 user_id:
                   description: Target user id
                   type: integer
+                  format: int64
                 chat_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -9024,11 +9317,13 @@ paths:
                 user_id:
                   description: Target user id
                   type: integer
+                  format: int64
                 chat_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified. Unique
                     identifier for the target chat
                   type: integer
+                  format: int64
                 message_id:
                   description: >-
                     Required if *inline\_message\_id* is not specified.
@@ -9190,6 +9485,7 @@ components:
         id:
           description: Unique identifier for this user or bot
           type: integer
+          format: int64
         is_bot:
           description: 'True, if this user is a bot'
           type: boolean
@@ -9243,6 +9539,7 @@ components:
             signed 64 bit integer or double-precision float type are safe for
             storing this identifier.
           type: integer
+          format: int64
         type:
           description: >-
             Type of chat, can be either “private”, “group”, “supergroup” or
@@ -9321,6 +9618,7 @@ components:
             storing this identifier. Returned only in
             [getChat](https://core.telegram.org/bots/api/#getchat).
           type: integer
+          format: int64
         location:
           $ref: '#/components/schemas/ChatLocation'
       required:
@@ -9491,6 +9789,7 @@ components:
             integer or double-precision float type are safe for storing this
             identifier.
           type: integer
+          format: int64
         migrate_from_chat_id:
           description: >-
             *Optional*. The supergroup has been migrated from a group with the
@@ -9500,6 +9799,7 @@ components:
             integer or double-precision float type are safe for storing this
             identifier.
           type: integer
+          format: int64
         pinned_message:
           $ref: '#/components/schemas/Message'
         invoice:
@@ -9887,6 +10187,7 @@ components:
         user_id:
           description: '*Optional*. Contact''s user identifier in Telegram'
           type: integer
+          format: int64
         vcard:
           description: >-
             *Optional*. Additional data about the contact in the form of a
@@ -10256,6 +10557,12 @@ components:
             keyboard again. Defaults to *false*.
           default: false
           type: boolean
+        input_field_placeholder:
+          description: >-
+            *Optional*. The placeholder to be shown in the input field when the keyboard is active; 1-64 characters
+          type: string
+          minLength: 1
+          maxLength: 64
         selective:
           description: >-
             *Optional*. Use this parameter if you want to show the keyboard to
@@ -10551,6 +10858,12 @@ components:
             Shows reply interface to the user, as if they manually selected the
             bot's message and tapped 'Reply'
           type: boolean
+        input_field_placeholder:
+          description: >-
+            *Optional*. The placeholder to be shown in the input field when the reply is active; 1-64 characters
+          type: string
+          minLength: 1
+          maxLength: 64
         selective:
           description: >-
             *Optional*. Use this parameter if you want to force reply from
@@ -10636,126 +10949,244 @@ components:
     ChatMember:
       externalDocs:
         url: 'https://core.telegram.org/bots/api/#chatmember'
-      description: This object contains information about one member of a chat.
+      description: >-
+        This object contains information about one member of a chat.
+        Currently, the following 6 types of chat members are supported:
+      anyOf:
+        - $ref: '#/components/schemas/ChatMemberOwner'
+        - $ref: '#/components/schemas/ChatMemberAdministrator'
+        - $ref: '#/components/schemas/ChatMemberMember'
+        - $ref: '#/components/schemas/ChatMemberRestricted'
+        - $ref: '#/components/schemas/ChatMemberLeft'
+        - $ref: '#/components/schemas/ChatMemberBanned'
+    ChatMemberOwner:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api/#chatmember'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that owns the chat and has all
+        administrator privileges.
       type: object
       properties:
-        user:
-          $ref: '#/components/schemas/User'
         status:
-          description: >-
-            The member's status in the chat. Can be “creator”, “administrator”,
-            “member”, “restricted”, “left” or “kicked”
+          description: The member's status in the chat, always “creator”
           type: string
           enum:
             - creator
-            - administrator
-            - member
-            - restricted
-            - left
-            - kicked
+        user:
+          $ref: '#/components/schemas/User'
+        is_anonymous:
+          description: True, if the user's presence in the chat is hidden
+          type: boolean
         custom_title:
           description: >-
-            *Optional*. Owner and administrators only. Custom title for this
-            user
+            *Optional*. Custom title for this user
           type: string
+      required:
+        - status
+        - user
+        - is_anonymous
+    ChatMemberAdministrator:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatmemberadministrator'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that has some additional privileges.
+      type: object
+      properties:
+        status:
+          description: >-
+            The member's status in the chat, always “administrator”
+          type: string
+          enum:
+            - administrator
+        user:
+          $ref: '#/components/schemas/User'
+        can_be_edited:
+          description: >-
+            True, if the bot is allowed to edit administrator privileges of that user
+          type: boolean
         is_anonymous:
           description: >-
-            *Optional*. Owner and administrators only. True, if the user's
-            presence in the chat is hidden
+            True, if the user's presence in the chat is hidden
           type: boolean
         can_manage_chat:
           description: >-
             True, if the administrator can access the chat event log, chat statistics, message statistics in channels,
-            see channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other
-            administrator privilege
-          type: boolean
-        can_be_edited:
-          description: >-
-            *Optional*. Administrators only. True, if the bot is allowed to edit
-            administrator privileges of that user
-          type: boolean
-        can_post_messages:
-          description: >-
-            *Optional*. Administrators only. True, if the administrator can post
-            in the channel; channels only
-          type: boolean
-        can_edit_messages:
-          description: >-
-            *Optional*. Administrators only. True, if the administrator can edit
-            messages of other users and can pin messages; channels only
+            see channel members, see anonymous administrators in supergroups and ignore slow mode.
+            Implied by any other administrator privilege
           type: boolean
         can_delete_messages:
           description: >-
-            *Optional*. Administrators only. True, if the administrator can
-            delete messages of other users
+            True, if the administrator can delete messages of other users
+          type: boolean
+        can_manage_voice_chats:
+          description: >-
+            True, if the administrator can manage voice chats
           type: boolean
         can_restrict_members:
           description: >-
-            *Optional*. Administrators only. True, if the administrator can
-            restrict, ban or unban chat members
+            True, if the administrator can restrict, ban or unban chat members
           type: boolean
         can_promote_members:
           description: >-
-            *Optional*. Administrators only. True, if the administrator can add
-            new administrators with a subset of their own privileges or demote
+            True, if the administrator can add new administrators with a subset of their own privileges or demote
             administrators that he has promoted, directly or indirectly
             (promoted by administrators that were appointed by the user)
           type: boolean
         can_change_info:
           description: >-
-            *Optional*. Administrators and restricted only. True, if the user is
-            allowed to change the chat title, photo and other settings
+            True, if the user is allowed to change the chat title, photo and other settings
           type: boolean
         can_invite_users:
           description: >-
-            *Optional*. Administrators and restricted only. True, if the user is
-            allowed to invite new users to the chat
+            True, if the user is allowed to invite new users to the chat
+          type: boolean
+        can_post_messages:
+          description: >-
+            *Optional*. True, if the administrator can post in the channel; channels only
+          type: boolean
+        can_edit_messages:
+          description: >-
+            *Optional*. True, if the administrator can edit messages of other users and can pin messages; channels only
           type: boolean
         can_pin_messages:
           description: >-
-            *Optional*. Administrators and restricted only. True, if the user is
-            allowed to pin messages; groups and supergroups only
+            *Optional*. True, if the user is allowed to pin messages; groups and supergroups only
           type: boolean
-        is_member:
+        custom_title:
           description: >-
-            *Optional*. Restricted only. True, if the user is a member of the
-            chat at the moment of the request
+            *Optional*. Custom title for this user
+          type: string
+      required:
+        - status
+        - user
+        - can_be_edited
+        - is_anonymous
+        - can_manage_chat
+        - can_delete_messages
+        - can_manage_voice_chats
+        - can_restrict_members
+        - can_promote_members
+        - can_change_info
+        - can_invite_users
+    ChatMemberMember:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatmembermember'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that has no additional
+        privileges or restrictions.
+      type: object
+      properties:
+        status:
+          description: >-
+            The member's status in the chat, always “member”
+          type: string
+          enum:
+            - member
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - status
+        - user
+    ChatMemberRestricted:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatmemberrestricted'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that is under certain
+        restrictions in the chat. Supergroups only.
+      type: object
+      properties:
+        status:
+          description: The member's status in the chat, always “restricted”
+          type: string
+          enum:
+            - restricted
+        user:
+          $ref: '#/components/schemas/User'
+        is_member:
+          description: True, if the user is a member of the chat at the moment of the request
+          type: boolean
+        can_change_info:
+          description: True, if the user is allowed to change the chat title, photo and other settings
+          type: boolean
+        can_invite_users:
+          description: True, if the user is allowed to invite new users to the chat
+          type: boolean
+        can_pin_messages:
+          description: True, if the user is allowed to pin messages
           type: boolean
         can_send_messages:
-          description: >-
-            *Optional*. Restricted only. True, if the user is allowed to send
-            text messages, contacts, locations and venues
+          description: True, if the user is allowed to send text messages, contacts, locations and venues
           type: boolean
         can_send_media_messages:
           description: >-
-            *Optional*. Restricted only. True, if the user is allowed to send
-            audios, documents, photos, videos, video notes and voice notes
+            True, if the user is allowed to send audios, documents, photos, videos, video notes and voice notes
           type: boolean
         can_send_polls:
-          description: >-
-            *Optional*. Restricted only. True, if the user is allowed to send
-            polls
+          description: True, if the user is allowed to send polls
           type: boolean
         can_send_other_messages:
-          description: >-
-            *Optional*. Restricted only. True, if the user is allowed to send
-            animations, games, stickers and use inline bots
+          description: True, if the user is allowed to send animations, games, stickers and use inline bots
           type: boolean
         can_add_web_page_previews:
-          description: >-
-            *Optional*. Restricted only. True, if the user is allowed to add web
-            page previews to their messages
-          type: boolean
-        can_manage_voice_chats:
+          description: True, if the user is allowed to add web page previews to their messages
           type: boolean
         until_date:
           description: >-
-            *Optional*. Restricted and kicked only. Date when restrictions will
-            be lifted for this user; unix time
+            Date when restrictions will be lifted for this user; unix time. If 0, then the user is restricted forever
           type: integer
       required:
-        - user
         - status
+        - user
+        - is_member
+        - can_change_info
+        - can_invite_users
+        - can_pin_messages
+        - can_send_messages
+        - can_send_media_messages
+        - can_send_polls
+        - can_send_other_messages
+        - can_add_web_page_previews
+        - until_date
+    ChatMemberLeft:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatmemberleft'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that isn't currently a member of the
+        chat, but may join it themselves.
+      type: object
+      properties:
+        status:
+          description: The member's status in the chat, always “left”
+          type: string
+          enum:
+            - left
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - status
+        - user
+    ChatMemberBanned:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatmemberbanned'
+      description: >-
+        Represents a [chat member](https://core.telegram.org/bots/api#chatmember) that was banned in the chat and
+        can't return to the chat or view chat messages.
+      type: object
+      properties:
+        status:
+          description: The member's status in the chat, always “kicked”
+          type: string
+          enum:
+            - kicked
+        user:
+          $ref: '#/components/schemas/User'
+        until_date:
+          description: Date when restrictions will be lifted for this user; unix time. If 0, then the user is banned forever
+          type: integer
+      required:
+        - status
+        - user
+        - until_date
     ChatMemberUpdated:
       externalDocs:
         url: 'https://core.telegram.org/bots/api#chatmemberupdated'
@@ -10861,6 +11292,158 @@ components:
       required:
         - command
         - description
+    BotCommandScope:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscope'
+      description: >-
+        This object represents the scope to which bot commands are applied.
+        Currently, the following 7 scopes are supported:
+      anyOf:
+        - $ref: '#/components/schemas/BotCommandScopeDefault'
+        - $ref: '#/components/schemas/BotCommandScopeAllPrivateChats'
+        - $ref: '#/components/schemas/BotCommandScopeAllGroupChats'
+        - $ref: '#/components/schemas/BotCommandScopeAllChatAdministrators'
+        - $ref: '#/components/schemas/BotCommandScopeChat'
+        - $ref: '#/components/schemas/BotCommandScopeChatAdministrators'
+        - $ref: '#/components/schemas/BotCommandScopeChatMember'
+    BotCommandScopeDefault:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopedefault'
+      description: >-
+        Represents the default [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands.
+        Default commands are used if no commands with a
+        [narrower scope](https://core.telegram.org/bots/api#determining-list-of-commands) are specified for the user.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *default*
+          type: string
+          enum:
+            - default
+      required:
+        - type
+    BotCommandScopeAllPrivateChats:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopeallprivatechats'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering all private chats.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *all_private_chats*
+          type: string
+          enum:
+            - all_private_chats
+      required:
+        - type
+    BotCommandScopeAllGroupChats:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopeallgroupchats'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering all group and supergroup chats.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *all_group_chats*
+          type: string
+          enum:
+            - all_group_chats
+      required:
+        - type
+    BotCommandScopeAllChatAdministrators:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopeallchatadministrators'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering all group and supergroup chat administrators.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *all_chat_administrators*
+          type: string
+          enum:
+            - all_chat_administrators
+      required:
+        - type
+    BotCommandScopeChat:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopechat'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering a specific chat.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *chat*
+          type: string
+          enum:
+            - chat
+        chat_id:
+          description: >-
+            Unique identifier for the target chat or username of the target supergroup
+            (in the format `@supergroupusername`)
+          anyOf:
+            - type: integer
+              format: int64
+            - type: string
+      required:
+        - type
+        - chat_id
+    BotCommandScopeChatAdministrators:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopechatadministrators'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering all administrators of a specific group or supergroup chat.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *chat_administrators*
+          type: string
+          enum:
+            - chat_administrators
+        chat_id:
+          description: >-
+            Unique identifier for the target chat or username of the target supergroup
+            (in the format `@supergroupusername`)
+          anyOf:
+            - type: integer
+              format: int64
+            - type: string
+      required:
+        - type
+        - chat_id
+    BotCommandScopeChatMember:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#botcommandscopechatmember'
+      description: >-
+        Represents the [scope](https://core.telegram.org/bots/api#botcommandscope) of bot commands,
+        covering a specific member of a group or supergroup chat.
+      type: object
+      properties:
+        type:
+          description: Scope type, must be *chat_member*
+          type: string
+          enum:
+            - chat_member
+        chat_id:
+          description: >-
+            Unique identifier for the target chat or username of the target supergroup
+            (in the format `@supergroupusername`)
+          anyOf:
+            - type: integer
+              format: int64
+            - type: string
+        user_id:
+          description: Unique identifier of the target user
+          type: integer
+          format: int64
+      required:
+        - type
+        - chat_id
+        - user_id
     ResponseParameters:
       externalDocs:
         url: 'https://core.telegram.org/bots/api/#responseparameters'
@@ -10876,6 +11459,7 @@ components:
             integer or double-precision float type are safe for storing this
             identifier.
           type: integer
+          format: int64
         retry_after:
           description: >-
             *Optional*. In case of exceeding flood control, the number of

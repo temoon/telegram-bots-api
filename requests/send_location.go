@@ -1,7 +1,9 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -9,17 +11,23 @@ type SendLocation struct {
 	AllowSendingWithoutReply bool
 	ChatId                   interface{}
 	DisableNotification      bool
-	Heading                  uint64
+	Heading                  int32
 	HorizontalAccuracy       float64
 	Latitude                 float64
-	LivePeriod               uint64
+	LivePeriod               int32
 	Longitude                float64
-	ProximityAlertRadius     uint64
+	ProximityAlertRadius     int32
 	ReplyMarkup              interface{}
-	ReplyToMessageId         uint64
+	ReplyToMessageId         int32
 }
 
-func (r *SendLocation) IsMultipart() bool {
+func (r *SendLocation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.Message)
+	err = b.CallMethod(ctx, "sendLocation", r, response)
+	return
+}
+
+func (r *SendLocation) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -31,8 +39,8 @@ func (r *SendLocation) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
@@ -42,31 +50,50 @@ func (r *SendLocation) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Heading != 0 {
-		values["heading"] = strconv.FormatUint(r.Heading, 10)
+		values["heading"] = strconv.FormatInt(int64(r.Heading), 10)
 	}
 
 	if r.LivePeriod != 0 {
-		values["live_period"] = strconv.FormatUint(r.LivePeriod, 10)
+		values["live_period"] = strconv.FormatInt(int64(r.LivePeriod), 10)
 	}
 
 	if r.ProximityAlertRadius != 0 {
-		values["proximity_alert_radius"] = strconv.FormatUint(r.ProximityAlertRadius, 10)
+		values["proximity_alert_radius"] = strconv.FormatInt(int64(r.ProximityAlertRadius), 10)
 	}
 
 	switch value := r.ReplyMarkup.(type) {
-	default:
-
-		var data []byte
-		if data, err = json.Marshal(value); err != nil {
+	case *telegram.InlineKeyboardMarkup:
+		var dataInlineKeyboardMarkup []byte
+		if dataInlineKeyboardMarkup, err = json.Marshal(value); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataInlineKeyboardMarkup)
+	case *telegram.ReplyKeyboardMarkup:
+		var dataReplyKeyboardMarkup []byte
+		if dataReplyKeyboardMarkup, err = json.Marshal(value); err != nil {
+			return
+		}
 
+		values["reply_markup"] = string(dataReplyKeyboardMarkup)
+	case *telegram.ReplyKeyboardRemove:
+		var dataReplyKeyboardRemove []byte
+		if dataReplyKeyboardRemove, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(dataReplyKeyboardRemove)
+	case *telegram.ForceReply:
+		var dataForceReply []byte
+		if dataForceReply, err = json.Marshal(value); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(dataForceReply)
 	}
 
 	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatUint(r.ReplyToMessageId, 10)
+		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
 	}
 
 	return

@@ -1,18 +1,26 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type AnswerCallbackQuery struct {
-	CacheTime       uint64
+	CacheTime       int32
 	CallbackQueryId string
 	ShowAlert       bool
 	Text            string
 	Url             string
 }
 
-func (r *AnswerCallbackQuery) IsMultipart() bool {
+func (r *AnswerCallbackQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "answerCallbackQuery", r, response)
+	return
+}
+
+func (r *AnswerCallbackQuery) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -20,7 +28,7 @@ func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err er
 	values = make(map[string]interface{})
 
 	if r.CacheTime != 0 {
-		values["cache_time"] = strconv.FormatUint(r.CacheTime, 10)
+		values["cache_time"] = strconv.FormatInt(int64(r.CacheTime), 10)
 	}
 
 	values["callback_query_id"] = r.CallbackQueryId

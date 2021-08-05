@@ -1,8 +1,9 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
-	"io"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -11,11 +12,17 @@ type SetWebhook struct {
 	Certificate        interface{}
 	DropPendingUpdates bool
 	IpAddress          string
-	MaxConnections     uint64
+	MaxConnections     int32
 	Url                string
 }
 
-func (r *SetWebhook) IsMultipart() bool {
+func (r *SetWebhook) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(bool)
+	err = b.CallMethod(ctx, "setWebhook", r, response)
+	return
+}
+
+func (r *SetWebhook) IsMultipart() (multipart bool) {
 	return true
 }
 
@@ -23,12 +30,12 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	if r.AllowedUpdates != nil {
-		var data []byte
-		if data, err = json.Marshal(r.AllowedUpdates); err != nil {
+		var dataAllowedUpdates []byte
+		if dataAllowedUpdates, err = json.Marshal(r.AllowedUpdates); err != nil {
 			return
 		}
 
-		values["allowed_updates"] = string(data)
+		values["allowed_updates"] = string(dataAllowedUpdates)
 	}
 
 	if r.Certificate != nil {
@@ -44,7 +51,7 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.MaxConnections != 0 {
-		values["max_connections"] = strconv.FormatUint(r.MaxConnections, 10)
+		values["max_connections"] = strconv.FormatInt(int64(r.MaxConnections), 10)
 	}
 
 	values["url"] = r.Url

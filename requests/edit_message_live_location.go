@@ -1,23 +1,31 @@
 package requests
 
 import (
+	"context"
 	"encoding/json"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
 type EditMessageLiveLocation struct {
 	ChatId               interface{}
-	Heading              uint64
+	Heading              int32
 	HorizontalAccuracy   float64
 	InlineMessageId      string
 	Latitude             float64
 	Longitude            float64
-	MessageId            uint64
-	ProximityAlertRadius uint64
-	ReplyMarkup          interface{}
+	MessageId            int32
+	ProximityAlertRadius int32
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
-func (r *EditMessageLiveLocation) IsMultipart() bool {
+func (r *EditMessageLiveLocation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(interface{})
+	err = b.CallMethod(ctx, "editMessageLiveLocation", r, response)
+	return
+}
+
+func (r *EditMessageLiveLocation) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -25,14 +33,14 @@ func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, er
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}
 
 	if r.Heading != 0 {
-		values["heading"] = strconv.FormatUint(r.Heading, 10)
+		values["heading"] = strconv.FormatInt(int64(r.Heading), 10)
 	}
 
 	if r.InlineMessageId != "" {
@@ -40,20 +48,20 @@ func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, er
 	}
 
 	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatUint(r.MessageId, 10)
+		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 	}
 
 	if r.ProximityAlertRadius != 0 {
-		values["proximity_alert_radius"] = strconv.FormatUint(r.ProximityAlertRadius, 10)
+		values["proximity_alert_radius"] = strconv.FormatInt(int64(r.ProximityAlertRadius), 10)
 	}
 
 	if r.ReplyMarkup != nil {
-		var data []byte
-		if data, err = json.Marshal(r.ReplyMarkup); err != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(data)
+		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
 	return

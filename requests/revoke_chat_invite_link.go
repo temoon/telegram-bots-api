@@ -1,6 +1,8 @@
 package requests
 
 import (
+	"context"
+	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
 )
 
@@ -9,7 +11,13 @@ type RevokeChatInviteLink struct {
 	InviteLink string
 }
 
-func (r *RevokeChatInviteLink) IsMultipart() bool {
+func (r *RevokeChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(string)
+	err = b.CallMethod(ctx, "revokeChatInviteLink", r, response)
+	return
+}
+
+func (r *RevokeChatInviteLink) IsMultipart() (multipart bool) {
 	return false
 }
 
@@ -17,8 +25,8 @@ func (r *RevokeChatInviteLink) GetValues() (values map[string]interface{}, err e
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {
-	case uint64:
-		values["chat_id"] = strconv.FormatUint(value, 10)
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
 	case string:
 		values["chat_id"] = value
 	}

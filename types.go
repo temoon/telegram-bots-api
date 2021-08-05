@@ -1,23 +1,23 @@
 package telegram
 
 type Animation struct {
-	Duration     uint64     `json:"duration"`
+	Duration     int32      `json:"duration"`
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
-	Height       uint64     `json:"height"`
-	Width        uint64     `json:"width"`
+	Height       int32      `json:"height"`
+	Width        int32      `json:"width"`
 	FileName     string     `json:"file_name,omitempty"`
-	FileSize     uint64     `json:"file_size,omitempty"`
+	FileSize     int32      `json:"file_size,omitempty"`
 	MimeType     string     `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
 
 type Audio struct {
-	Duration     uint64     `json:"duration"`
+	Duration     int32      `json:"duration"`
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
 	FileName     string     `json:"file_name,omitempty"`
-	FileSize     uint64     `json:"file_size,omitempty"`
+	FileSize     int32      `json:"file_size,omitempty"`
 	MimeType     string     `json:"mime_type,omitempty"`
 	Performer    string     `json:"performer,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
@@ -27,6 +27,42 @@ type Audio struct {
 type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
+}
+
+type BotCommandScope struct {
+	// Placeholder
+}
+
+type BotCommandScopeAllChatAdministrators struct {
+	Type string `json:"type"`
+}
+
+type BotCommandScopeAllGroupChats struct {
+	Type string `json:"type"`
+}
+
+type BotCommandScopeAllPrivateChats struct {
+	Type string `json:"type"`
+}
+
+type BotCommandScopeChat struct {
+	ChatId interface{} `json:"chat_id"`
+	Type   string      `json:"type"`
+}
+
+type BotCommandScopeChatAdministrators struct {
+	ChatId interface{} `json:"chat_id"`
+	Type   string      `json:"type"`
+}
+
+type BotCommandScopeChatMember struct {
+	ChatId interface{} `json:"chat_id"`
+	Type   string      `json:"type"`
+	UserId int64       `json:"user_id"`
+}
+
+type BotCommandScopeDefault struct {
+	Type string `json:"type"`
 }
 
 type CallbackGame struct {
@@ -44,7 +80,7 @@ type CallbackQuery struct {
 }
 
 type Chat struct {
-	Id               uint64           `json:"id"`
+	Id               int64            `json:"id"`
 	Type             string           `json:"type"`
 	Bio              string           `json:"bio,omitempty"`
 	CanSetStickerSet bool             `json:"can_set_sticker_set,omitempty"`
@@ -52,12 +88,12 @@ type Chat struct {
 	FirstName        string           `json:"first_name,omitempty"`
 	InviteLink       string           `json:"invite_link,omitempty"`
 	LastName         string           `json:"last_name,omitempty"`
-	LinkedChatId     uint64           `json:"linked_chat_id,omitempty"`
+	LinkedChatId     int64            `json:"linked_chat_id,omitempty"`
 	Location         *ChatLocation    `json:"location,omitempty"`
 	Permissions      *ChatPermissions `json:"permissions,omitempty"`
 	Photo            *ChatPhoto       `json:"photo,omitempty"`
 	PinnedMessage    *Message         `json:"pinned_message,omitempty"`
-	SlowModeDelay    uint64           `json:"slow_mode_delay,omitempty"`
+	SlowModeDelay    int32            `json:"slow_mode_delay,omitempty"`
 	StickerSetName   string           `json:"sticker_set_name,omitempty"`
 	Title            string           `json:"title,omitempty"`
 	Username         string           `json:"username,omitempty"`
@@ -68,8 +104,8 @@ type ChatInviteLink struct {
 	InviteLink  string `json:"invite_link"`
 	IsPrimary   bool   `json:"is_primary"`
 	IsRevoked   bool   `json:"is_revoked"`
-	ExpireDate  uint64 `json:"expire_date,omitempty"`
-	MemberLimit uint64 `json:"member_limit,omitempty"`
+	ExpireDate  int32  `json:"expire_date,omitempty"`
+	MemberLimit int32  `json:"member_limit,omitempty"`
 }
 
 type ChatLocation struct {
@@ -78,33 +114,68 @@ type ChatLocation struct {
 }
 
 type ChatMember struct {
+	// Placeholder
+}
+
+type ChatMemberAdministrator struct {
+	CanBeEdited         bool   `json:"can_be_edited"`
+	CanChangeInfo       bool   `json:"can_change_info"`
+	CanDeleteMessages   bool   `json:"can_delete_messages"`
+	CanInviteUsers      bool   `json:"can_invite_users"`
+	CanManageChat       bool   `json:"can_manage_chat"`
+	CanManageVoiceChats bool   `json:"can_manage_voice_chats"`
+	CanPromoteMembers   bool   `json:"can_promote_members"`
+	CanRestrictMembers  bool   `json:"can_restrict_members"`
+	IsAnonymous         bool   `json:"is_anonymous"`
+	Status              string `json:"status"`
+	User                User   `json:"user"`
+	CanEditMessages     bool   `json:"can_edit_messages,omitempty"`
+	CanPinMessages      bool   `json:"can_pin_messages,omitempty"`
+	CanPostMessages     bool   `json:"can_post_messages,omitempty"`
+	CustomTitle         string `json:"custom_title,omitempty"`
+}
+
+type ChatMemberBanned struct {
+	Status    string `json:"status"`
+	UntilDate int32  `json:"until_date"`
+	User      User   `json:"user"`
+}
+
+type ChatMemberLeft struct {
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+type ChatMemberMember struct {
+	Status string `json:"status"`
+	User   User   `json:"user"`
+}
+
+type ChatMemberOwner struct {
+	IsAnonymous bool   `json:"is_anonymous"`
+	Status      string `json:"status"`
+	User        User   `json:"user"`
+	CustomTitle string `json:"custom_title,omitempty"`
+}
+
+type ChatMemberRestricted struct {
+	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
+	CanChangeInfo         bool   `json:"can_change_info"`
+	CanInviteUsers        bool   `json:"can_invite_users"`
+	CanPinMessages        bool   `json:"can_pin_messages"`
+	CanSendMediaMessages  bool   `json:"can_send_media_messages"`
+	CanSendMessages       bool   `json:"can_send_messages"`
+	CanSendOtherMessages  bool   `json:"can_send_other_messages"`
+	CanSendPolls          bool   `json:"can_send_polls"`
+	IsMember              bool   `json:"is_member"`
 	Status                string `json:"status"`
+	UntilDate             int32  `json:"until_date"`
 	User                  User   `json:"user"`
-	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews,omitempty"`
-	CanBeEdited           bool   `json:"can_be_edited,omitempty"`
-	CanChangeInfo         bool   `json:"can_change_info,omitempty"`
-	CanDeleteMessages     bool   `json:"can_delete_messages,omitempty"`
-	CanEditMessages       bool   `json:"can_edit_messages,omitempty"`
-	CanInviteUsers        bool   `json:"can_invite_users,omitempty"`
-	CanManageChat         bool   `json:"can_manage_chat,omitempty"`
-	CanManageVoiceChats   bool   `json:"can_manage_voice_chats,omitempty"`
-	CanPinMessages        bool   `json:"can_pin_messages,omitempty"`
-	CanPostMessages       bool   `json:"can_post_messages,omitempty"`
-	CanPromoteMembers     bool   `json:"can_promote_members,omitempty"`
-	CanRestrictMembers    bool   `json:"can_restrict_members,omitempty"`
-	CanSendMediaMessages  bool   `json:"can_send_media_messages,omitempty"`
-	CanSendMessages       bool   `json:"can_send_messages,omitempty"`
-	CanSendOtherMessages  bool   `json:"can_send_other_messages,omitempty"`
-	CanSendPolls          bool   `json:"can_send_polls,omitempty"`
-	CustomTitle           string `json:"custom_title,omitempty"`
-	IsAnonymous           bool   `json:"is_anonymous,omitempty"`
-	IsMember              bool   `json:"is_member,omitempty"`
-	UntilDate             uint64 `json:"until_date,omitempty"`
 }
 
 type ChatMemberUpdated struct {
 	Chat          Chat            `json:"chat"`
-	Date          uint64          `json:"date"`
+	Date          int32           `json:"date"`
 	From          User            `json:"from"`
 	NewChatMember ChatMember      `json:"new_chat_member"`
 	OldChatMember ChatMember      `json:"old_chat_member"`
@@ -141,20 +212,20 @@ type Contact struct {
 	FirstName   string `json:"first_name"`
 	PhoneNumber string `json:"phone_number"`
 	LastName    string `json:"last_name,omitempty"`
-	UserId      uint64 `json:"user_id,omitempty"`
+	UserId      int64  `json:"user_id,omitempty"`
 	Vcard       string `json:"vcard,omitempty"`
 }
 
 type Dice struct {
 	Emoji string `json:"emoji"`
-	Value uint64 `json:"value"`
+	Value int32  `json:"value"`
 }
 
 type Document struct {
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
 	FileName     string     `json:"file_name,omitempty"`
-	FileSize     uint64     `json:"file_size,omitempty"`
+	FileSize     int32      `json:"file_size,omitempty"`
 	MimeType     string     `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
@@ -180,7 +251,7 @@ type EncryptedPassportElement struct {
 
 type Error struct {
 	Description string              `json:"description"`
-	ErrorCode   uint64              `json:"error_code"`
+	ErrorCode   int32               `json:"error_code"`
 	Ok          bool                `json:"ok"`
 	Parameters  *ResponseParameters `json:"parameters,omitempty"`
 }
@@ -189,12 +260,13 @@ type File struct {
 	FileId       string `json:"file_id"`
 	FileUniqueId string `json:"file_unique_id"`
 	FilePath     string `json:"file_path,omitempty"`
-	FileSize     uint64 `json:"file_size,omitempty"`
+	FileSize     int32  `json:"file_size,omitempty"`
 }
 
 type ForceReply struct {
-	ForceReply bool `json:"force_reply"`
-	Selective  bool `json:"selective,omitempty"`
+	ForceReply            bool   `json:"force_reply"`
+	InputFieldPlaceholder string `json:"input_field_placeholder,omitempty"`
+	Selective             bool   `json:"selective,omitempty"`
 }
 
 type Game struct {
@@ -207,9 +279,9 @@ type Game struct {
 }
 
 type GameHighScore struct {
-	Position uint64 `json:"position"`
-	Score    uint64 `json:"score"`
-	User     User   `json:"user"`
+	Position int32 `json:"position"`
+	Score    int32 `json:"score"`
+	User     User  `json:"user"`
 }
 
 type InlineKeyboardButton struct {
@@ -248,9 +320,9 @@ type InlineQueryResultArticle struct {
 	Description         string                `json:"description,omitempty"`
 	HideUrl             bool                  `json:"hide_url,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         uint64                `json:"thumb_height,omitempty"`
+	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl            string                `json:"thumb_url,omitempty"`
-	ThumbWidth          uint64                `json:"thumb_width,omitempty"`
+	ThumbWidth          int32                 `json:"thumb_width,omitempty"`
 	Url                 string                `json:"url,omitempty"`
 }
 
@@ -259,7 +331,7 @@ type InlineQueryResultAudio struct {
 	Id                  string                `json:"id"`
 	Title               string                `json:"title"`
 	Type                string                `json:"type"`
-	AudioDuration       uint64                `json:"audio_duration,omitempty"`
+	AudioDuration       int32                 `json:"audio_duration,omitempty"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
@@ -370,9 +442,9 @@ type InlineQueryResultContact struct {
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	LastName            string                `json:"last_name,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         uint64                `json:"thumb_height,omitempty"`
+	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl            string                `json:"thumb_url,omitempty"`
-	ThumbWidth          uint64                `json:"thumb_width,omitempty"`
+	ThumbWidth          int32                 `json:"thumb_width,omitempty"`
 	Vcard               string                `json:"vcard,omitempty"`
 }
 
@@ -388,9 +460,9 @@ type InlineQueryResultDocument struct {
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         uint64                `json:"thumb_height,omitempty"`
+	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl            string                `json:"thumb_url,omitempty"`
-	ThumbWidth          uint64                `json:"thumb_width,omitempty"`
+	ThumbWidth          int32                 `json:"thumb_width,omitempty"`
 }
 
 type InlineQueryResultGame struct {
@@ -407,9 +479,9 @@ type InlineQueryResultGif struct {
 	Type                string                `json:"type"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	GifDuration         uint64                `json:"gif_duration,omitempty"`
-	GifHeight           uint64                `json:"gif_height,omitempty"`
-	GifWidth            uint64                `json:"gif_width,omitempty"`
+	GifDuration         int32                 `json:"gif_duration,omitempty"`
+	GifHeight           int32                 `json:"gif_height,omitempty"`
+	GifWidth            int32                 `json:"gif_width,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -423,15 +495,15 @@ type InlineQueryResultLocation struct {
 	Longitude            float64               `json:"longitude"`
 	Title                string                `json:"title"`
 	Type                 string                `json:"type"`
-	Heading              uint64                `json:"heading,omitempty"`
+	Heading              int32                 `json:"heading,omitempty"`
 	HorizontalAccuracy   float64               `json:"horizontal_accuracy,omitempty"`
 	InputMessageContent  *InputMessageContent  `json:"input_message_content,omitempty"`
-	LivePeriod           uint64                `json:"live_period,omitempty"`
-	ProximityAlertRadius uint64                `json:"proximity_alert_radius,omitempty"`
+	LivePeriod           int32                 `json:"live_period,omitempty"`
+	ProximityAlertRadius int32                 `json:"proximity_alert_radius,omitempty"`
 	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight          uint64                `json:"thumb_height,omitempty"`
+	ThumbHeight          int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl             string                `json:"thumb_url,omitempty"`
-	ThumbWidth           uint64                `json:"thumb_width,omitempty"`
+	ThumbWidth           int32                 `json:"thumb_width,omitempty"`
 }
 
 type InlineQueryResultMpeg4Gif struct {
@@ -442,9 +514,9 @@ type InlineQueryResultMpeg4Gif struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
-	Mpeg4Duration       uint64                `json:"mpeg4_duration,omitempty"`
-	Mpeg4Height         uint64                `json:"mpeg4_height,omitempty"`
-	Mpeg4Width          uint64                `json:"mpeg4_width,omitempty"`
+	Mpeg4Duration       int32                 `json:"mpeg4_duration,omitempty"`
+	Mpeg4Height         int32                 `json:"mpeg4_height,omitempty"`
+	Mpeg4Width          int32                 `json:"mpeg4_width,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ThumbMimeType       string                `json:"thumb_mime_type,omitempty"`
@@ -461,8 +533,8 @@ type InlineQueryResultPhoto struct {
 	Description         string                `json:"description,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
-	PhotoHeight         uint64                `json:"photo_height,omitempty"`
-	PhotoWidth          uint64                `json:"photo_width,omitempty"`
+	PhotoHeight         int32                 `json:"photo_height,omitempty"`
+	PhotoWidth          int32                 `json:"photo_width,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	Title               string                `json:"title,omitempty"`
 }
@@ -480,9 +552,9 @@ type InlineQueryResultVenue struct {
 	GooglePlaceType     string                `json:"google_place_type,omitempty"`
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         uint64                `json:"thumb_height,omitempty"`
+	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl            string                `json:"thumb_url,omitempty"`
-	ThumbWidth          uint64                `json:"thumb_width,omitempty"`
+	ThumbWidth          int32                 `json:"thumb_width,omitempty"`
 }
 
 type InlineQueryResultVideo struct {
@@ -498,9 +570,9 @@ type InlineQueryResultVideo struct {
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	VideoDuration       uint64                `json:"video_duration,omitempty"`
-	VideoHeight         uint64                `json:"video_height,omitempty"`
-	VideoWidth          uint64                `json:"video_width,omitempty"`
+	VideoDuration       int32                 `json:"video_duration,omitempty"`
+	VideoHeight         int32                 `json:"video_height,omitempty"`
+	VideoWidth          int32                 `json:"video_width,omitempty"`
 }
 
 type InlineQueryResultVoice struct {
@@ -513,7 +585,7 @@ type InlineQueryResultVoice struct {
 	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	VoiceDuration       uint64                `json:"voice_duration,omitempty"`
+	VoiceDuration       int32                 `json:"voice_duration,omitempty"`
 }
 
 type InputContactMessageContent struct {
@@ -521,6 +593,10 @@ type InputContactMessageContent struct {
 	PhoneNumber string `json:"phone_number"`
 	LastName    string `json:"last_name,omitempty"`
 	Vcard       string `json:"vcard,omitempty"`
+}
+
+type InputFile struct {
+	// Placeholder
 }
 
 type InputInvoiceMessageContent struct {
@@ -531,28 +607,28 @@ type InputInvoiceMessageContent struct {
 	ProviderToken             string         `json:"provider_token"`
 	Title                     string         `json:"title"`
 	IsFlexible                bool           `json:"is_flexible,omitempty"`
-	MaxTipAmount              uint64         `json:"max_tip_amount,omitempty"`
+	MaxTipAmount              int32          `json:"max_tip_amount,omitempty"`
 	NeedEmail                 bool           `json:"need_email,omitempty"`
 	NeedName                  bool           `json:"need_name,omitempty"`
 	NeedPhoneNumber           bool           `json:"need_phone_number,omitempty"`
 	NeedShippingAddress       bool           `json:"need_shipping_address,omitempty"`
-	PhotoHeight               uint64         `json:"photo_height,omitempty"`
-	PhotoSize                 uint64         `json:"photo_size,omitempty"`
+	PhotoHeight               int32          `json:"photo_height,omitempty"`
+	PhotoSize                 int32          `json:"photo_size,omitempty"`
 	PhotoUrl                  string         `json:"photo_url,omitempty"`
-	PhotoWidth                uint64         `json:"photo_width,omitempty"`
+	PhotoWidth                int32          `json:"photo_width,omitempty"`
 	ProviderData              string         `json:"provider_data,omitempty"`
 	SendEmailToProvider       bool           `json:"send_email_to_provider,omitempty"`
 	SendPhoneNumberToProvider bool           `json:"send_phone_number_to_provider,omitempty"`
-	SuggestedTipAmounts       []uint64       `json:"suggested_tip_amounts,omitempty"`
+	SuggestedTipAmounts       []int32        `json:"suggested_tip_amounts,omitempty"`
 }
 
 type InputLocationMessageContent struct {
 	Latitude             float64 `json:"latitude"`
 	Longitude            float64 `json:"longitude"`
-	Heading              uint64  `json:"heading,omitempty"`
+	Heading              int32   `json:"heading,omitempty"`
 	HorizontalAccuracy   float64 `json:"horizontal_accuracy,omitempty"`
-	LivePeriod           uint64  `json:"live_period,omitempty"`
-	ProximityAlertRadius uint64  `json:"proximity_alert_radius,omitempty"`
+	LivePeriod           int32   `json:"live_period,omitempty"`
+	ProximityAlertRadius int32   `json:"proximity_alert_radius,omitempty"`
 }
 
 type InputMedia struct {
@@ -564,11 +640,11 @@ type InputMediaAnimation struct {
 	Type            string          `json:"type"`
 	Caption         string          `json:"caption,omitempty"`
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
-	Duration        uint64          `json:"duration,omitempty"`
-	Height          uint64          `json:"height,omitempty"`
+	Duration        int32           `json:"duration,omitempty"`
+	Height          int32           `json:"height,omitempty"`
 	ParseMode       string          `json:"parse_mode,omitempty"`
 	Thumb           interface{}     `json:"thumb,omitempty"`
-	Width           uint64          `json:"width,omitempty"`
+	Width           int32           `json:"width,omitempty"`
 }
 
 type InputMediaAudio struct {
@@ -576,7 +652,7 @@ type InputMediaAudio struct {
 	Type            string          `json:"type"`
 	Caption         string          `json:"caption,omitempty"`
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
-	Duration        uint64          `json:"duration,omitempty"`
+	Duration        int32           `json:"duration,omitempty"`
 	ParseMode       string          `json:"parse_mode,omitempty"`
 	Performer       string          `json:"performer,omitempty"`
 	Thumb           interface{}     `json:"thumb,omitempty"`
@@ -606,12 +682,12 @@ type InputMediaVideo struct {
 	Type              string          `json:"type"`
 	Caption           string          `json:"caption,omitempty"`
 	CaptionEntities   []MessageEntity `json:"caption_entities,omitempty"`
-	Duration          uint64          `json:"duration,omitempty"`
-	Height            uint64          `json:"height,omitempty"`
+	Duration          int32           `json:"duration,omitempty"`
+	Height            int32           `json:"height,omitempty"`
 	ParseMode         string          `json:"parse_mode,omitempty"`
 	SupportsStreaming bool            `json:"supports_streaming,omitempty"`
 	Thumb             interface{}     `json:"thumb,omitempty"`
-	Width             uint64          `json:"width,omitempty"`
+	Width             int32           `json:"width,omitempty"`
 }
 
 type InputMessageContent struct {
@@ -641,7 +717,7 @@ type Invoice struct {
 	Description    string `json:"description"`
 	StartParameter string `json:"start_parameter"`
 	Title          string `json:"title"`
-	TotalAmount    uint64 `json:"total_amount"`
+	TotalAmount    int32  `json:"total_amount"`
 }
 
 type KeyboardButton struct {
@@ -656,17 +732,17 @@ type KeyboardButtonPollType struct {
 }
 
 type LabeledPrice struct {
-	Amount uint64 `json:"amount"`
+	Amount int32  `json:"amount"`
 	Label  string `json:"label"`
 }
 
 type Location struct {
 	Latitude             float64 `json:"latitude"`
 	Longitude            float64 `json:"longitude"`
-	Heading              uint64  `json:"heading,omitempty"`
+	Heading              int32   `json:"heading,omitempty"`
 	HorizontalAccuracy   float64 `json:"horizontal_accuracy,omitempty"`
-	LivePeriod           uint64  `json:"live_period,omitempty"`
-	ProximityAlertRadius uint64  `json:"proximity_alert_radius,omitempty"`
+	LivePeriod           int32   `json:"live_period,omitempty"`
+	ProximityAlertRadius int32   `json:"proximity_alert_radius,omitempty"`
 }
 
 type LoginUrl struct {
@@ -685,8 +761,8 @@ type MaskPosition struct {
 
 type Message struct {
 	Chat                          Chat                           `json:"chat"`
-	Date                          uint64                         `json:"date"`
-	MessageId                     uint64                         `json:"message_id"`
+	Date                          int32                          `json:"date"`
+	MessageId                     int32                          `json:"message_id"`
 	Animation                     *Animation                     `json:"animation,omitempty"`
 	Audio                         *Audio                         `json:"audio,omitempty"`
 	AuthorSignature               string                         `json:"author_signature,omitempty"`
@@ -698,12 +774,12 @@ type Message struct {
 	DeleteChatPhoto               bool                           `json:"delete_chat_photo,omitempty"`
 	Dice                          *Dice                          `json:"dice,omitempty"`
 	Document                      *Document                      `json:"document,omitempty"`
-	EditDate                      uint64                         `json:"edit_date,omitempty"`
+	EditDate                      int32                          `json:"edit_date,omitempty"`
 	Entities                      []MessageEntity                `json:"entities,omitempty"`
-	ForwardDate                   uint64                         `json:"forward_date,omitempty"`
+	ForwardDate                   int32                          `json:"forward_date,omitempty"`
 	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
 	ForwardFromChat               *Chat                          `json:"forward_from_chat,omitempty"`
-	ForwardFromMessageId          uint64                         `json:"forward_from_message_id,omitempty"`
+	ForwardFromMessageId          int32                          `json:"forward_from_message_id,omitempty"`
 	ForwardSenderName             string                         `json:"forward_sender_name,omitempty"`
 	ForwardSignature              string                         `json:"forward_signature,omitempty"`
 	From                          *User                          `json:"from,omitempty"`
@@ -714,8 +790,8 @@ type Message struct {
 	Location                      *Location                      `json:"location,omitempty"`
 	MediaGroupId                  string                         `json:"media_group_id,omitempty"`
 	MessageAutoDeleteTimerChanged *MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed,omitempty"`
-	MigrateFromChatId             uint64                         `json:"migrate_from_chat_id,omitempty"`
-	MigrateToChatId               uint64                         `json:"migrate_to_chat_id,omitempty"`
+	MigrateFromChatId             int64                          `json:"migrate_from_chat_id,omitempty"`
+	MigrateToChatId               int64                          `json:"migrate_to_chat_id,omitempty"`
 	NewChatMembers                []User                         `json:"new_chat_members,omitempty"`
 	NewChatPhoto                  []PhotoSize                    `json:"new_chat_photo,omitempty"`
 	NewChatTitle                  string                         `json:"new_chat_title,omitempty"`
@@ -743,12 +819,12 @@ type Message struct {
 }
 
 type MessageAutoDeleteTimerChanged struct {
-	MessageAutoDeleteTime uint64 `json:"message_auto_delete_time"`
+	MessageAutoDeleteTime int32 `json:"message_auto_delete_time"`
 }
 
 type MessageEntity struct {
-	Length   uint64 `json:"length"`
-	Offset   uint64 `json:"offset"`
+	Length   int32  `json:"length"`
+	Offset   int32  `json:"offset"`
 	Type     string `json:"type"`
 	Language string `json:"language,omitempty"`
 	Url      string `json:"url,omitempty"`
@@ -756,7 +832,7 @@ type MessageEntity struct {
 }
 
 type MessageId struct {
-	MessageId uint64 `json:"message_id"`
+	MessageId int32 `json:"message_id"`
 }
 
 type OrderInfo struct {
@@ -840,18 +916,18 @@ type PassportElementErrorUnspecified struct {
 }
 
 type PassportFile struct {
-	FileDate     uint64 `json:"file_date"`
+	FileDate     int32  `json:"file_date"`
 	FileId       string `json:"file_id"`
-	FileSize     uint64 `json:"file_size"`
+	FileSize     int32  `json:"file_size"`
 	FileUniqueId string `json:"file_unique_id"`
 }
 
 type PhotoSize struct {
 	FileId       string `json:"file_id"`
 	FileUniqueId string `json:"file_unique_id"`
-	Height       uint64 `json:"height"`
-	Width        uint64 `json:"width"`
-	FileSize     uint64 `json:"file_size,omitempty"`
+	Height       int32  `json:"height"`
+	Width        int32  `json:"width"`
+	FileSize     int32  `json:"file_size,omitempty"`
 }
 
 type Poll struct {
@@ -861,24 +937,24 @@ type Poll struct {
 	IsClosed              bool            `json:"is_closed"`
 	Options               []PollOption    `json:"options"`
 	Question              string          `json:"question"`
-	TotalVoterCount       uint64          `json:"total_voter_count"`
+	TotalVoterCount       int32           `json:"total_voter_count"`
 	Type                  string          `json:"type"`
-	CloseDate             uint64          `json:"close_date,omitempty"`
-	CorrectOptionId       uint64          `json:"correct_option_id,omitempty"`
+	CloseDate             int32           `json:"close_date,omitempty"`
+	CorrectOptionId       int32           `json:"correct_option_id,omitempty"`
 	Explanation           string          `json:"explanation,omitempty"`
 	ExplanationEntities   []MessageEntity `json:"explanation_entities,omitempty"`
-	OpenPeriod            uint64          `json:"open_period,omitempty"`
+	OpenPeriod            int32           `json:"open_period,omitempty"`
 }
 
 type PollAnswer struct {
-	OptionIds []uint64 `json:"option_ids"`
-	PollId    string   `json:"poll_id"`
-	User      User     `json:"user"`
+	OptionIds []int32 `json:"option_ids"`
+	PollId    string  `json:"poll_id"`
+	User      User    `json:"user"`
 }
 
 type PollOption struct {
 	Text       string `json:"text"`
-	VoterCount uint64 `json:"voter_count"`
+	VoterCount int32  `json:"voter_count"`
 }
 
 type PreCheckoutQuery struct {
@@ -886,22 +962,23 @@ type PreCheckoutQuery struct {
 	From             User       `json:"from"`
 	Id               string     `json:"id"`
 	InvoicePayload   string     `json:"invoice_payload"`
-	TotalAmount      uint64     `json:"total_amount"`
+	TotalAmount      int32      `json:"total_amount"`
 	OrderInfo        *OrderInfo `json:"order_info,omitempty"`
 	ShippingOptionId string     `json:"shipping_option_id,omitempty"`
 }
 
 type ProximityAlertTriggered struct {
-	Distance uint64 `json:"distance"`
-	Traveler User   `json:"traveler"`
-	Watcher  User   `json:"watcher"`
+	Distance int32 `json:"distance"`
+	Traveler User  `json:"traveler"`
+	Watcher  User  `json:"watcher"`
 }
 
 type ReplyKeyboardMarkup struct {
-	Keyboard        [][]KeyboardButton `json:"keyboard"`
-	OneTimeKeyboard bool               `json:"one_time_keyboard,omitempty"`
-	ResizeKeyboard  bool               `json:"resize_keyboard,omitempty"`
-	Selective       bool               `json:"selective,omitempty"`
+	Keyboard              [][]KeyboardButton `json:"keyboard"`
+	InputFieldPlaceholder string             `json:"input_field_placeholder,omitempty"`
+	OneTimeKeyboard       bool               `json:"one_time_keyboard,omitempty"`
+	ResizeKeyboard        bool               `json:"resize_keyboard,omitempty"`
+	Selective             bool               `json:"selective,omitempty"`
 }
 
 type ReplyKeyboardRemove struct {
@@ -910,8 +987,8 @@ type ReplyKeyboardRemove struct {
 }
 
 type ResponseParameters struct {
-	MigrateToChatId uint64 `json:"migrate_to_chat_id,omitempty"`
-	RetryAfter      uint64 `json:"retry_after,omitempty"`
+	MigrateToChatId int64 `json:"migrate_to_chat_id,omitempty"`
+	RetryAfter      int32 `json:"retry_after,omitempty"`
 }
 
 type ShippingAddress struct {
@@ -939,11 +1016,11 @@ type ShippingQuery struct {
 type Sticker struct {
 	FileId       string        `json:"file_id"`
 	FileUniqueId string        `json:"file_unique_id"`
-	Height       uint64        `json:"height"`
+	Height       int32         `json:"height"`
 	IsAnimated   bool          `json:"is_animated"`
-	Width        uint64        `json:"width"`
+	Width        int32         `json:"width"`
 	Emoji        string        `json:"emoji,omitempty"`
-	FileSize     uint64        `json:"file_size,omitempty"`
+	FileSize     int32         `json:"file_size,omitempty"`
 	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 	SetName      string        `json:"set_name,omitempty"`
 	Thumb        *PhotoSize    `json:"thumb,omitempty"`
@@ -963,13 +1040,13 @@ type SuccessfulPayment struct {
 	InvoicePayload          string     `json:"invoice_payload"`
 	ProviderPaymentChargeId string     `json:"provider_payment_charge_id"`
 	TelegramPaymentChargeId string     `json:"telegram_payment_charge_id"`
-	TotalAmount             uint64     `json:"total_amount"`
+	TotalAmount             int32      `json:"total_amount"`
 	OrderInfo               *OrderInfo `json:"order_info,omitempty"`
 	ShippingOptionId        string     `json:"shipping_option_id,omitempty"`
 }
 
 type Update struct {
-	UpdateId           uint64              `json:"update_id"`
+	UpdateId           int32               `json:"update_id"`
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
 	ChannelPost        *Message            `json:"channel_post,omitempty"`
 	ChatMember         *ChatMemberUpdated  `json:"chat_member,omitempty"`
@@ -987,7 +1064,7 @@ type Update struct {
 
 type User struct {
 	FirstName               string `json:"first_name"`
-	Id                      uint64 `json:"id"`
+	Id                      int64  `json:"id"`
 	IsBot                   bool   `json:"is_bot"`
 	CanJoinGroups           bool   `json:"can_join_groups,omitempty"`
 	CanReadAllGroupMessages bool   `json:"can_read_all_group_messages,omitempty"`
@@ -999,7 +1076,7 @@ type User struct {
 
 type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`
-	TotalCount uint64        `json:"total_count"`
+	TotalCount int32         `json:"total_count"`
 }
 
 type Venue struct {
@@ -1013,36 +1090,36 @@ type Venue struct {
 }
 
 type Video struct {
-	Duration     uint64     `json:"duration"`
+	Duration     int32      `json:"duration"`
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
-	Height       uint64     `json:"height"`
-	Width        uint64     `json:"width"`
+	Height       int32      `json:"height"`
+	Width        int32      `json:"width"`
 	FileName     string     `json:"file_name,omitempty"`
-	FileSize     uint64     `json:"file_size,omitempty"`
+	FileSize     int32      `json:"file_size,omitempty"`
 	MimeType     string     `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
 
 type VideoNote struct {
-	Duration     uint64     `json:"duration"`
+	Duration     int32      `json:"duration"`
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
-	Length       uint64     `json:"length"`
-	FileSize     uint64     `json:"file_size,omitempty"`
+	Length       int32      `json:"length"`
+	FileSize     int32      `json:"file_size,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
 
 type Voice struct {
-	Duration     uint64 `json:"duration"`
+	Duration     int32  `json:"duration"`
 	FileId       string `json:"file_id"`
 	FileUniqueId string `json:"file_unique_id"`
-	FileSize     uint64 `json:"file_size,omitempty"`
+	FileSize     int32  `json:"file_size,omitempty"`
 	MimeType     string `json:"mime_type,omitempty"`
 }
 
 type VoiceChatEnded struct {
-	Duration uint64 `json:"duration"`
+	Duration int32 `json:"duration"`
 }
 
 type VoiceChatParticipantsInvited struct {
@@ -1050,7 +1127,7 @@ type VoiceChatParticipantsInvited struct {
 }
 
 type VoiceChatScheduled struct {
-	StartDate uint64 `json:"start_date"`
+	StartDate int32 `json:"start_date"`
 }
 
 type VoiceChatStarted struct {
@@ -1059,11 +1136,11 @@ type VoiceChatStarted struct {
 
 type WebhookInfo struct {
 	HasCustomCertificate bool     `json:"has_custom_certificate"`
-	PendingUpdateCount   uint64   `json:"pending_update_count"`
+	PendingUpdateCount   int32    `json:"pending_update_count"`
 	Url                  string   `json:"url"`
 	AllowedUpdates       []string `json:"allowed_updates,omitempty"`
 	IpAddress            string   `json:"ip_address,omitempty"`
-	LastErrorDate        uint64   `json:"last_error_date,omitempty"`
+	LastErrorDate        int32    `json:"last_error_date,omitempty"`
 	LastErrorMessage     string   `json:"last_error_message,omitempty"`
-	MaxConnections       uint64   `json:"max_connections,omitempty"`
+	MaxConnections       int32    `json:"max_connections,omitempty"`
 }
