@@ -12,6 +12,7 @@ type SendInvoice struct {
 	Description               string
 	DisableNotification       bool
 	IsFlexible                bool
+	MaxTipAmount              uint64
 	NeedEmail                 bool
 	NeedName                  bool
 	NeedPhoneNumber           bool
@@ -29,6 +30,7 @@ type SendInvoice struct {
 	SendEmailToProvider       bool
 	SendPhoneNumberToProvider bool
 	StartParameter            string
+	SuggestedTipAmounts       []uint64
 	Title                     string
 }
 
@@ -55,6 +57,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.IsFlexible {
 		values["is_flexible"] = "1"
+	}
+
+	if r.MaxTipAmount != 0 {
+		values["max_tip_amount"] = strconv.FormatUint(r.MaxTipAmount, 10)
 	}
 
 	if r.NeedEmail {
@@ -127,7 +133,18 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		values["send_phone_number_to_provider"] = "1"
 	}
 
-	values["start_parameter"] = r.StartParameter
+	if r.StartParameter != "" {
+		values["start_parameter"] = r.StartParameter
+	}
+
+	if r.SuggestedTipAmounts != nil {
+		var data []byte
+		if data, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
+			return
+		}
+
+		values["suggested_tip_amounts"] = string(data)
+	}
 
 	values["title"] = r.Title
 

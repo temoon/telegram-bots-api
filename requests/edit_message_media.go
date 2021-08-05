@@ -42,50 +42,14 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 
 	switch value := r.Media.(type) {
 	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
 
-			values["media"] = string(data)
+		var data []byte
+		if data, err = json.Marshal(value); err != nil {
+			return
 		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
 
-			values["media"] = string(data)
-		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
+		values["media"] = string(data)
 
-			values["media"] = string(data)
-		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["media"] = string(data)
-		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["media"] = string(data)
-		}
 	}
 
 	if r.MessageId != 0 {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"text/template"
 
@@ -23,12 +24,14 @@ const RequestFileTemplate = "request.tmpl"
 
 type Type struct {
 	Name   string
-	Fields map[string]TypeField
+	Fields []TypeField
 }
 
 type TypeField struct {
-	Name string
-	Type string
+	Key        string
+	Name       string
+	Type       string
+	IsRequired bool
 }
 
 type Method struct {
@@ -99,23 +102,48 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 		return
 	}
 
-	for name, schema := range doc.Components.Schemas {
+	schemas := make([]string, 0, len(doc.Components.Schemas))
+	for name, _ := range doc.Components.Schemas {
+		schemas = append(schemas, name)
+	}
+	sort.Strings(schemas)
+
+	for _, name := range schemas {
 		if name == TypeInputFile {
 			continue
 		}
+
+		schema := doc.Components.Schemas[name]
 
 		required := make(map[string]bool)
 		for _, key := range schema.Value.Required {
 			required[key] = true
 		}
 
-		fields := make(map[string]TypeField)
+		fields := make([]TypeField, 0, len(schema.Value.Properties))
 		for key, value := range schema.Value.Properties {
-			fields[key] = TypeField{
-				Name: strcase.ToCamel(key),
-				Type: GenerateValueType(value, required[key], true),
+			field := TypeField{
+				Key:        key,
+				Name:       strcase.ToCamel(key),
+				Type:       GenerateValueType(value, required[key], true),
+				IsRequired: required[key],
 			}
+
+			fields = append(fields, field)
 		}
+		sort.Slice(fields, func(i, j int) bool {
+			iRequired := "1"
+			if fields[i].IsRequired {
+				iRequired = "0"
+			}
+
+			jRequired := "1"
+			if fields[j].IsRequired {
+				jRequired = "0"
+			}
+
+			return iRequired+fields[i].Key < jRequired+fields[j].Key
+		})
 
 		data := Type{
 			Name:   name,
@@ -151,7 +179,14 @@ func GenerateMethods(doc *openapi3.T) (err error) {
 		return
 	}
 
-	for method, path := range doc.Paths {
+	methods := make([]string, 0, len(doc.Paths))
+	for method, _ := range doc.Paths {
+		methods = append(methods, method)
+	}
+	sort.Strings(methods)
+
+	for _, method := range methods {
+		path := doc.Paths[method]
 		response := path.Post.Responses["200"].Value.Content.Get("application/json").Schema.Value.Properties["result"]
 
 		data := Method{
@@ -220,17 +255,19 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 		if value.Value.Type == "integer" {
 			data.Imports["strconv"] = true
 		} else if len(value.Value.AnyOf) != 0 {
+			hasRef := false
 			for _, ref := range value.Value.AnyOf {
-				if ref.Value.Type == "integer" {
-					data.Imports["strconv"] = true
-				}
+				if ref.Ref != "" && ref.Ref != RefInputFile || ref.Value.Type == "array" {
+					if hasRef {
+						continue
+					}
 
-				if ref.Ref != "" || ref.Value.Type == "array" {
+					hasRef = true
 					data.Imports["encoding/json"] = true
-				}
-
-				if ref.Ref == RefInputFile {
+				} else if ref.Ref == RefInputFile {
 					data.Imports["io"] = true
+				} else if ref.Value.Type == "integer" {
+					data.Imports["strconv"] = true
 				}
 
 				variant := RequestField{

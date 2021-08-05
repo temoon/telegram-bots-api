@@ -107,14 +107,18 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 
                 {{if or $v.IsRef (eq $v.RawType "array") -}}
 				default:
+					{{if not $v.IsRequired}}
 					if value != nil {
-						var data []byte
-						if data, err = json.Marshal(value); err != nil {
-							return
-						}
-
-						values["{{$k}}"] = string(data)
+					{{end}}
+					var data []byte
+					if data, err = json.Marshal(value); err != nil {
+						return
 					}
+
+					values["{{$k}}"] = string(data)
+					{{if not $v.IsRequired}}
+					}
+					{{end}}
                 {{end -}}
             {{end -}}
 			}

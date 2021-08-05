@@ -2,7 +2,7 @@ package telegram
 
 {{if len . -}}
 import (
-{{range $import, $_ := . -}}
+{{range $_, $import := . -}}
 	"{{$import}}"
 {{end -}}
 )

@@ -72,41 +72,14 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 
 	switch value := r.ReplyMarkup.(type) {
 	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
 
-			values["reply_markup"] = string(data)
+		var data []byte
+		if data, err = json.Marshal(value); err != nil {
+			return
 		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
 
-			values["reply_markup"] = string(data)
-		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
+		values["reply_markup"] = string(data)
 
-			values["reply_markup"] = string(data)
-		}
-	default:
-		if value != nil {
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["reply_markup"] = string(data)
-		}
 	}
 
 	if r.ReplyToMessageId != 0 {

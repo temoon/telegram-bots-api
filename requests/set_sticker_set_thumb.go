@@ -1,7 +1,6 @@
 package requests
 
 import (
-	"encoding/json"
 	"io"
 	"strconv"
 )
