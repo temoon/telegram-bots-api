@@ -1,5 +1,8 @@
 package telegram
 
+const Name = "Telegram Bot API"
+const Version = "5.4.0"
+
 const ParseModeMarkdown = "Markdown"
 const ParseModeHTML = "HTML"
 
@@ -41,6 +44,7 @@ const ChatActionUploadVideo = "upload_video"
 const ChatActionRecordAudio = "record_audio"
 const ChatActionUploadAudio = "upload_audio"
 const ChatActionUploadDocument = "upload_document"
+const ChatActionChooseSticker = "choose_sticker"
 const ChatActionFindLocation = "find_location"
 const ChatActionRecordVideoNote = "record_video_note"
 const ChatActionUploadVideoNote = "upload_video_note"

@@ -7,10 +7,12 @@ import (
 )
 
 type EditChatInviteLink struct {
-	ChatId      interface{}
-	ExpireDate  int32
-	InviteLink  string
-	MemberLimit int32
+	ChatId             interface{}
+	CreatesJoinRequest bool
+	ExpireDate         int32
+	InviteLink         string
+	MemberLimit        int32
+	Name               string
 }
 
 func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -33,6 +35,10 @@ func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err err
 		values["chat_id"] = value
 	}
 
+	if r.CreatesJoinRequest {
+		values["creates_join_request"] = "1"
+	}
+
 	if r.ExpireDate != 0 {
 		values["expire_date"] = strconv.FormatInt(int64(r.ExpireDate), 10)
 	}
@@ -41,6 +47,10 @@ func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err err
 
 	if r.MemberLimit != 0 {
 		values["member_limit"] = strconv.FormatInt(int64(r.MemberLimit), 10)
+	}
+
+	if r.Name != "" {
+		values["name"] = r.Name
 	}
 
 	return

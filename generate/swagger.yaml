@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Telegram Bot API
   description: Auto-generated OpenAPI schema
-  version: 5.3.0
+  version: 5.4.0
 servers:
   - url: 'https://api.telegram.org/bot{token}'
     variables:
@@ -3604,14 +3604,12 @@ paths:
         (when a message arrives from your bot, Telegram clients clear its typing
         status). Returns *True* on success.
 
-
         Example: The [ImageBot](https://t.me/imagebot) needs some time to
         process a request and upload the image. Instead of sending a text
         message along the lines of “Retrieving image, please wait…”, the bot may
         use [sendChatAction](https://core.telegram.org/bots/api/#sendchataction)
         with *action* = *upload\_photo*. The user will see a “sending photo”
         status for the bot.
-
 
         We only recommend using this method when a response from the bot will
         take a **noticeable** amount of time to arrive.
@@ -3644,6 +3642,7 @@ paths:
                     notes](https://core.telegram.org/bots/api/#sendvoice),
                     *upload\_document* for [general
                     files](https://core.telegram.org/bots/api/#senddocument),
+                    *choose_sticker* for [stickers](https://core.telegram.org/bots/api#sendsticker),
                     *find\_location* for [location
                     data](https://core.telegram.org/bots/api/#sendlocation),
                     *record\_video\_note* or *upload\_video\_note* for [video
@@ -3677,6 +3676,7 @@ paths:
                     notes](https://core.telegram.org/bots/api/#sendvoice),
                     *upload\_document* for [general
                     files](https://core.telegram.org/bots/api/#senddocument),
+                    *choose_sticker* for [stickers](https://core.telegram.org/bots/api#sendsticker),
                     *find\_location* for [location
                     data](https://core.telegram.org/bots/api/#sendlocation),
                     *record\_video\_note* or *upload\_video\_note* for [video
@@ -3710,6 +3710,7 @@ paths:
                     notes](https://core.telegram.org/bots/api/#sendvoice),
                     *upload\_document* for [general
                     files](https://core.telegram.org/bots/api/#senddocument),
+                    *choose_sticker* for [stickers](https://core.telegram.org/bots/api#sendsticker)
                     *find\_location* for [location
                     data](https://core.telegram.org/bots/api/#sendlocation),
                     *record\_video\_note* or *upload\_video\_note* for [video
@@ -4804,6 +4805,12 @@ paths:
                     - type: integer
                       format: int64
                     - type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4815,6 +4822,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
           multipart/form-data:
@@ -4829,6 +4841,12 @@ paths:
                     - type: integer
                       format: int64
                     - type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4840,6 +4858,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
           application/json:
@@ -4854,6 +4877,12 @@ paths:
                     - type: integer
                       format: int64
                     - type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4865,6 +4894,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
         required: true
@@ -4916,6 +4950,12 @@ paths:
                   description: >-
                     The invite link to edit
                   type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4927,6 +4967,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
                 - invite_link
@@ -4946,6 +4991,12 @@ paths:
                   description: >-
                     The invite link to edit
                   type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4957,6 +5008,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
                 - invite_link
@@ -4976,6 +5032,12 @@ paths:
                   description: >-
                     The invite link to edit
                   type: string
+                name:
+                  description: >-
+                    Invite link name; 0-32 characters
+                  type: string
+                  minLength: 0
+                  maxLength: 32
                 expire_date:
                   description: >-
                     Point in time (Unix timestamp) when the link will expire
@@ -4987,6 +5049,11 @@ paths:
                   type: integer
                   minimum: 1
                   maximum: 99999
+                creates_join_request:
+                  description: >-
+                    *True*, if users joining the chat via the link need to be approved by chat administrators. If
+                    *True*, *member_limit* can't be specified
+                  type: boolean
               required:
                 - chat_id
                 - invite_link
@@ -5081,6 +5148,190 @@ paths:
               required:
                 - chat_id
                 - invite_link
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    type: string
+                required:
+                  - ok
+                  - result
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /approveChatJoinRequest:
+    post:
+      description: >-
+        Use this method to approve a chat join request. The bot must be an administrator in the chat for this to work
+        and must have the *can_invite_users* administrator right. Returns *True* on success.
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#approvechatjoinrequest'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
+        required: true
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    type: string
+                required:
+                  - ok
+                  - result
+        default:
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /declineChatJoinRequest:
+    post:
+      description: >-
+        Use this method to decline a chat join request. The bot must be an administrator in the chat for this to work
+        and must have the *can_invite_users* administrator right. Returns *True* on success.
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#declinechatjoinrequest'
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
+          application/json:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  description: >-
+                    Unique identifier for the target chat or username of the
+                    target channel (in the format `@channelusername`)
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                user_id:
+                  description: >-
+                    Unique identifier of the target user
+                  type: integer
+                  format: int64
+              required:
+                - chat_id
+                - user_id
         required: true
       responses:
         '200':
@@ -9427,6 +9678,8 @@ components:
           $ref: '#/components/schemas/ChatMemberUpdated'
         chat_member:
           $ref: '#/components/schemas/ChatMemberUpdated'
+        chat_join_request:
+          $ref: '#/components/schemas/ChatJoinRequest'
       required:
         - update_id
     WebhookInfo:
@@ -10922,6 +11175,10 @@ components:
           type: string
         creator:
           $ref: '#/components/schemas/User'
+        creates_join_request:
+          description: >-
+            *True*, if users joining the chat via the link need to be approved by chat administrators
+          type: boolean
         is_primary:
           description: >-
             True, if the link is primary
@@ -10930,6 +11187,10 @@ components:
           description: >-
             True, if the link is revoked
           type: boolean
+        name:
+          description: >-
+            *Optional*. Invite link name
+          type: string
         expire_date:
           description: >-
             *Optional*. Point in time (Unix timestamp) when the link will expire or has been expired
@@ -10941,9 +11202,14 @@ components:
           type: integer
           minimum: 1
           maximum: 99999
+        pending_join_request_count:
+          description: >-
+            *Optional*. Number of pending join requests created using this link
+          type: integer
       required:
         - invite_link
         - creator
+        - creates_join_request
         - is_primary
         - is_revoked
     ChatMember:
@@ -11212,6 +11478,30 @@ components:
         - date
         - old_chat_member
         - new_chat_member
+    ChatJoinRequest:
+      externalDocs:
+        url: 'https://core.telegram.org/bots/api#chatjoinrequest'
+      description: >-
+        Represents a join request sent to a chat.
+      type: object
+      properties:
+        chat:
+          $ref: '#/components/schemas/Chat'
+        from:
+          $ref: '#/components/schemas/User'
+        date:
+          description: Date the change was done in Unix time
+          type: integer
+        bio:
+          description: >-
+            *Optional*. Bio of the user.
+          type: string
+        invite_link:
+          $ref: "#/components/schemas/ChatInviteLink"
+      required:
+        - chat
+        - from
+        - date
     ChatPermissions:
       externalDocs:
         url: 'https://core.telegram.org/bots/api/#chatpermissions'

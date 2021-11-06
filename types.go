@@ -100,12 +100,23 @@ type Chat struct {
 }
 
 type ChatInviteLink struct {
-	Creator     User   `json:"creator"`
-	InviteLink  string `json:"invite_link"`
-	IsPrimary   bool   `json:"is_primary"`
-	IsRevoked   bool   `json:"is_revoked"`
-	ExpireDate  int32  `json:"expire_date,omitempty"`
-	MemberLimit int32  `json:"member_limit,omitempty"`
+	CreatesJoinRequest      bool   `json:"creates_join_request"`
+	Creator                 User   `json:"creator"`
+	InviteLink              string `json:"invite_link"`
+	IsPrimary               bool   `json:"is_primary"`
+	IsRevoked               bool   `json:"is_revoked"`
+	ExpireDate              int32  `json:"expire_date,omitempty"`
+	MemberLimit             int32  `json:"member_limit,omitempty"`
+	Name                    string `json:"name,omitempty"`
+	PendingJoinRequestCount int32  `json:"pending_join_request_count,omitempty"`
+}
+
+type ChatJoinRequest struct {
+	Chat       Chat            `json:"chat"`
+	Date       int32           `json:"date"`
+	From       User            `json:"from"`
+	Bio        string          `json:"bio,omitempty"`
+	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 }
 
 type ChatLocation struct {
@@ -1049,6 +1060,7 @@ type Update struct {
 	UpdateId           int32               `json:"update_id"`
 	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
 	ChannelPost        *Message            `json:"channel_post,omitempty"`
+	ChatJoinRequest    *ChatJoinRequest    `json:"chat_join_request,omitempty"`
 	ChatMember         *ChatMemberUpdated  `json:"chat_member,omitempty"`
 	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
 	EditedChannelPost  *Message            `json:"edited_channel_post,omitempty"`
