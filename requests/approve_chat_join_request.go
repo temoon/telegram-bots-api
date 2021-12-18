@@ -7,22 +7,22 @@ import (
 	"github.com/temoon/go-telegram-bots-api"
 )
 
-type GetChatMember struct {
+type ApproveChatJoinRequest struct {
 	ChatId interface{}
 	UserId int64
 }
 
-func (r *GetChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(interface{})
-	err = b.CallMethod(ctx, "getChatMember", r, response)
+func (r *ApproveChatJoinRequest) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(string)
+	err = b.CallMethod(ctx, "approveChatJoinRequest", r, response)
 	return
 }
 
-func (r *GetChatMember) IsMultipart() (multipart bool) {
+func (r *ApproveChatJoinRequest) IsMultipart() (multipart bool) {
 	return false
 }
 
-func (r *GetChatMember) GetValues() (values map[string]interface{}, err error) {
+func (r *ApproveChatJoinRequest) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	switch value := r.ChatId.(type) {

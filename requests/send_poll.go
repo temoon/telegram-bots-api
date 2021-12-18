@@ -3,8 +3,9 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type SendPoll struct {

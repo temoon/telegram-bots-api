@@ -3,8 +3,9 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type AnswerInlineQuery struct {
@@ -12,7 +13,7 @@ type AnswerInlineQuery struct {
 	InlineQueryId     string
 	IsPersonal        bool
 	NextOffset        string
-	Results           []telegram.InlineQueryResult
+	Results           []interface{}
 	SwitchPmParameter string
 	SwitchPmText      string
 }

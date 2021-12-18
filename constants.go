@@ -6,6 +6,7 @@ const Version = "5.4.0"
 const ParseModeMarkdown = "Markdown"
 const ParseModeHTML = "HTML"
 
+const ChatTypeSender = "sender"
 const ChatTypePrivate = "private"
 const ChatTypeGroup = "group"
 const ChatTypeSupergroup = "supergroup"

@@ -29,10 +29,6 @@ type BotCommand struct {
 	Description string `json:"description"`
 }
 
-type BotCommandScope struct {
-	// Placeholder
-}
-
 type BotCommandScopeAllChatAdministrators struct {
 	Type string `json:"type"`
 }
@@ -66,7 +62,7 @@ type BotCommandScopeDefault struct {
 }
 
 type CallbackGame struct {
-	// Placeholder
+	// Hold no information
 }
 
 type CallbackQuery struct {
@@ -122,10 +118,6 @@ type ChatJoinRequest struct {
 type ChatLocation struct {
 	Address  string   `json:"address"`
 	Location Location `json:"location"`
-}
-
-type ChatMember struct {
-	// Placeholder
 }
 
 type ChatMemberAdministrator struct {
@@ -188,8 +180,8 @@ type ChatMemberUpdated struct {
 	Chat          Chat            `json:"chat"`
 	Date          int32           `json:"date"`
 	From          User            `json:"from"`
-	NewChatMember ChatMember      `json:"new_chat_member"`
-	OldChatMember ChatMember      `json:"old_chat_member"`
+	NewChatMember interface{}     `json:"new_chat_member"`
+	OldChatMember interface{}     `json:"old_chat_member"`
 	InviteLink    *ChatInviteLink `json:"invite_link,omitempty"`
 }
 
@@ -319,13 +311,9 @@ type InlineQuery struct {
 	Location *Location `json:"location,omitempty"`
 }
 
-type InlineQueryResult struct {
-	// Placeholder
-}
-
 type InlineQueryResultArticle struct {
 	Id                  string                `json:"id"`
-	InputMessageContent InputMessageContent   `json:"input_message_content"`
+	InputMessageContent interface{}           `json:"input_message_content"`
 	Title               string                `json:"title"`
 	Type                string                `json:"type"`
 	Description         string                `json:"description,omitempty"`
@@ -345,7 +333,7 @@ type InlineQueryResultAudio struct {
 	AudioDuration       int32                 `json:"audio_duration,omitempty"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	Performer           string                `json:"performer,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -357,7 +345,7 @@ type InlineQueryResultCachedAudio struct {
 	Type                string                `json:"type"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
@@ -370,7 +358,7 @@ type InlineQueryResultCachedDocument struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
@@ -381,7 +369,7 @@ type InlineQueryResultCachedGif struct {
 	Type                string                `json:"type"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	Title               string                `json:"title,omitempty"`
@@ -393,7 +381,7 @@ type InlineQueryResultCachedMpeg4Gif struct {
 	Type                string                `json:"type"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	Title               string                `json:"title,omitempty"`
@@ -406,7 +394,7 @@ type InlineQueryResultCachedPhoto struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	Title               string                `json:"title,omitempty"`
@@ -416,7 +404,7 @@ type InlineQueryResultCachedSticker struct {
 	Id                  string                `json:"id"`
 	StickerFileId       string                `json:"sticker_file_id"`
 	Type                string                `json:"type"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
 
@@ -428,7 +416,7 @@ type InlineQueryResultCachedVideo struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
@@ -440,7 +428,7 @@ type InlineQueryResultCachedVoice struct {
 	VoiceFileId         string                `json:"voice_file_id"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 }
@@ -450,7 +438,7 @@ type InlineQueryResultContact struct {
 	Id                  string                `json:"id"`
 	PhoneNumber         string                `json:"phone_number"`
 	Type                string                `json:"type"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	LastName            string                `json:"last_name,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
@@ -468,7 +456,7 @@ type InlineQueryResultDocument struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
@@ -493,7 +481,7 @@ type InlineQueryResultGif struct {
 	GifDuration         int32                 `json:"gif_duration,omitempty"`
 	GifHeight           int32                 `json:"gif_height,omitempty"`
 	GifWidth            int32                 `json:"gif_width,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ThumbMimeType       string                `json:"thumb_mime_type,omitempty"`
@@ -508,7 +496,7 @@ type InlineQueryResultLocation struct {
 	Type                 string                `json:"type"`
 	Heading              int32                 `json:"heading,omitempty"`
 	HorizontalAccuracy   float64               `json:"horizontal_accuracy,omitempty"`
-	InputMessageContent  *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent  interface{}           `json:"input_message_content,omitempty"`
 	LivePeriod           int32                 `json:"live_period,omitempty"`
 	ProximityAlertRadius int32                 `json:"proximity_alert_radius,omitempty"`
 	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
@@ -524,7 +512,7 @@ type InlineQueryResultMpeg4Gif struct {
 	Type                string                `json:"type"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	Mpeg4Duration       int32                 `json:"mpeg4_duration,omitempty"`
 	Mpeg4Height         int32                 `json:"mpeg4_height,omitempty"`
 	Mpeg4Width          int32                 `json:"mpeg4_width,omitempty"`
@@ -542,7 +530,7 @@ type InlineQueryResultPhoto struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	PhotoHeight         int32                 `json:"photo_height,omitempty"`
 	PhotoWidth          int32                 `json:"photo_width,omitempty"`
@@ -561,7 +549,7 @@ type InlineQueryResultVenue struct {
 	FoursquareType      string                `json:"foursquare_type,omitempty"`
 	GooglePlaceId       string                `json:"google_place_id,omitempty"`
 	GooglePlaceType     string                `json:"google_place_type,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	ThumbHeight         int32                 `json:"thumb_height,omitempty"`
 	ThumbUrl            string                `json:"thumb_url,omitempty"`
@@ -578,7 +566,7 @@ type InlineQueryResultVideo struct {
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
 	Description         string                `json:"description,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	VideoDuration       int32                 `json:"video_duration,omitempty"`
@@ -593,7 +581,7 @@ type InlineQueryResultVoice struct {
 	VoiceUrl            string                `json:"voice_url"`
 	Caption             string                `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
-	InputMessageContent *InputMessageContent  `json:"input_message_content,omitempty"`
+	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           string                `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	VoiceDuration       int32                 `json:"voice_duration,omitempty"`
@@ -604,10 +592,6 @@ type InputContactMessageContent struct {
 	PhoneNumber string `json:"phone_number"`
 	LastName    string `json:"last_name,omitempty"`
 	Vcard       string `json:"vcard,omitempty"`
-}
-
-type InputFile struct {
-	// Placeholder
 }
 
 type InputInvoiceMessageContent struct {
@@ -640,10 +624,6 @@ type InputLocationMessageContent struct {
 	HorizontalAccuracy   float64 `json:"horizontal_accuracy,omitempty"`
 	LivePeriod           int32   `json:"live_period,omitempty"`
 	ProximityAlertRadius int32   `json:"proximity_alert_radius,omitempty"`
-}
-
-type InputMedia struct {
-	// Placeholder
 }
 
 type InputMediaAnimation struct {
@@ -699,10 +679,6 @@ type InputMediaVideo struct {
 	SupportsStreaming bool            `json:"supports_streaming,omitempty"`
 	Thumb             interface{}     `json:"thumb,omitempty"`
 	Width             int32           `json:"width,omitempty"`
-}
-
-type InputMessageContent struct {
-	// Placeholder
 }
 
 type InputTextMessageContent struct {
@@ -856,10 +832,6 @@ type OrderInfo struct {
 type PassportData struct {
 	Credentials EncryptedCredentials       `json:"credentials"`
 	Data        []EncryptedPassportElement `json:"data"`
-}
-
-type PassportElementError struct {
-	// Placeholder
 }
 
 type PassportElementErrorDataField struct {
@@ -1143,7 +1115,7 @@ type VoiceChatScheduled struct {
 }
 
 type VoiceChatStarted struct {
-	// Placeholder
+	// Hold no information
 }
 
 type WebhookInfo struct {

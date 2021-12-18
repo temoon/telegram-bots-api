@@ -2,8 +2,9 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type ExportChatInviteLink struct {

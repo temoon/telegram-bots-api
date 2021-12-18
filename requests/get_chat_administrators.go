@@ -2,8 +2,9 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type GetChatAdministrators struct {
@@ -11,7 +12,7 @@ type GetChatAdministrators struct {
 }
 
 func (r *GetChatAdministrators) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new([]telegram.ChatMember)
+	response = new([]interface{})
 	err = b.CallMethod(ctx, "getChatAdministrators", r, response)
 	return
 }

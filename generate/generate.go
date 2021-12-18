@@ -12,7 +12,16 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-const RefInputFile = "#/components/schemas/InputFile"
+const SchemaPrefix = "#/components/schemas/"
+const (
+	RefInputFile            = SchemaPrefix + "InputFile"
+	RefInputMedia           = SchemaPrefix + "InputMedia"
+	RefChatMember           = SchemaPrefix + "ChatMember"
+	RefBotCommandScope      = SchemaPrefix + "BotCommandScope"
+	RefInlineQueryResult    = SchemaPrefix + "InlineQueryResult"
+	RefInputMessageContent  = SchemaPrefix + "InputMessageContent"
+	RefPassportElementError = SchemaPrefix + "PassportElementError"
+)
 
 const TemplatesDir = "generate/templates/"
 
@@ -55,6 +64,16 @@ type RequestField struct {
 	Variants      []RequestField
 }
 
+var dummyTypes = map[string]bool{
+	RefInputFile:            true,
+	RefInputMedia:           true,
+	RefChatMember:           true,
+	RefBotCommandScope:      true,
+	RefInlineQueryResult:    true,
+	RefInputMessageContent:  true,
+	RefPassportElementError: true,
+}
+
 func main() {
 	loader := openapi3.NewLoader()
 
@@ -95,6 +114,10 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 
 	schemas := make([]string, 0, len(doc.Components.Schemas))
 	for name := range doc.Components.Schemas {
+		if dummyTypes[SchemaPrefix+name] {
+			continue
+		}
+
 		schemas = append(schemas, name)
 	}
 	sort.Strings(schemas)
@@ -249,7 +272,7 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 }
 
 func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (t string) {
-	if value.Ref != "" {
+	if value.Ref != "" && !dummyTypes[value.Ref] {
 		path := strings.Split(value.Ref, "/")
 
 		t = path[len(path)-1]

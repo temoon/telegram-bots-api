@@ -3,12 +3,13 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/go-telegram-bots-api"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type SetPassportDataErrors struct {
-	Errors []telegram.PassportElementError
+	Errors []interface{}
 	UserId int64
 }
 

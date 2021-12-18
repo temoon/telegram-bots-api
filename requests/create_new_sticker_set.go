@@ -3,9 +3,10 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/go-telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/go-telegram-bots-api"
 )
 
 type CreateNewStickerSet struct {

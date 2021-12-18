@@ -2,6 +2,7 @@ package requests
 
 import (
 	"context"
+
 	"github.com/temoon/go-telegram-bots-api"
 )
 
