@@ -10,9 +10,9 @@ import (
 
 type GetUpdates struct {
 	AllowedUpdates []string
-	Limit          int32
-	Offset         int32
-	Timeout        int32
+	Limit          *int32
+	Offset         *int32
+	Timeout        *int32
 }
 
 func (r *GetUpdates) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -37,16 +37,16 @@ func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
 		values["allowed_updates"] = string(dataAllowedUpdates)
 	}
 
-	if r.Limit != 0 {
-		values["limit"] = strconv.FormatInt(int64(r.Limit), 10)
+	if r.Limit != nil {
+		values["limit"] = strconv.FormatInt(int64(*r.Limit), 10)
 	}
 
-	if r.Offset != 0 {
-		values["offset"] = strconv.FormatInt(int64(r.Offset), 10)
+	if r.Offset != nil {
+		values["offset"] = strconv.FormatInt(int64(*r.Offset), 10)
 	}
 
-	if r.Timeout != 0 {
-		values["timeout"] = strconv.FormatInt(int64(r.Timeout), 10)
+	if r.Timeout != nil {
+		values["timeout"] = strconv.FormatInt(int64(*r.Timeout), 10)
 	}
 
 	return

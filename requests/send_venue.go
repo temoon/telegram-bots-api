@@ -10,17 +10,17 @@ import (
 
 type SendVenue struct {
 	Address                  string
-	AllowSendingWithoutReply bool
+	AllowSendingWithoutReply *bool
 	ChatId                   interface{}
-	DisableNotification      bool
-	FoursquareId             string
-	FoursquareType           string
-	GooglePlaceId            string
-	GooglePlaceType          string
+	DisableNotification      *bool
+	FoursquareId             *string
+	FoursquareType           *string
+	GooglePlaceId            *string
+	GooglePlaceType          *string
 	Latitude                 float64
 	Longitude                float64
 	ReplyMarkup              interface{}
-	ReplyToMessageId         int32
+	ReplyToMessageId         *int32
 	Title                    string
 }
 
@@ -39,8 +39,12 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 	values["address"] = r.Address
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
 	switch value := r.ChatId.(type) {
@@ -50,24 +54,28 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
-	if r.FoursquareId != "" {
-		values["foursquare_id"] = r.FoursquareId
+	if r.FoursquareId != nil {
+		values["foursquare_id"] = *r.FoursquareId
 	}
 
-	if r.FoursquareType != "" {
-		values["foursquare_type"] = r.FoursquareType
+	if r.FoursquareType != nil {
+		values["foursquare_type"] = *r.FoursquareType
 	}
 
-	if r.GooglePlaceId != "" {
-		values["google_place_id"] = r.GooglePlaceId
+	if r.GooglePlaceId != nil {
+		values["google_place_id"] = *r.GooglePlaceId
 	}
 
-	if r.GooglePlaceType != "" {
-		values["google_place_type"] = r.GooglePlaceType
+	if r.GooglePlaceType != nil {
+		values["google_place_type"] = *r.GooglePlaceType
 	}
 
 	switch value := r.ReplyMarkup.(type) {
@@ -101,8 +109,8 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataForceReply)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
 	values["title"] = r.Title

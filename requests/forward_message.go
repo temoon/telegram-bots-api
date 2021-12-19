@@ -9,7 +9,7 @@ import (
 
 type ForwardMessage struct {
 	ChatId              interface{}
-	DisableNotification bool
+	DisableNotification *bool
 	FromChatId          interface{}
 	MessageId           int32
 }
@@ -34,8 +34,12 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	switch value := r.FromChatId.(type) {

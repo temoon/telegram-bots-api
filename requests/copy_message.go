@@ -9,16 +9,16 @@ import (
 )
 
 type CopyMessage struct {
-	AllowSendingWithoutReply bool
-	Caption                  string
+	AllowSendingWithoutReply *bool
+	Caption                  *string
 	CaptionEntities          []telegram.MessageEntity
 	ChatId                   interface{}
-	DisableNotification      bool
+	DisableNotification      *bool
 	FromChatId               interface{}
 	MessageId                int32
-	ParseMode                string
+	ParseMode                *string
 	ReplyMarkup              interface{}
-	ReplyToMessageId         int32
+	ReplyToMessageId         *int32
 }
 
 func (r *CopyMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -34,12 +34,16 @@ func (r *CopyMessage) IsMultipart() (multipart bool) {
 func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
-	if r.Caption != "" {
-		values["caption"] = r.Caption
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
 	}
 
 	if r.CaptionEntities != nil {
@@ -58,8 +62,12 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	switch value := r.FromChatId.(type) {
@@ -71,8 +79,8 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 
 	values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
 
-	if r.ParseMode != "" {
-		values["parse_mode"] = r.ParseMode
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	switch value := r.ReplyMarkup.(type) {
@@ -106,8 +114,8 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataForceReply)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
 	return

@@ -9,11 +9,11 @@ import (
 )
 
 type SendMediaGroup struct {
-	AllowSendingWithoutReply bool
+	AllowSendingWithoutReply *bool
 	ChatId                   interface{}
-	DisableNotification      bool
+	DisableNotification      *bool
 	Media                    []interface{}
-	ReplyToMessageId         int32
+	ReplyToMessageId         *int32
 }
 
 func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,8 +29,12 @@ func (r *SendMediaGroup) IsMultipart() (multipart bool) {
 func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
 	switch value := r.ChatId.(type) {
@@ -40,8 +44,12 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	var dataMedia []byte
@@ -51,8 +59,8 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 
 	values["media"] = string(dataMedia)
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
 	return

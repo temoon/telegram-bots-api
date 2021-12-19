@@ -9,12 +9,12 @@ import (
 )
 
 type EditMessageCaption struct {
-	Caption         string
+	Caption         *string
 	CaptionEntities []telegram.MessageEntity
 	ChatId          interface{}
-	InlineMessageId string
-	MessageId       int32
-	ParseMode       string
+	InlineMessageId *string
+	MessageId       *int32
+	ParseMode       *string
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -31,8 +31,8 @@ func (r *EditMessageCaption) IsMultipart() (multipart bool) {
 func (r *EditMessageCaption) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Caption != "" {
-		values["caption"] = r.Caption
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
 	}
 
 	if r.CaptionEntities != nil {
@@ -51,16 +51,16 @@ func (r *EditMessageCaption) GetValues() (values map[string]interface{}, err err
 		values["chat_id"] = value
 	}
 
-	if r.InlineMessageId != "" {
-		values["inline_message_id"] = r.InlineMessageId
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
-	if r.ParseMode != "" {
-		values["parse_mode"] = r.ParseMode
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ReplyMarkup != nil {

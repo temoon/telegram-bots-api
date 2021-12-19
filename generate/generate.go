@@ -287,8 +287,16 @@ func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (
 		switch value.Value.Type {
 		case "boolean":
 			t = "bool"
+
+			if !isRequired {
+				t = "*" + t
+			}
 		case "number":
 			t = "float64"
+
+			if !isRequired {
+				t = "*" + t
+			}
 		case "integer":
 			switch value.Value.Format {
 			case "int64":
@@ -296,8 +304,16 @@ func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (
 			default:
 				t = "int32"
 			}
+
+			if !isRequired {
+				t = "*" + t
+			}
 		case "string":
 			t = value.Value.Type
+
+			if !isRequired {
+				t = "*" + t
+			}
 		case "array":
 			t = "[]" + GenerateValueType(value.Value.Items, true, pkg)
 		default:

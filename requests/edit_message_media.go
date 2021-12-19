@@ -10,9 +10,9 @@ import (
 
 type EditMessageMedia struct {
 	ChatId          interface{}
-	InlineMessageId string
+	InlineMessageId *string
 	Media           interface{}
-	MessageId       int32
+	MessageId       *int32
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -36,8 +36,8 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 		values["chat_id"] = value
 	}
 
-	if r.InlineMessageId != "" {
-		values["inline_message_id"] = r.InlineMessageId
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
 	}
 
 	switch value := r.Media.(type) {
@@ -78,8 +78,8 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 		values["media"] = string(dataInputMediaVideo)
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
 	if r.ReplyMarkup != nil {

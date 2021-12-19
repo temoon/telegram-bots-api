@@ -10,13 +10,13 @@ import (
 )
 
 type SendVideoNote struct {
-	AllowSendingWithoutReply bool
+	AllowSendingWithoutReply *bool
 	ChatId                   interface{}
-	DisableNotification      bool
-	Duration                 int32
-	Length                   int32
+	DisableNotification      *bool
+	Duration                 *int32
+	Length                   *int32
 	ReplyMarkup              interface{}
-	ReplyToMessageId         int32
+	ReplyToMessageId         *int32
 	Thumb                    interface{}
 	VideoNote                interface{}
 }
@@ -34,8 +34,12 @@ func (r *SendVideoNote) IsMultipart() (multipart bool) {
 func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
 	switch value := r.ChatId.(type) {
@@ -45,16 +49,20 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
-	if r.Duration != 0 {
-		values["duration"] = strconv.FormatInt(int64(r.Duration), 10)
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(int64(*r.Duration), 10)
 	}
 
-	if r.Length != 0 {
-		values["length"] = strconv.FormatInt(int64(r.Length), 10)
+	if r.Length != nil {
+		values["length"] = strconv.FormatInt(int64(*r.Length), 10)
 	}
 
 	switch value := r.ReplyMarkup.(type) {
@@ -88,8 +96,8 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataForceReply)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
 	switch value := r.Thumb.(type) {

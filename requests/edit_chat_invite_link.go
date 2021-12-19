@@ -9,11 +9,11 @@ import (
 
 type EditChatInviteLink struct {
 	ChatId             interface{}
-	CreatesJoinRequest bool
-	ExpireDate         int32
+	CreatesJoinRequest *bool
+	ExpireDate         *int32
 	InviteLink         string
-	MemberLimit        int32
-	Name               string
+	MemberLimit        *int32
+	Name               *string
 }
 
 func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,22 +36,26 @@ func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err err
 		values["chat_id"] = value
 	}
 
-	if r.CreatesJoinRequest {
-		values["creates_join_request"] = "1"
+	if r.CreatesJoinRequest != nil {
+		if *r.CreatesJoinRequest {
+			values["creates_join_request"] = "1"
+		} else {
+			values["creates_join_request"] = "0"
+		}
 	}
 
-	if r.ExpireDate != 0 {
-		values["expire_date"] = strconv.FormatInt(int64(r.ExpireDate), 10)
+	if r.ExpireDate != nil {
+		values["expire_date"] = strconv.FormatInt(int64(*r.ExpireDate), 10)
 	}
 
 	values["invite_link"] = r.InviteLink
 
-	if r.MemberLimit != 0 {
-		values["member_limit"] = strconv.FormatInt(int64(r.MemberLimit), 10)
+	if r.MemberLimit != nil {
+		values["member_limit"] = strconv.FormatInt(int64(*r.MemberLimit), 10)
 	}
 
-	if r.Name != "" {
-		values["name"] = r.Name
+	if r.Name != nil {
+		values["name"] = *r.Name
 	}
 
 	return

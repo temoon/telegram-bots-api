@@ -9,7 +9,7 @@ import (
 
 type SetMyCommands struct {
 	Commands     []telegram.BotCommand
-	LanguageCode string
+	LanguageCode *string
 	Scope        interface{}
 }
 
@@ -33,8 +33,8 @@ func (r *SetMyCommands) GetValues() (values map[string]interface{}, err error) {
 
 	values["commands"] = string(dataCommands)
 
-	if r.LanguageCode != "" {
-		values["language_code"] = r.LanguageCode
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
 	}
 
 	switch value := r.Scope.(type) {

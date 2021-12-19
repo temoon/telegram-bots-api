@@ -11,9 +11,9 @@ import (
 type SetWebhook struct {
 	AllowedUpdates     []string
 	Certificate        interface{}
-	DropPendingUpdates bool
-	IpAddress          string
-	MaxConnections     int32
+	DropPendingUpdates *bool
+	IpAddress          *string
+	MaxConnections     *int32
 	Url                string
 }
 
@@ -43,16 +43,20 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 		values["certificate"] = r.Certificate
 	}
 
-	if r.DropPendingUpdates {
-		values["drop_pending_updates"] = "1"
+	if r.DropPendingUpdates != nil {
+		if *r.DropPendingUpdates {
+			values["drop_pending_updates"] = "1"
+		} else {
+			values["drop_pending_updates"] = "0"
+		}
 	}
 
-	if r.IpAddress != "" {
-		values["ip_address"] = r.IpAddress
+	if r.IpAddress != nil {
+		values["ip_address"] = *r.IpAddress
 	}
 
-	if r.MaxConnections != 0 {
-		values["max_connections"] = strconv.FormatInt(int64(r.MaxConnections), 10)
+	if r.MaxConnections != nil {
+		values["max_connections"] = strconv.FormatInt(int64(*r.MaxConnections), 10)
 	}
 
 	values["url"] = r.Url

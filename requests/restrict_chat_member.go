@@ -11,7 +11,7 @@ import (
 type RestrictChatMember struct {
 	ChatId      interface{}
 	Permissions telegram.ChatPermissions
-	UntilDate   int32
+	UntilDate   *int32
 	UserId      int64
 }
 
@@ -42,8 +42,8 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 
 	values["permissions"] = string(dataPermissions)
 
-	if r.UntilDate != 0 {
-		values["until_date"] = strconv.FormatInt(int64(r.UntilDate), 10)
+	if r.UntilDate != nil {
+		values["until_date"] = strconv.FormatInt(int64(*r.UntilDate), 10)
 	}
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)

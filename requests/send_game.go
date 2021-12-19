@@ -9,12 +9,12 @@ import (
 )
 
 type SendGame struct {
-	AllowSendingWithoutReply bool
+	AllowSendingWithoutReply *bool
 	ChatId                   int64
-	DisableNotification      bool
+	DisableNotification      *bool
 	GameShortName            string
 	ReplyMarkup              *telegram.InlineKeyboardMarkup
-	ReplyToMessageId         int32
+	ReplyToMessageId         *int32
 }
 
 func (r *SendGame) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -30,14 +30,22 @@ func (r *SendGame) IsMultipart() (multipart bool) {
 func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	values["game_short_name"] = r.GameShortName
@@ -51,8 +59,8 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
 	return

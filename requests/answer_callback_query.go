@@ -8,11 +8,11 @@ import (
 )
 
 type AnswerCallbackQuery struct {
-	CacheTime       int32
+	CacheTime       *int32
 	CallbackQueryId string
-	ShowAlert       bool
-	Text            string
-	Url             string
+	ShowAlert       *bool
+	Text            *string
+	Url             *string
 }
 
 func (r *AnswerCallbackQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -28,22 +28,26 @@ func (r *AnswerCallbackQuery) IsMultipart() (multipart bool) {
 func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.CacheTime != 0 {
-		values["cache_time"] = strconv.FormatInt(int64(r.CacheTime), 10)
+	if r.CacheTime != nil {
+		values["cache_time"] = strconv.FormatInt(int64(*r.CacheTime), 10)
 	}
 
 	values["callback_query_id"] = r.CallbackQueryId
 
-	if r.ShowAlert {
-		values["show_alert"] = "1"
+	if r.ShowAlert != nil {
+		if *r.ShowAlert {
+			values["show_alert"] = "1"
+		} else {
+			values["show_alert"] = "0"
+		}
 	}
 
-	if r.Text != "" {
-		values["text"] = r.Text
+	if r.Text != nil {
+		values["text"] = *r.Text
 	}
 
-	if r.Url != "" {
-		values["url"] = r.Url
+	if r.Url != nil {
+		values["url"] = *r.Url
 	}
 
 	return

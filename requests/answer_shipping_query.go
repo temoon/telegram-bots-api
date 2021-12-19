@@ -8,7 +8,7 @@ import (
 )
 
 type AnswerShippingQuery struct {
-	ErrorMessage    string
+	ErrorMessage    *string
 	Ok              bool
 	ShippingOptions []telegram.ShippingOption
 	ShippingQueryId string
@@ -27,12 +27,14 @@ func (r *AnswerShippingQuery) IsMultipart() (multipart bool) {
 func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ErrorMessage != "" {
-		values["error_message"] = r.ErrorMessage
+	if r.ErrorMessage != nil {
+		values["error_message"] = *r.ErrorMessage
 	}
 
 	if r.Ok {
 		values["ok"] = "1"
+	} else {
+		values["ok"] = "0"
 	}
 
 	if r.ShippingOptions != nil {

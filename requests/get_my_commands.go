@@ -8,7 +8,7 @@ import (
 )
 
 type GetMyCommands struct {
-	LanguageCode string
+	LanguageCode *string
 	Scope        interface{}
 }
 
@@ -25,8 +25,8 @@ func (r *GetMyCommands) IsMultipart() (multipart bool) {
 func (r *GetMyCommands) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.LanguageCode != "" {
-		values["language_code"] = r.LanguageCode
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
 	}
 
 	switch value := r.Scope.(type) {

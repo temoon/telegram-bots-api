@@ -9,7 +9,7 @@ import (
 
 type UnbanChatMember struct {
 	ChatId       interface{}
-	OnlyIfBanned bool
+	OnlyIfBanned *bool
 	UserId       int64
 }
 
@@ -33,8 +33,12 @@ func (r *UnbanChatMember) GetValues() (values map[string]interface{}, err error)
 		values["chat_id"] = value
 	}
 
-	if r.OnlyIfBanned {
-		values["only_if_banned"] = "1"
+	if r.OnlyIfBanned != nil {
+		if *r.OnlyIfBanned {
+			values["only_if_banned"] = "1"
+		} else {
+			values["only_if_banned"] = "0"
+		}
 	}
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)

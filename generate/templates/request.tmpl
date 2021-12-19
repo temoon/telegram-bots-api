@@ -35,22 +35,22 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 	{{range $k, $f := .Fields -}}
         {{if eq $f.RawType "string" -}}
             {{if not $f.IsRequired -}}
-				if r.{{$f.Name}} != "" {
+			if r.{{$f.Name}} != nil {
             {{end -}}
-			values["{{$k}}"] = r.{{$f.Name}}
+			values["{{$k}}"] = {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}
             {{if not $f.IsRequired -}}
-				}
+			}
             {{end -}}
         {{end}}
 
 		{{if eq $f.RawType "integer" -}}
 			{{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != 0 {
+			if r.{{$f.Name}} != nil {
 			{{end -}}
 			{{if eq $f.RawTypeFormat "int64" -}}
-			values["{{$k}}"] = strconv.FormatInt(r.{{$f.Name}}, 10)
+			values["{{$k}}"] = strconv.FormatInt({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}, 10)
 			{{else -}}
-			values["{{$k}}"] = strconv.FormatInt(int64(r.{{$f.Name}}), 10)
+			values["{{$k}}"] = strconv.FormatInt(int64({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}), 10)
 			{{end -}}
             {{if not $f.IsRequired -}}
 			}
@@ -58,9 +58,17 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 		{{end}}
 
 		{{if eq $f.RawType "boolean" -}}
-			if r.{{$f.Name}} {
+            {{if not $f.IsRequired -}}
+			if r.{{$f.Name}} != nil {
+            {{end -}}
+			if {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}} {
 				values["{{$k}}"] = "1"
+			} else {
+				values["{{$k}}"] = "0"
 			}
+            {{if not $f.IsRequired -}}
+			}
+            {{end -}}
 		{{end}}
 
 		{{if and (or $f.IsRef (eq $f.RawType "array")) (not (len $f.Variants)) -}}

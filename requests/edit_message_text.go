@@ -10,11 +10,11 @@ import (
 
 type EditMessageText struct {
 	ChatId                interface{}
-	DisableWebPagePreview bool
+	DisableWebPagePreview *bool
 	Entities              []telegram.MessageEntity
-	InlineMessageId       string
-	MessageId             int32
-	ParseMode             string
+	InlineMessageId       *string
+	MessageId             *int32
+	ParseMode             *string
 	ReplyMarkup           *telegram.InlineKeyboardMarkup
 	Text                  string
 }
@@ -39,8 +39,12 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 		values["chat_id"] = value
 	}
 
-	if r.DisableWebPagePreview {
-		values["disable_web_page_preview"] = "1"
+	if r.DisableWebPagePreview != nil {
+		if *r.DisableWebPagePreview {
+			values["disable_web_page_preview"] = "1"
+		} else {
+			values["disable_web_page_preview"] = "0"
+		}
 	}
 
 	if r.Entities != nil {
@@ -52,16 +56,16 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 		values["entities"] = string(dataEntities)
 	}
 
-	if r.InlineMessageId != "" {
-		values["inline_message_id"] = r.InlineMessageId
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
-	if r.ParseMode != "" {
-		values["parse_mode"] = r.ParseMode
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ReplyMarkup != nil {

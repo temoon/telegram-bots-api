@@ -9,30 +9,30 @@ import (
 )
 
 type SendInvoice struct {
-	AllowSendingWithoutReply  bool
+	AllowSendingWithoutReply  *bool
 	ChatId                    int64
 	Currency                  string
 	Description               string
-	DisableNotification       bool
-	IsFlexible                bool
-	MaxTipAmount              int32
-	NeedEmail                 bool
-	NeedName                  bool
-	NeedPhoneNumber           bool
-	NeedShippingAddress       bool
+	DisableNotification       *bool
+	IsFlexible                *bool
+	MaxTipAmount              *int32
+	NeedEmail                 *bool
+	NeedName                  *bool
+	NeedPhoneNumber           *bool
+	NeedShippingAddress       *bool
 	Payload                   string
-	PhotoHeight               int32
-	PhotoSize                 int32
-	PhotoUrl                  string
-	PhotoWidth                int32
+	PhotoHeight               *int32
+	PhotoSize                 *int32
+	PhotoUrl                  *string
+	PhotoWidth                *int32
 	Prices                    []telegram.LabeledPrice
-	ProviderData              string
+	ProviderData              *string
 	ProviderToken             string
 	ReplyMarkup               *telegram.InlineKeyboardMarkup
-	ReplyToMessageId          int32
-	SendEmailToProvider       bool
-	SendPhoneNumberToProvider bool
-	StartParameter            string
+	ReplyToMessageId          *int32
+	SendEmailToProvider       *bool
+	SendPhoneNumberToProvider *bool
+	StartParameter            *string
 	SuggestedTipAmounts       []int32
 	Title                     string
 }
@@ -50,8 +50,12 @@ func (r *SendInvoice) IsMultipart() (multipart bool) {
 func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
@@ -60,50 +64,74 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	values["description"] = r.Description
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
-	if r.IsFlexible {
-		values["is_flexible"] = "1"
+	if r.IsFlexible != nil {
+		if *r.IsFlexible {
+			values["is_flexible"] = "1"
+		} else {
+			values["is_flexible"] = "0"
+		}
 	}
 
-	if r.MaxTipAmount != 0 {
-		values["max_tip_amount"] = strconv.FormatInt(int64(r.MaxTipAmount), 10)
+	if r.MaxTipAmount != nil {
+		values["max_tip_amount"] = strconv.FormatInt(int64(*r.MaxTipAmount), 10)
 	}
 
-	if r.NeedEmail {
-		values["need_email"] = "1"
+	if r.NeedEmail != nil {
+		if *r.NeedEmail {
+			values["need_email"] = "1"
+		} else {
+			values["need_email"] = "0"
+		}
 	}
 
-	if r.NeedName {
-		values["need_name"] = "1"
+	if r.NeedName != nil {
+		if *r.NeedName {
+			values["need_name"] = "1"
+		} else {
+			values["need_name"] = "0"
+		}
 	}
 
-	if r.NeedPhoneNumber {
-		values["need_phone_number"] = "1"
+	if r.NeedPhoneNumber != nil {
+		if *r.NeedPhoneNumber {
+			values["need_phone_number"] = "1"
+		} else {
+			values["need_phone_number"] = "0"
+		}
 	}
 
-	if r.NeedShippingAddress {
-		values["need_shipping_address"] = "1"
+	if r.NeedShippingAddress != nil {
+		if *r.NeedShippingAddress {
+			values["need_shipping_address"] = "1"
+		} else {
+			values["need_shipping_address"] = "0"
+		}
 	}
 
 	values["payload"] = r.Payload
 
-	if r.PhotoHeight != 0 {
-		values["photo_height"] = strconv.FormatInt(int64(r.PhotoHeight), 10)
+	if r.PhotoHeight != nil {
+		values["photo_height"] = strconv.FormatInt(int64(*r.PhotoHeight), 10)
 	}
 
-	if r.PhotoSize != 0 {
-		values["photo_size"] = strconv.FormatInt(int64(r.PhotoSize), 10)
+	if r.PhotoSize != nil {
+		values["photo_size"] = strconv.FormatInt(int64(*r.PhotoSize), 10)
 	}
 
-	if r.PhotoUrl != "" {
-		values["photo_url"] = r.PhotoUrl
+	if r.PhotoUrl != nil {
+		values["photo_url"] = *r.PhotoUrl
 	}
 
-	if r.PhotoWidth != 0 {
-		values["photo_width"] = strconv.FormatInt(int64(r.PhotoWidth), 10)
+	if r.PhotoWidth != nil {
+		values["photo_width"] = strconv.FormatInt(int64(*r.PhotoWidth), 10)
 	}
 
 	var dataPrices []byte
@@ -113,8 +141,8 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	values["prices"] = string(dataPrices)
 
-	if r.ProviderData != "" {
-		values["provider_data"] = r.ProviderData
+	if r.ProviderData != nil {
+		values["provider_data"] = *r.ProviderData
 	}
 
 	values["provider_token"] = r.ProviderToken
@@ -128,20 +156,28 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
-	if r.SendEmailToProvider {
-		values["send_email_to_provider"] = "1"
+	if r.SendEmailToProvider != nil {
+		if *r.SendEmailToProvider {
+			values["send_email_to_provider"] = "1"
+		} else {
+			values["send_email_to_provider"] = "0"
+		}
 	}
 
-	if r.SendPhoneNumberToProvider {
-		values["send_phone_number_to_provider"] = "1"
+	if r.SendPhoneNumberToProvider != nil {
+		if *r.SendPhoneNumberToProvider {
+			values["send_phone_number_to_provider"] = "1"
+		} else {
+			values["send_phone_number_to_provider"] = "0"
+		}
 	}
 
-	if r.StartParameter != "" {
-		values["start_parameter"] = r.StartParameter
+	if r.StartParameter != nil {
+		values["start_parameter"] = *r.StartParameter
 	}
 
 	if r.SuggestedTipAmounts != nil {

@@ -9,13 +9,13 @@ import (
 )
 
 type AnswerInlineQuery struct {
-	CacheTime         int32
+	CacheTime         *int32
 	InlineQueryId     string
-	IsPersonal        bool
-	NextOffset        string
+	IsPersonal        *bool
+	NextOffset        *string
 	Results           []interface{}
-	SwitchPmParameter string
-	SwitchPmText      string
+	SwitchPmParameter *string
+	SwitchPmText      *string
 }
 
 func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,18 +31,22 @@ func (r *AnswerInlineQuery) IsMultipart() (multipart bool) {
 func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.CacheTime != 0 {
-		values["cache_time"] = strconv.FormatInt(int64(r.CacheTime), 10)
+	if r.CacheTime != nil {
+		values["cache_time"] = strconv.FormatInt(int64(*r.CacheTime), 10)
 	}
 
 	values["inline_query_id"] = r.InlineQueryId
 
-	if r.IsPersonal {
-		values["is_personal"] = "1"
+	if r.IsPersonal != nil {
+		if *r.IsPersonal {
+			values["is_personal"] = "1"
+		} else {
+			values["is_personal"] = "0"
+		}
 	}
 
-	if r.NextOffset != "" {
-		values["next_offset"] = r.NextOffset
+	if r.NextOffset != nil {
+		values["next_offset"] = *r.NextOffset
 	}
 
 	var dataResults []byte
@@ -52,12 +56,12 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 
 	values["results"] = string(dataResults)
 
-	if r.SwitchPmParameter != "" {
-		values["switch_pm_parameter"] = r.SwitchPmParameter
+	if r.SwitchPmParameter != nil {
+		values["switch_pm_parameter"] = *r.SwitchPmParameter
 	}
 
-	if r.SwitchPmText != "" {
-		values["switch_pm_text"] = r.SwitchPmText
+	if r.SwitchPmText != nil {
+		values["switch_pm_text"] = *r.SwitchPmText
 	}
 
 	return

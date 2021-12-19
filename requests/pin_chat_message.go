@@ -9,7 +9,7 @@ import (
 
 type PinChatMessage struct {
 	ChatId              interface{}
-	DisableNotification bool
+	DisableNotification *bool
 	MessageId           int32
 }
 
@@ -33,8 +33,12 @@ func (r *PinChatMessage) GetValues() (values map[string]interface{}, err error) 
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)

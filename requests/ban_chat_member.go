@@ -9,8 +9,8 @@ import (
 
 type BanChatMember struct {
 	ChatId         interface{}
-	RevokeMessages bool
-	UntilDate      int32
+	RevokeMessages *bool
+	UntilDate      *int32
 	UserId         int64
 }
 
@@ -34,12 +34,16 @@ func (r *BanChatMember) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.RevokeMessages {
-		values["revoke_messages"] = "1"
+	if r.RevokeMessages != nil {
+		if *r.RevokeMessages {
+			values["revoke_messages"] = "1"
+		} else {
+			values["revoke_messages"] = "0"
+		}
 	}
 
-	if r.UntilDate != 0 {
-		values["until_date"] = strconv.FormatInt(int64(r.UntilDate), 10)
+	if r.UntilDate != nil {
+		values["until_date"] = strconv.FormatInt(int64(*r.UntilDate), 10)
 	}
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)

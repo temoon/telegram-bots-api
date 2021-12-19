@@ -10,7 +10,7 @@ import (
 )
 
 type CreateNewStickerSet struct {
-	ContainsMasks bool
+	ContainsMasks *bool
 	Emojis        string
 	MaskPosition  *telegram.MaskPosition
 	Name          string
@@ -33,8 +33,12 @@ func (r *CreateNewStickerSet) IsMultipart() (multipart bool) {
 func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ContainsMasks {
-		values["contains_masks"] = "1"
+	if r.ContainsMasks != nil {
+		if *r.ContainsMasks {
+			values["contains_masks"] = "1"
+		} else {
+			values["contains_masks"] = "0"
+		}
 	}
 
 	values["emojis"] = r.Emojis

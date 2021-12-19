@@ -10,13 +10,13 @@ import (
 
 type EditMessageLiveLocation struct {
 	ChatId               interface{}
-	Heading              int32
-	HorizontalAccuracy   float64
-	InlineMessageId      string
+	Heading              *int32
+	HorizontalAccuracy   *float64
+	InlineMessageId      *string
 	Latitude             float64
 	Longitude            float64
-	MessageId            int32
-	ProximityAlertRadius int32
+	MessageId            *int32
+	ProximityAlertRadius *int32
 	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
@@ -40,20 +40,20 @@ func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, er
 		values["chat_id"] = value
 	}
 
-	if r.Heading != 0 {
-		values["heading"] = strconv.FormatInt(int64(r.Heading), 10)
+	if r.Heading != nil {
+		values["heading"] = strconv.FormatInt(int64(*r.Heading), 10)
 	}
 
-	if r.InlineMessageId != "" {
-		values["inline_message_id"] = r.InlineMessageId
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
-	if r.ProximityAlertRadius != 0 {
-		values["proximity_alert_radius"] = strconv.FormatInt(int64(r.ProximityAlertRadius), 10)
+	if r.ProximityAlertRadius != nil {
+		values["proximity_alert_radius"] = strconv.FormatInt(int64(*r.ProximityAlertRadius), 10)
 	}
 
 	if r.ReplyMarkup != nil {

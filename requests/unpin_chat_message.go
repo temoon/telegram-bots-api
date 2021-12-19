@@ -9,7 +9,7 @@ import (
 
 type UnpinChatMessage struct {
 	ChatId    interface{}
-	MessageId int32
+	MessageId *int32
 }
 
 func (r *UnpinChatMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -32,8 +32,8 @@ func (r *UnpinChatMessage) GetValues() (values map[string]interface{}, err error
 		values["chat_id"] = value
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
 	return

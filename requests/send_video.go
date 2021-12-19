@@ -10,20 +10,20 @@ import (
 )
 
 type SendVideo struct {
-	AllowSendingWithoutReply bool
-	Caption                  string
+	AllowSendingWithoutReply *bool
+	Caption                  *string
 	CaptionEntities          []telegram.MessageEntity
 	ChatId                   interface{}
-	DisableNotification      bool
-	Duration                 int32
-	Height                   int32
-	ParseMode                string
+	DisableNotification      *bool
+	Duration                 *int32
+	Height                   *int32
+	ParseMode                *string
 	ReplyMarkup              interface{}
-	ReplyToMessageId         int32
-	SupportsStreaming        bool
+	ReplyToMessageId         *int32
+	SupportsStreaming        *bool
 	Thumb                    interface{}
 	Video                    interface{}
-	Width                    int32
+	Width                    *int32
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -39,12 +39,16 @@ func (r *SendVideo) IsMultipart() (multipart bool) {
 func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
-	if r.Caption != "" {
-		values["caption"] = r.Caption
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
 	}
 
 	if r.CaptionEntities != nil {
@@ -63,20 +67,24 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
-	if r.Duration != 0 {
-		values["duration"] = strconv.FormatInt(int64(r.Duration), 10)
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(int64(*r.Duration), 10)
 	}
 
-	if r.Height != 0 {
-		values["height"] = strconv.FormatInt(int64(r.Height), 10)
+	if r.Height != nil {
+		values["height"] = strconv.FormatInt(int64(*r.Height), 10)
 	}
 
-	if r.ParseMode != "" {
-		values["parse_mode"] = r.ParseMode
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	switch value := r.ReplyMarkup.(type) {
@@ -110,12 +118,16 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataForceReply)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
-	if r.SupportsStreaming {
-		values["supports_streaming"] = "1"
+	if r.SupportsStreaming != nil {
+		if *r.SupportsStreaming {
+			values["supports_streaming"] = "1"
+		} else {
+			values["supports_streaming"] = "0"
+		}
 	}
 
 	switch value := r.Thumb.(type) {
@@ -132,8 +144,8 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["video"] = value
 	}
 
-	if r.Width != 0 {
-		values["width"] = strconv.FormatInt(int64(r.Width), 10)
+	if r.Width != nil {
+		values["width"] = strconv.FormatInt(int64(*r.Width), 10)
 	}
 
 	return

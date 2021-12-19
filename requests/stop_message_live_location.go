@@ -10,8 +10,8 @@ import (
 
 type StopMessageLiveLocation struct {
 	ChatId          interface{}
-	InlineMessageId string
-	MessageId       int32
+	InlineMessageId *string
+	MessageId       *int32
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -35,12 +35,12 @@ func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, er
 		values["chat_id"] = value
 	}
 
-	if r.InlineMessageId != "" {
-		values["inline_message_id"] = r.InlineMessageId
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
 	}
 
-	if r.MessageId != 0 {
-		values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
 	}
 
 	if r.ReplyMarkup != nil {

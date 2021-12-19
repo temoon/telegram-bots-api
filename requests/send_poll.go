@@ -9,23 +9,23 @@ import (
 )
 
 type SendPoll struct {
-	AllowSendingWithoutReply bool
-	AllowsMultipleAnswers    bool
+	AllowSendingWithoutReply *bool
+	AllowsMultipleAnswers    *bool
 	ChatId                   interface{}
-	CloseDate                int32
-	CorrectOptionId          int32
-	DisableNotification      bool
-	Explanation              string
+	CloseDate                *int32
+	CorrectOptionId          *int32
+	DisableNotification      *bool
+	Explanation              *string
 	ExplanationEntities      []telegram.MessageEntity
-	ExplanationParseMode     string
-	IsAnonymous              bool
-	IsClosed                 bool
-	OpenPeriod               int32
+	ExplanationParseMode     *string
+	IsAnonymous              *bool
+	IsClosed                 *bool
+	OpenPeriod               *int32
 	Options                  []string
 	Question                 string
 	ReplyMarkup              interface{}
-	ReplyToMessageId         int32
-	Type                     string
+	ReplyToMessageId         *int32
+	Type                     *string
 }
 
 func (r *SendPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -41,12 +41,20 @@ func (r *SendPoll) IsMultipart() (multipart bool) {
 func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply {
-		values["allow_sending_without_reply"] = "1"
+	if r.AllowSendingWithoutReply != nil {
+		if *r.AllowSendingWithoutReply {
+			values["allow_sending_without_reply"] = "1"
+		} else {
+			values["allow_sending_without_reply"] = "0"
+		}
 	}
 
-	if r.AllowsMultipleAnswers {
-		values["allows_multiple_answers"] = "1"
+	if r.AllowsMultipleAnswers != nil {
+		if *r.AllowsMultipleAnswers {
+			values["allows_multiple_answers"] = "1"
+		} else {
+			values["allows_multiple_answers"] = "0"
+		}
 	}
 
 	switch value := r.ChatId.(type) {
@@ -56,20 +64,24 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		values["chat_id"] = value
 	}
 
-	if r.CloseDate != 0 {
-		values["close_date"] = strconv.FormatInt(int64(r.CloseDate), 10)
+	if r.CloseDate != nil {
+		values["close_date"] = strconv.FormatInt(int64(*r.CloseDate), 10)
 	}
 
-	if r.CorrectOptionId != 0 {
-		values["correct_option_id"] = strconv.FormatInt(int64(r.CorrectOptionId), 10)
+	if r.CorrectOptionId != nil {
+		values["correct_option_id"] = strconv.FormatInt(int64(*r.CorrectOptionId), 10)
 	}
 
-	if r.DisableNotification {
-		values["disable_notification"] = "1"
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
-	if r.Explanation != "" {
-		values["explanation"] = r.Explanation
+	if r.Explanation != nil {
+		values["explanation"] = *r.Explanation
 	}
 
 	if r.ExplanationEntities != nil {
@@ -81,20 +93,28 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		values["explanation_entities"] = string(dataExplanationEntities)
 	}
 
-	if r.ExplanationParseMode != "" {
-		values["explanation_parse_mode"] = r.ExplanationParseMode
+	if r.ExplanationParseMode != nil {
+		values["explanation_parse_mode"] = *r.ExplanationParseMode
 	}
 
-	if r.IsAnonymous {
-		values["is_anonymous"] = "1"
+	if r.IsAnonymous != nil {
+		if *r.IsAnonymous {
+			values["is_anonymous"] = "1"
+		} else {
+			values["is_anonymous"] = "0"
+		}
 	}
 
-	if r.IsClosed {
-		values["is_closed"] = "1"
+	if r.IsClosed != nil {
+		if *r.IsClosed {
+			values["is_closed"] = "1"
+		} else {
+			values["is_closed"] = "0"
+		}
 	}
 
-	if r.OpenPeriod != 0 {
-		values["open_period"] = strconv.FormatInt(int64(r.OpenPeriod), 10)
+	if r.OpenPeriod != nil {
+		values["open_period"] = strconv.FormatInt(int64(*r.OpenPeriod), 10)
 	}
 
 	var dataOptions []byte
@@ -137,12 +157,12 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataForceReply)
 	}
 
-	if r.ReplyToMessageId != 0 {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(r.ReplyToMessageId), 10)
+	if r.ReplyToMessageId != nil {
+		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
-	if r.Type != "" {
-		values["type"] = r.Type
+	if r.Type != nil {
+		values["type"] = *r.Type
 	}
 
 	return

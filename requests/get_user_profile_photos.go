@@ -8,8 +8,8 @@ import (
 )
 
 type GetUserProfilePhotos struct {
-	Limit  int32
-	Offset int32
+	Limit  *int32
+	Offset *int32
 	UserId int64
 }
 
@@ -26,12 +26,12 @@ func (r *GetUserProfilePhotos) IsMultipart() (multipart bool) {
 func (r *GetUserProfilePhotos) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Limit != 0 {
-		values["limit"] = strconv.FormatInt(int64(r.Limit), 10)
+	if r.Limit != nil {
+		values["limit"] = strconv.FormatInt(int64(*r.Limit), 10)
 	}
 
-	if r.Offset != 0 {
-		values["offset"] = strconv.FormatInt(int64(r.Offset), 10)
+	if r.Offset != nil {
+		values["offset"] = strconv.FormatInt(int64(*r.Offset), 10)
 	}
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
