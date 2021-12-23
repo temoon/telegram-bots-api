@@ -76,23 +76,26 @@ type CallbackQuery struct {
 }
 
 type Chat struct {
-	Id               int64            `json:"id"`
-	Type             string           `json:"type"`
-	Bio              *string          `json:"bio,omitempty"`
-	CanSetStickerSet *bool            `json:"can_set_sticker_set,omitempty"`
-	Description      *string          `json:"description,omitempty"`
-	FirstName        *string          `json:"first_name,omitempty"`
-	InviteLink       *string          `json:"invite_link,omitempty"`
-	LastName         *string          `json:"last_name,omitempty"`
-	LinkedChatId     *int64           `json:"linked_chat_id,omitempty"`
-	Location         *ChatLocation    `json:"location,omitempty"`
-	Permissions      *ChatPermissions `json:"permissions,omitempty"`
-	Photo            *ChatPhoto       `json:"photo,omitempty"`
-	PinnedMessage    *Message         `json:"pinned_message,omitempty"`
-	SlowModeDelay    *int32           `json:"slow_mode_delay,omitempty"`
-	StickerSetName   *string          `json:"sticker_set_name,omitempty"`
-	Title            *string          `json:"title,omitempty"`
-	Username         *string          `json:"username,omitempty"`
+	Id                    int64            `json:"id"`
+	Type                  string           `json:"type"`
+	Bio                   *string          `json:"bio,omitempty"`
+	CanSetStickerSet      *bool            `json:"can_set_sticker_set,omitempty"`
+	Description           *string          `json:"description,omitempty"`
+	FirstName             *string          `json:"first_name,omitempty"`
+	HasPrivateForwards    *bool            `json:"has_private_forwards,omitempty"`
+	HasProtectedContent   *bool            `json:"has_protected_content,omitempty"`
+	InviteLink            *string          `json:"invite_link,omitempty"`
+	LastName              *string          `json:"last_name,omitempty"`
+	LinkedChatId          *int64           `json:"linked_chat_id,omitempty"`
+	Location              *ChatLocation    `json:"location,omitempty"`
+	MessageAutoDeleteTime *int32           `json:"message_auto_delete_time,omitempty"`
+	Permissions           *ChatPermissions `json:"permissions,omitempty"`
+	Photo                 *ChatPhoto       `json:"photo,omitempty"`
+	PinnedMessage         *Message         `json:"pinned_message,omitempty"`
+	SlowModeDelay         *int32           `json:"slow_mode_delay,omitempty"`
+	StickerSetName        *string          `json:"sticker_set_name,omitempty"`
+	Title                 *string          `json:"title,omitempty"`
+	Username              *string          `json:"username,omitempty"`
 }
 
 type ChatInviteLink struct {
@@ -772,7 +775,9 @@ type Message struct {
 	From                          *User                          `json:"from,omitempty"`
 	Game                          *Game                          `json:"game,omitempty"`
 	GroupChatCreated              *bool                          `json:"group_chat_created,omitempty"`
+	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
+	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
 	Location                      *Location                      `json:"location,omitempty"`
 	MediaGroupId                  *string                        `json:"media_group_id,omitempty"`
