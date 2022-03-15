@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Telegram Bot API
   description: Auto-generated OpenAPI schema
-  version: 5.5.0
+  version: 5.7.0
 servers:
   - url: 'https://api.telegram.org/bot{token}'
     variables:
@@ -8178,6 +8178,8 @@ paths:
                     - type: string
                 tgs_sticker:
                   $ref: '#/components/schemas/InputFile'
+                webm_sticker:
+                  $ref: '#/components/schemas/InputFile'
                 emojis:
                   description: One or more emoji corresponding to the sticker
                   type: string
@@ -8252,6 +8254,8 @@ paths:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
                 tgs_sticker:
+                  $ref: '#/components/schemas/InputFile'
+                webm_sticker:
                   $ref: '#/components/schemas/InputFile'
                 emojis:
                   description: One or more emoji corresponding to the sticker
@@ -12422,6 +12426,11 @@ components:
             *True*, if the sticker is
             [animated](https://telegram.org/blog/animated-stickers)
           type: boolean
+        is_video:
+          description: >-
+            *True*, if the sticker is
+            [video sticker](https://telegram.org/blog/video-stickers-better-reactions)
+          type: boolean
         thumb:
           $ref: '#/components/schemas/PhotoSize'
         emoji:
@@ -12441,6 +12450,7 @@ components:
         - width
         - height
         - is_animated
+        - is_video
     StickerSet:
       externalDocs:
         url: 'https://core.telegram.org/bots/api/#stickerset'
@@ -12458,6 +12468,11 @@ components:
             *True*, if the sticker set contains [animated
             stickers](https://telegram.org/blog/animated-stickers)
           type: boolean
+        is_video:
+          description: >-
+            *True*, if the sticker is
+            [video sticker](https://telegram.org/blog/video-stickers-better-reactions)
+          type: boolean
         contains_masks:
           description: '*True*, if the sticker set contains masks'
           type: boolean
@@ -12472,6 +12487,7 @@ components:
         - name
         - title
         - is_animated
+        - is_video
         - contains_masks
         - stickers
     MaskPosition:

@@ -18,6 +18,7 @@ type CreateNewStickerSet struct {
 	TgsSticker    interface{}
 	Title         string
 	UserId        int64
+	WebmSticker   interface{}
 }
 
 func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -68,6 +69,10 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 	values["title"] = r.Title
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+
+	if r.WebmSticker != nil {
+		values["webm_sticker"] = r.WebmSticker
+	}
 
 	return
 }
