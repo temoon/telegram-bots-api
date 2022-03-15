@@ -19,6 +19,7 @@ type SendVenue struct {
 	GooglePlaceType          *string
 	Latitude                 float64
 	Longitude                float64
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Title                    string
@@ -76,6 +77,14 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 	if r.GooglePlaceType != nil {
 		values["google_place_type"] = *r.GooglePlaceType
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

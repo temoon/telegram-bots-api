@@ -22,6 +22,7 @@ type SendPoll struct {
 	IsClosed                 *bool
 	OpenPeriod               *int32
 	Options                  []string
+	ProtectContent           *bool
 	Question                 string
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
@@ -123,6 +124,14 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["options"] = string(dataOptions)
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
 
 	values["question"] = r.Question
 

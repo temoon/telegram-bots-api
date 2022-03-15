@@ -15,6 +15,7 @@ type SendVideoNote struct {
 	DisableNotification      *bool
 	Duration                 *int32
 	Length                   *int32
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Thumb                    interface{}
@@ -63,6 +64,14 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Length != nil {
 		values["length"] = strconv.FormatInt(int64(*r.Length), 10)
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

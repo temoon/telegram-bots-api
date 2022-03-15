@@ -17,6 +17,7 @@ type SendLocation struct {
 	Latitude                 float64
 	LivePeriod               *int32
 	Longitude                float64
+	ProtectContent           *bool
 	ProximityAlertRadius     *int32
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
@@ -64,6 +65,14 @@ func (r *SendLocation) GetValues() (values map[string]interface{}, err error) {
 
 	if r.LivePeriod != nil {
 		values["live_period"] = strconv.FormatInt(int64(*r.LivePeriod), 10)
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	if r.ProximityAlertRadius != nil {

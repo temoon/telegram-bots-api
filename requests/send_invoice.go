@@ -26,6 +26,7 @@ type SendInvoice struct {
 	PhotoUrl                  *string
 	PhotoWidth                *int32
 	Prices                    []telegram.LabeledPrice
+	ProtectContent            *bool
 	ProviderData              *string
 	ProviderToken             string
 	ReplyMarkup               *telegram.InlineKeyboardMarkup
@@ -140,6 +141,14 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["prices"] = string(dataPrices)
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
 
 	if r.ProviderData != nil {
 		values["provider_data"] = *r.ProviderData

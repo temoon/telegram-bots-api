@@ -15,6 +15,7 @@ type SendContact struct {
 	FirstName                string
 	LastName                 *string
 	PhoneNumber              string
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Vcard                    *string
@@ -63,6 +64,14 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["phone_number"] = r.PhoneNumber
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
 
 	switch value := r.ReplyMarkup.(type) {
 	case *telegram.InlineKeyboardMarkup:

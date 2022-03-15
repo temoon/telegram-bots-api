@@ -19,6 +19,7 @@ type SendAudio struct {
 	Duration                 *int32
 	ParseMode                *string
 	Performer                *string
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Thumb                    interface{}
@@ -91,6 +92,14 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Performer != nil {
 		values["performer"] = *r.Performer
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

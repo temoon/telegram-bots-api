@@ -519,6 +519,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -584,6 +587,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -648,6 +654,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -733,6 +742,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
                   type: integer
@@ -767,6 +779,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
                   type: integer
@@ -800,6 +815,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 message_id:
                   description: Message identifier in the chat specified in *from\_chat\_id*
@@ -893,6 +911,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -968,6 +989,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1042,6 +1066,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -1150,6 +1177,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -1288,6 +1318,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1415,6 +1448,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -1553,6 +1589,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1686,6 +1725,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1800,6 +1842,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1910,6 +1955,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -1998,6 +2046,9 @@ paths:
                     Sends messages
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the messages are a reply, ID of the original message'
@@ -2091,6 +2142,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -2164,6 +2218,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -2236,6 +2293,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -2644,6 +2704,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -2719,6 +2782,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -2793,6 +2859,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -2886,6 +2955,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -2944,6 +3016,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -3001,6 +3076,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -3141,6 +3219,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -3248,6 +3329,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -3354,6 +3438,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -3443,6 +3530,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -3496,6 +3586,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -3548,6 +3641,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -7878,6 +7974,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -8733,6 +8832,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -8872,6 +8974,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -9010,6 +9115,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -9413,6 +9521,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -9446,6 +9557,9 @@ paths:
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
                   type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
+                  type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
                   type: integer
@@ -9478,6 +9592,9 @@ paths:
                     Sends the message
                     [silently](https://telegram.org/blog/channels-2-0#silent-messages).
                     Users will receive a notification with no sound.
+                  type: boolean
+                protect_content:
+                  description: Protects the contents of the sent message from forwarding and saving
                   type: boolean
                 reply_to_message_id:
                   description: 'If the message is a reply, ID of the original message'
@@ -10315,7 +10432,7 @@ components:
             (`/start@jobs_bot`), “url” (`https://telegram.org`), “email”
             (`do-not-reply@telegram.org`), “phone\_number” (`+1-212-555-0123`),
             “bold” (**bold text**), “italic” (*italic text*), “underline”
-            (underlined text), “strikethrough” (strikethrough text), “code”
+            (underlined text), “strikethrough” (strikethrough text), "spoiler" (spoiler message), “code”
             (monowidth string), “pre” (monowidth block), “text\_link” (for
             clickable text URLs), “text\_mention” (for users [without
             usernames](https://telegram.org/blog/edit#new-mentions))
@@ -10332,6 +10449,7 @@ components:
             - italic
             - underline
             - strikethrough
+            - spoiler
             - code
             - pre
             - text_link

@@ -15,6 +15,7 @@ type SendMessage struct {
 	DisableWebPagePreview    *bool
 	Entities                 []telegram.MessageEntity
 	ParseMode                *string
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Text                     string
@@ -75,6 +76,14 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 
 	if r.ParseMode != nil {
 		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

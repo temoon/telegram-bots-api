@@ -13,6 +13,7 @@ type SendGame struct {
 	ChatId                   int64
 	DisableNotification      *bool
 	GameShortName            string
+	ProtectContent           *bool
 	ReplyMarkup              *telegram.InlineKeyboardMarkup
 	ReplyToMessageId         *int32
 }
@@ -49,6 +50,14 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["game_short_name"] = r.GameShortName
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
 
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte

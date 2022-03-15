@@ -17,6 +17,7 @@ type SendVoice struct {
 	DisableNotification      *bool
 	Duration                 *int32
 	ParseMode                *string
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	Voice                    interface{}
@@ -77,6 +78,14 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.ParseMode != nil {
 		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

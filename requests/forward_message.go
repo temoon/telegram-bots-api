@@ -12,6 +12,7 @@ type ForwardMessage struct {
 	DisableNotification *bool
 	FromChatId          interface{}
 	MessageId           int32
+	ProtectContent      *bool
 }
 
 func (r *ForwardMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -50,6 +51,14 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 	}
 
 	values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
 
 	return
 }

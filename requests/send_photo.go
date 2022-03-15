@@ -17,6 +17,7 @@ type SendPhoto struct {
 	DisableNotification      *bool
 	ParseMode                *string
 	Photo                    interface{}
+	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 }
@@ -79,6 +80,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		values["photo"] = value
 	case string:
 		values["photo"] = value
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	switch value := r.ReplyMarkup.(type) {

@@ -1,9 +1,10 @@
 package telegram
 
 const Name = "Telegram Bot API"
-const Version = "5.5.0"
+const Version = "5.6.0"
 
 const ParseModeMarkdown = "Markdown"
+const ParseModeMarkdownV2 = "MarkdownV2"
 const ParseModeHTML = "HTML"
 
 const ChatTypeSender = "sender"
@@ -14,17 +15,20 @@ const ChatTypeChannel = "channel"
 
 const MessageEntityTypeMention = "mention"
 const MessageEntityTypeHashtag = "hashtag"
+const MessageEntityTypeCashtag = "cashtag"
 const MessageEntityTypeBotCommand = "bot_command"
-const MessageEntityTypeURL = "url"
+const MessageEntityTypeUrl = "url"
 const MessageEntityTypeEmail = "email"
+const MessageEntityTypePhoneNumber = "phone_number"
 const MessageEntityTypeBold = "bold"
 const MessageEntityTypeItalic = "italic"
+const MessageEntityTypeUnderline = "underline"
+const MessageEntityTypeStrikethrough = "strikethrough"
+const MessageEntityTypeSpoiler = "spoiler"
 const MessageEntityTypeCode = "code"
 const MessageEntityTypePre = "pre"
 const MessageEntityTypeTextLink = "text_link"
 const MessageEntityTypeTextMention = "text_mention"
-const MessageEntityTypeCashtag = "cashtag"
-const MessageEntityTypePhoneNumber = "phone_number"
 
 const ChatMemberStatusCreator = "creator"
 const ChatMemberStatusAdministrator = "administrator"
