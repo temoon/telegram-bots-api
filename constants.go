@@ -1,7 +1,7 @@
 package telegram
 
 const Name = "Telegram Bot API"
-const Version = "5.7.0"
+const Version = "6.0.0"
 
 const ParseModeMarkdown = "Markdown"
 const ParseModeMarkdownV2 = "MarkdownV2"

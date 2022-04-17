@@ -98,6 +98,20 @@ type Chat struct {
 	Username              *string          `json:"username,omitempty"`
 }
 
+type ChatAdministratorRights struct {
+	CanChangeInfo       bool  `json:"can_change_info"`
+	CanDeleteMessages   bool  `json:"can_delete_messages"`
+	CanInviteUsers      bool  `json:"can_invite_users"`
+	CanManageChat       bool  `json:"can_manage_chat"`
+	CanManageVideoChats bool  `json:"can_manage_video_chats"`
+	CanPromoteMembers   bool  `json:"can_promote_members"`
+	CanRestrictMembers  bool  `json:"can_restrict_members"`
+	IsAnonymous         bool  `json:"is_anonymous"`
+	CanEditMessages     *bool `json:"can_edit_messages,omitempty"`
+	CanPinMessages      *bool `json:"can_pin_messages,omitempty"`
+	CanPostMessages     *bool `json:"can_post_messages,omitempty"`
+}
+
 type ChatInviteLink struct {
 	CreatesJoinRequest      bool    `json:"creates_join_request"`
 	Creator                 User    `json:"creator"`
@@ -129,7 +143,7 @@ type ChatMemberAdministrator struct {
 	CanDeleteMessages   bool    `json:"can_delete_messages"`
 	CanInviteUsers      bool    `json:"can_invite_users"`
 	CanManageChat       bool    `json:"can_manage_chat"`
-	CanManageVoiceChats bool    `json:"can_manage_voice_chats"`
+	CanManageVideoChats bool    `json:"can_manage_video_chats"`
 	CanPromoteMembers   bool    `json:"can_promote_members"`
 	CanRestrictMembers  bool    `json:"can_restrict_members"`
 	IsAnonymous         bool    `json:"is_anonymous"`
@@ -299,6 +313,7 @@ type InlineKeyboardButton struct {
 	SwitchInlineQuery            *string       `json:"switch_inline_query,omitempty"`
 	SwitchInlineQueryCurrentChat *string       `json:"switch_inline_query_current_chat,omitempty"`
 	Url                          *string       `json:"url,omitempty"`
+	WebApp                       *WebAppInfo   `json:"web_app,omitempty"`
 }
 
 type InlineKeyboardMarkup struct {
@@ -715,6 +730,7 @@ type KeyboardButton struct {
 	RequestContact  *bool                   `json:"request_contact,omitempty"`
 	RequestLocation *bool                   `json:"request_location,omitempty"`
 	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
+	WebApp          *WebAppInfo             `json:"web_app,omitempty"`
 }
 
 type KeyboardButtonPollType struct {
@@ -747,6 +763,24 @@ type MaskPosition struct {
 	Scale  float64 `json:"scale"`
 	XShift float64 `json:"x_shift"`
 	YShift float64 `json:"y_shift"`
+}
+
+type MenuButton struct {
+	// Hold no information
+}
+
+type MenuButtonCommands struct {
+	Type string `json:"type"`
+}
+
+type MenuButtonDefault struct {
+	Type string `json:"type"`
+}
+
+type MenuButtonWebApp struct {
+	Text   string     `json:"text"`
+	Type   string     `json:"type"`
+	WebApp WebAppInfo `json:"web_app"`
 }
 
 type Message struct {
@@ -802,12 +836,13 @@ type Message struct {
 	Venue                         *Venue                         `json:"venue,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	Video                         *Video                         `json:"video,omitempty"`
+	VideoChatEnded                *VideoChatEnded                `json:"video_chat_ended,omitempty"`
+	VideoChatParticipantsInvited  *VideoChatParticipantsInvited  `json:"video_chat_participants_invited,omitempty"`
+	VideoChatScheduled            *VideoChatScheduled            `json:"video_chat_scheduled,omitempty"`
+	VideoChatStarted              *VideoChatStarted              `json:"video_chat_started,omitempty"`
 	VideoNote                     *VideoNote                     `json:"video_note,omitempty"`
 	Voice                         *Voice                         `json:"voice,omitempty"`
-	VoiceChatEnded                *VoiceChatEnded                `json:"voice_chat_ended,omitempty"`
-	VoiceChatParticipantsInvited  *VoiceChatParticipantsInvited  `json:"voice_chat_participants_invited,omitempty"`
-	VoiceChatScheduled            *VoiceChatScheduled            `json:"voice_chat_scheduled,omitempty"`
-	VoiceChatStarted              *VoiceChatStarted              `json:"voice_chat_started,omitempty"`
+	WebAppData                    *WebAppData                    `json:"web_app_data,omitempty"`
 }
 
 type MessageAutoDeleteTimerChanged struct {
@@ -979,6 +1014,10 @@ type ResponseParameters struct {
 	RetryAfter      *int32 `json:"retry_after,omitempty"`
 }
 
+type SentWebAppMessage struct {
+	InlineMessageId *string `json:"inline_message_id,omitempty"`
+}
+
 type ShippingAddress struct {
 	City        string `json:"city"`
 	CountryCode string `json:"country_code"`
@@ -1092,6 +1131,22 @@ type Video struct {
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
 
+type VideoChatEnded struct {
+	Duration int32 `json:"duration"`
+}
+
+type VideoChatParticipantsInvited struct {
+	Users []User `json:"users"`
+}
+
+type VideoChatScheduled struct {
+	StartDate int32 `json:"start_date"`
+}
+
+type VideoChatStarted struct {
+	// Hold no information
+}
+
 type VideoNote struct {
 	Duration     int32      `json:"duration"`
 	FileId       string     `json:"file_id"`
@@ -1109,29 +1164,23 @@ type Voice struct {
 	MimeType     *string `json:"mime_type,omitempty"`
 }
 
-type VoiceChatEnded struct {
-	Duration int32 `json:"duration"`
+type WebAppData struct {
+	ButtonText string `json:"button_text"`
+	Data       string `json:"data"`
 }
 
-type VoiceChatParticipantsInvited struct {
-	Users []User `json:"users"`
-}
-
-type VoiceChatScheduled struct {
-	StartDate int32 `json:"start_date"`
-}
-
-type VoiceChatStarted struct {
-	// Hold no information
+type WebAppInfo struct {
+	Url string `json:"url"`
 }
 
 type WebhookInfo struct {
-	HasCustomCertificate bool     `json:"has_custom_certificate"`
-	PendingUpdateCount   int32    `json:"pending_update_count"`
-	Url                  string   `json:"url"`
-	AllowedUpdates       []string `json:"allowed_updates,omitempty"`
-	IpAddress            *string  `json:"ip_address,omitempty"`
-	LastErrorDate        *int32   `json:"last_error_date,omitempty"`
-	LastErrorMessage     *string  `json:"last_error_message,omitempty"`
-	MaxConnections       *int32   `json:"max_connections,omitempty"`
+	HasCustomCertificate         bool     `json:"has_custom_certificate"`
+	PendingUpdateCount           int32    `json:"pending_update_count"`
+	Url                          string   `json:"url"`
+	AllowedUpdates               []string `json:"allowed_updates,omitempty"`
+	IpAddress                    *string  `json:"ip_address,omitempty"`
+	LastErrorDate                *int32   `json:"last_error_date,omitempty"`
+	LastErrorMessage             *string  `json:"last_error_message,omitempty"`
+	LastSynchronizationErrorDate *int32   `json:"last_synchronization_error_date,omitempty"`
+	MaxConnections               *int32   `json:"max_connections,omitempty"`
 }
