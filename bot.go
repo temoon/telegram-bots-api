@@ -14,15 +14,21 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
+	"time"
 )
+
+const EnvProduction = "prod"
+const EnvTest = "test"
 
 type Bot struct {
 	opts *BotOpts
 }
 
 type BotOpts struct {
-	Token  string
-	Client *http.Client
+	Token   string
+	Client  *http.Client
+	Timeout time.Duration
+	Env     string
 }
 
 type Request interface {
@@ -39,15 +45,16 @@ type Response struct {
 	Parameters  *ResponseParameters `json:"parameters,omitempty"`
 }
 
-func NewBot(opts *BotOpts) (bot *Bot) {
+func NewBot(opts *BotOpts) *Bot {
 	if opts.Client == nil {
-		opts.Client = new(http.Client)
+		opts.Client = &http.Client{
+			Timeout: opts.Timeout,
+		}
 	}
 
-	bot = new(Bot)
-	bot.opts = opts
-
-	return
+	return &Bot{
+		opts: opts,
+	}
 }
 
 func (b *Bot) CallMethod(ctx context.Context, method string, request Request, response interface{}) (err error) {
@@ -64,10 +71,13 @@ func (b *Bot) CallMethod(ctx context.Context, method string, request Request, re
 		return
 	}
 
-	methodUrl := "https://api.telegram.org/bot" + b.opts.Token + "/" + method
+	methodUrlBase := "https://api.telegram.org/bot" + b.opts.Token + "/"
+	if b.opts.Env == EnvTest {
+		methodUrlBase += "test/"
+	}
 
 	var httpRequest *http.Request
-	if httpRequest, err = http.NewRequestWithContext(ctx, "POST", methodUrl, query); err != nil {
+	if httpRequest, err = http.NewRequestWithContext(ctx, "POST", methodUrlBase+method, query); err != nil {
 		return
 	}
 	httpRequest.Header.Set("Content-Type", contentType)
