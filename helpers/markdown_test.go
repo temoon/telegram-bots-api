@@ -12,7 +12,7 @@ type CaseMarkdown struct {
 	Return string
 }
 
-var testsMarkdown = []CaseMarkdown{
+var testCasesMarkdown = []CaseMarkdown{
 	{Text: "", Return: ""},
 	{Text: "abc", Return: "abc"},
 	{Text: "*abc*", Return: "\\*abc\\*"},
@@ -36,16 +36,16 @@ var testsMarkdown = []CaseMarkdown{
 }
 
 func TestMarkdown(t *testing.T) {
-	for _, test := range testsMarkdown {
-		if value := Markdown(test.Text); value != test.Return {
-			t.Error("Text:", test.Text, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdown {
+		if value := Markdown(testCase.Text); value != testCase.Return {
+			t.Error("Text:", testCase.Text, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdown(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Markdown(testsMarkdown[i%len(testsMarkdown)].Text)
+		Markdown(testCasesMarkdown[i%len(testCasesMarkdown)].Text)
 	}
 }
 
@@ -63,7 +63,7 @@ type CaseMarkdownBold struct {
 	Return string
 }
 
-var testsMarkdownBold = []CaseMarkdownBold{
+var testCasesMarkdownBold = []CaseMarkdownBold{
 	{Text: "", Return: ""},
 	{Text: "abc", Return: "*abc*"},
 	{Text: "a*bc", Return: "*a*\\**bc*"},
@@ -80,16 +80,16 @@ var testsMarkdownBold = []CaseMarkdownBold{
 }
 
 func TestMarkdownBold(t *testing.T) {
-	for _, test := range testsMarkdownBold {
-		if value := MarkdownBold(test.Text); value != test.Return {
-			t.Error("Text:", test.Text, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownBold {
+		if value := MarkdownBold(testCase.Text); value != testCase.Return {
+			t.Error("Text:", testCase.Text, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownBold(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		MarkdownBold(testsMarkdownBold[i%len(testsMarkdownBold)].Text)
+		MarkdownBold(testCasesMarkdownBold[i%len(testCasesMarkdownBold)].Text)
 	}
 }
 
@@ -107,7 +107,7 @@ type CaseMarkdownItalic struct {
 	Return string
 }
 
-var testsMarkdownItalic = []CaseMarkdownItalic{
+var testCasesMarkdownItalic = []CaseMarkdownItalic{
 	{Text: "", Return: ""},
 	{Text: "abc", Return: "_abc_"},
 	{Text: "a*bc", Return: "_a\\*bc_"},
@@ -124,16 +124,16 @@ var testsMarkdownItalic = []CaseMarkdownItalic{
 }
 
 func TestMarkdownItalic(t *testing.T) {
-	for _, test := range testsMarkdownItalic {
-		if value := MarkdownItalic(test.Text); value != test.Return {
-			t.Error("Text:", test.Text, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownItalic {
+		if value := MarkdownItalic(testCase.Text); value != testCase.Return {
+			t.Error("Text:", testCase.Text, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownItalic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		MarkdownItalic(testsMarkdownItalic[i%len(testsMarkdownItalic)].Text)
+		MarkdownItalic(testCasesMarkdownItalic[i%len(testCasesMarkdownItalic)].Text)
 	}
 }
 
@@ -151,7 +151,7 @@ type CaseMarkdownCode struct {
 	Return string
 }
 
-var testsMarkdownCode = []CaseMarkdownCode{
+var testCasesMarkdownCode = []CaseMarkdownCode{
 	{Text: "", Return: ""},
 	{Text: "abc", Return: "`abc`"},
 	{Text: "a*bc", Return: "`a\\*bc`"},
@@ -168,16 +168,16 @@ var testsMarkdownCode = []CaseMarkdownCode{
 }
 
 func TestMarkdownCode(t *testing.T) {
-	for _, test := range testsMarkdownCode {
-		if value := MarkdownCode(test.Text); value != test.Return {
-			t.Error("Text:", test.Text, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownCode {
+		if value := MarkdownCode(testCase.Text); value != testCase.Return {
+			t.Error("Text:", testCase.Text, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownCode(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		MarkdownCode(testsMarkdownCode[i%len(testsMarkdownCode)].Text)
+		MarkdownCode(testCasesMarkdownCode[i%len(testCasesMarkdownCode)].Text)
 	}
 }
 
@@ -195,7 +195,7 @@ type CaseMarkdownCodeBlock struct {
 	Return string
 }
 
-var testsMarkdownCodeBlock = []CaseMarkdownCodeBlock{
+var testCasesMarkdownCodeBlock = []CaseMarkdownCodeBlock{
 	{Text: "", Return: ""},
 	{Text: "abc", Return: "```abc```"},
 	{Text: "a*bc", Return: "```a*bc```"},
@@ -212,16 +212,16 @@ var testsMarkdownCodeBlock = []CaseMarkdownCodeBlock{
 }
 
 func TestMarkdownCodeBlock(t *testing.T) {
-	for _, test := range testsMarkdownCodeBlock {
-		if value := MarkdownCodeBlock(test.Text); value != test.Return {
-			t.Error("Text:", test.Text, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownCodeBlock {
+		if value := MarkdownCodeBlock(testCase.Text); value != testCase.Return {
+			t.Error("Text:", testCase.Text, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownCodeBlock(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		MarkdownCodeBlock(testsMarkdownCodeBlock[i%len(testsMarkdownCodeBlock)].Text)
+		MarkdownCodeBlock(testCasesMarkdownCodeBlock[i%len(testCasesMarkdownCodeBlock)].Text)
 	}
 }
 
@@ -240,7 +240,7 @@ type CaseMarkdownUserMention struct {
 	Return string
 }
 
-var testsMarkdownUserMention = []CaseMarkdownUserMention{
+var testCasesMarkdownUserMention = []CaseMarkdownUserMention{
 	{Name: "", Id: 0, Return: ""},
 	{Name: "abc", Id: 0, Return: "[abc](tg://user?id=0)"},
 	{Name: "abc", Id: 42, Return: "[abc](tg://user?id=42)"},
@@ -259,18 +259,18 @@ var testsMarkdownUserMention = []CaseMarkdownUserMention{
 }
 
 func TestMarkdownUserMention(t *testing.T) {
-	for _, test := range testsMarkdownUserMention {
-		if value := MarkdownUserMention(test.Name, test.Id); value != test.Return {
-			t.Error("Name:", test.Name, "Id:", test.Id, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownUserMention {
+		if value := MarkdownUserMention(testCase.Name, testCase.Id); value != testCase.Return {
+			t.Error("Name:", testCase.Name, "Id:", testCase.Id, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownUserMention(b *testing.B) {
-	var test CaseMarkdownUserMention
+	var testCase CaseMarkdownUserMention
 	for i := 0; i < b.N; i++ {
-		test = testsMarkdownUserMention[i%len(testsMarkdownUserMention)]
-		MarkdownUserMention(test.Name, test.Id)
+		testCase = testCasesMarkdownUserMention[i%len(testCasesMarkdownUserMention)]
+		MarkdownUserMention(testCase.Name, testCase.Id)
 	}
 }
 
@@ -289,7 +289,7 @@ type CaseMarkdownUrl struct {
 	Return string
 }
 
-var testsMarkdownUrl = []CaseMarkdownUrl{
+var testCasesMarkdownUrl = []CaseMarkdownUrl{
 	{Name: "", Url: "", Return: ""},
 	{Name: "abc", Url: "https://example.com", Return: "[abc](https://example.com)"},
 	{Name: "abc", Url: "https://example.com", Return: "[abc](https://example.com)"},
@@ -308,18 +308,18 @@ var testsMarkdownUrl = []CaseMarkdownUrl{
 }
 
 func TestMarkdownUrl(t *testing.T) {
-	for _, test := range testsMarkdownUrl {
-		if value := MarkdownUrl(test.Name, test.Url); value != test.Return {
-			t.Error("Name:", test.Name, "Url:", test.Url, "Expected:", test.Return, "Got:", value)
+	for _, testCase := range testCasesMarkdownUrl {
+		if value := MarkdownUrl(testCase.Name, testCase.Url); value != testCase.Return {
+			t.Error("Name:", testCase.Name, "Url:", testCase.Url, "Expected:", testCase.Return, "Got:", value)
 		}
 	}
 }
 
 func BenchmarkMarkdownUrl(b *testing.B) {
-	var test CaseMarkdownUrl
+	var testCase CaseMarkdownUrl
 	for i := 0; i < b.N; i++ {
-		test = testsMarkdownUrl[i%len(testsMarkdownUrl)]
-		MarkdownUrl(test.Name, test.Url)
+		testCase = testCasesMarkdownUrl[i%len(testCasesMarkdownUrl)]
+		MarkdownUrl(testCase.Name, testCase.Url)
 	}
 }
 

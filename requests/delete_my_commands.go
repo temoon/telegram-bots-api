@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 
-	"github.com/temoon/go-telegram-bots-api"
+	"github.com/temoon/telegram-bots-api"
 )
 
 type DeleteMyCommands struct {

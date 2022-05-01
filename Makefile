@@ -11,3 +11,6 @@ test:
 
 benchmark:
 	go test -bench=. ./...
+
+coverage:
+	go tool cover -html=coverage.out

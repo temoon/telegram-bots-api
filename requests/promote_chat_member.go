@@ -4,7 +4,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/temoon/go-telegram-bots-api"
+	"github.com/temoon/telegram-bots-api"
 )
 
 type PromoteChatMember struct {

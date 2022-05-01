@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 
-	"github.com/temoon/go-telegram-bots-api"
-	"github.com/temoon/go-telegram-bots-api/requests"
+	"github.com/temoon/telegram-bots-api"
+	"github.com/temoon/telegram-bots-api/requests"
 )
 
 func NewBotWithCheck(ctx context.Context, opts *telegram.BotOpts) (bot *telegram.Bot, me *telegram.User, err error) {

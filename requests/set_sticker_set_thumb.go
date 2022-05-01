@@ -5,7 +5,7 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/temoon/go-telegram-bots-api"
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SetStickerSetThumb struct {

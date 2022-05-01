@@ -1,4 +1,4 @@
-module github.com/temoon/go-telegram-bots-api
+module github.com/temoon/telegram-bots-api
 
 go 1.16
 
