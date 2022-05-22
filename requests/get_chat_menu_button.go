@@ -2,6 +2,7 @@ package requests
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"github.com/temoon/telegram-bots-api"
@@ -12,8 +13,19 @@ type GetChatMenuButton struct {
 }
 
 func (r *GetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(telegram.MenuButton)
+	response = new(interface{})
 	err = b.CallMethod(ctx, "getChatMenuButton", r, response)
+	return
+}
+
+func (r *GetChatMenuButton) CallWithResponse(ctx context.Context, b *telegram.Bot, response interface{}) (err error) {
+	switch response.(type) {
+	case *telegram.MenuButtonCommands, *telegram.MenuButtonWebApp, *telegram.MenuButtonDefault:
+		err = b.CallMethod(ctx, "getChatMenuButton", r, response)
+	default:
+		err = errors.New("unexpected response type")
+	}
+
 	return
 }
 

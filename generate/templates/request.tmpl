@@ -20,6 +20,19 @@ func (r *{{.Type}}) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
+{{if .ResponseTypes -}}
+func (r *{{.Type}}) CallWithResponse(ctx context.Context, b *telegram.Bot, response interface{}) (err error) {
+	switch response.(type) {
+	case {{range $index, $type := .ResponseTypes}}{{if $index}}, {{end}}{{$type}}{{end}}:
+		err = b.CallMethod(ctx, "{{.Method}}", {{if .HasRequest}}r{{else}}nil{{end}}, response)
+	default:
+		err = errors.New("unexpected response type")
+	}
+
+	return
+}
+{{- end}}
+
 func (r *{{.Type}}) IsMultipart() (multipart bool) {
 	{{if .HasRequest -}}
 	return {{.IsMultipart}}

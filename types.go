@@ -765,10 +765,6 @@ type MaskPosition struct {
 	YShift float64 `json:"y_shift"`
 }
 
-type MenuButton struct {
-	// Hold no information
-}
-
 type MenuButtonCommands struct {
 	Type string `json:"type"`
 }

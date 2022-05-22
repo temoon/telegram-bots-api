@@ -13,15 +13,7 @@ import (
 )
 
 const SchemaPrefix = "#/components/schemas/"
-const (
-	RefInputFile            = SchemaPrefix + "InputFile"
-	RefInputMedia           = SchemaPrefix + "InputMedia"
-	RefChatMember           = SchemaPrefix + "ChatMember"
-	RefBotCommandScope      = SchemaPrefix + "BotCommandScope"
-	RefInlineQueryResult    = SchemaPrefix + "InlineQueryResult"
-	RefInputMessageContent  = SchemaPrefix + "InputMessageContent"
-	RefPassportElementError = SchemaPrefix + "PassportElementError"
-)
+const RefInputFile = SchemaPrefix + "InputFile"
 
 const TemplatesDir = "generate/templates/"
 
@@ -44,13 +36,14 @@ type TypeField struct {
 }
 
 type Request struct {
-	Imports      []string
-	Method       string
-	Type         string
-	Fields       map[string]RequestField
-	HasRequest   bool
-	ResponseType string
-	IsMultipart  bool
+	Imports       []string
+	Method        string
+	Type          string
+	Fields        map[string]RequestField
+	HasRequest    bool
+	ResponseType  string
+	ResponseTypes []string
+	IsMultipart   bool
 }
 
 type RequestField struct {
@@ -62,16 +55,6 @@ type RequestField struct {
 	RawType       string
 	RawTypeFormat string
 	Variants      []RequestField
-}
-
-var dummyTypes = map[string]bool{
-	RefInputFile:            true,
-	RefInputMedia:           true,
-	RefChatMember:           true,
-	RefBotCommandScope:      true,
-	RefInlineQueryResult:    true,
-	RefInputMessageContent:  true,
-	RefPassportElementError: true,
 }
 
 func main() {
@@ -113,8 +96,8 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	}
 
 	schemas := make([]string, 0, len(doc.Components.Schemas))
-	for name := range doc.Components.Schemas {
-		if dummyTypes[SchemaPrefix+name] {
+	for name, schema := range doc.Components.Schemas {
+		if SchemaPrefix+name == RefInputFile || len(schema.Value.AnyOf) != 0 {
 			continue
 		}
 
@@ -176,7 +159,6 @@ func GenerateRequests(doc *openapi3.T) (err error) {
 
 	for method, path := range doc.Paths {
 		response := path.Post.Responses["200"].Value.Content.Get("application/json").Schema.Value.Properties["result"]
-
 		if err = GenerateRequestFile(t, method, path.Post.RequestBody, response); err != nil {
 			return
 		}
@@ -193,15 +175,28 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 	//goland:noinspection GoUnhandledErrorResult
 	defer file.Close()
 
+	var responseTypes []string
+	if response.Ref != "" && response.Ref != RefInputFile {
+		responseTypes = make([]string, 0, len(response.Value.AnyOf))
+		for _, responseType := range response.Value.AnyOf {
+			responseTypes = append(responseTypes, GenerateValueType(responseType, false, "telegram"))
+		}
+	}
+
 	data := Request{
-		Method:       method[1:],
-		Type:         strings.Title(method[1:]),
-		Fields:       make(map[string]RequestField),
-		HasRequest:   requestBody != nil,
-		ResponseType: GenerateValueType(response, true, "telegram"),
+		Method:        method[1:],
+		Type:          strings.Title(method[1:]),
+		Fields:        make(map[string]RequestField),
+		HasRequest:    requestBody != nil,
+		ResponseType:  GenerateValueType(response, true, "telegram"),
+		ResponseTypes: responseTypes,
 	}
 
 	imports := make(map[string]bool)
+	if len(responseTypes) != 0 {
+		imports["errors"] = true
+	}
+
 	if requestBody != nil {
 		form := requestBody.Value.Content.Get("application/x-www-form-urlencoded")
 		if form == nil {
@@ -272,7 +267,7 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 }
 
 func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (t string) {
-	if value.Ref != "" && !dummyTypes[value.Ref] {
+	if value.Ref != "" && value.Ref != RefInputFile && len(value.Value.AnyOf) == 0 {
 		path := strings.Split(value.Ref, "/")
 
 		t = path[len(path)-1]

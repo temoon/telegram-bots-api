@@ -2,6 +2,7 @@ package requests
 
 import (
 	"context"
+	"errors"
 	"strconv"
 
 	"github.com/temoon/telegram-bots-api"
@@ -15,6 +16,17 @@ type GetChatMember struct {
 func (r *GetChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
 	response = new(interface{})
 	err = b.CallMethod(ctx, "getChatMember", r, response)
+	return
+}
+
+func (r *GetChatMember) CallWithResponse(ctx context.Context, b *telegram.Bot, response interface{}) (err error) {
+	switch response.(type) {
+	case *telegram.ChatMemberOwner, *telegram.ChatMemberAdministrator, *telegram.ChatMemberMember, *telegram.ChatMemberRestricted, *telegram.ChatMemberLeft, *telegram.ChatMemberBanned:
+		err = b.CallMethod(ctx, "getChatMember", r, response)
+	default:
+		err = errors.New("unexpected response type")
+	}
+
 	return
 }
 

@@ -37,6 +37,11 @@ type Request interface {
 	GetValues() (map[string]interface{}, error)
 }
 
+type RequestWithResponse interface {
+	Request
+	CallWithResponse(context.Context, *Bot, interface{}) error
+}
+
 type Response struct {
 	OK          bool                `json:"ok"`
 	Description string              `json:"description,omitempty"`
