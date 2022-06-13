@@ -31,54 +31,68 @@ func (r *GetMyCommands) GetValues() (values map[string]interface{}, err error) {
 
 	switch value := r.Scope.(type) {
 	case *telegram.BotCommandScopeDefault:
-		var dataBotCommandScopeDefault []byte
-		if dataBotCommandScopeDefault, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeDefault []byte
+			if dataBotCommandScopeDefault, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeDefault)
+			values["scope"] = string(dataBotCommandScopeDefault)
+		}
 	case *telegram.BotCommandScopeAllPrivateChats:
-		var dataBotCommandScopeAllPrivateChats []byte
-		if dataBotCommandScopeAllPrivateChats, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeAllPrivateChats []byte
+			if dataBotCommandScopeAllPrivateChats, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeAllPrivateChats)
+			values["scope"] = string(dataBotCommandScopeAllPrivateChats)
+		}
 	case *telegram.BotCommandScopeAllGroupChats:
-		var dataBotCommandScopeAllGroupChats []byte
-		if dataBotCommandScopeAllGroupChats, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeAllGroupChats []byte
+			if dataBotCommandScopeAllGroupChats, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeAllGroupChats)
+			values["scope"] = string(dataBotCommandScopeAllGroupChats)
+		}
 	case *telegram.BotCommandScopeAllChatAdministrators:
-		var dataBotCommandScopeAllChatAdministrators []byte
-		if dataBotCommandScopeAllChatAdministrators, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeAllChatAdministrators []byte
+			if dataBotCommandScopeAllChatAdministrators, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeAllChatAdministrators)
+			values["scope"] = string(dataBotCommandScopeAllChatAdministrators)
+		}
 	case *telegram.BotCommandScopeChat:
-		var dataBotCommandScopeChat []byte
-		if dataBotCommandScopeChat, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeChat []byte
+			if dataBotCommandScopeChat, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeChat)
+			values["scope"] = string(dataBotCommandScopeChat)
+		}
 	case *telegram.BotCommandScopeChatAdministrators:
-		var dataBotCommandScopeChatAdministrators []byte
-		if dataBotCommandScopeChatAdministrators, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeChatAdministrators []byte
+			if dataBotCommandScopeChatAdministrators, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeChatAdministrators)
+			values["scope"] = string(dataBotCommandScopeChatAdministrators)
+		}
 	case *telegram.BotCommandScopeChatMember:
-		var dataBotCommandScopeChatMember []byte
-		if dataBotCommandScopeChatMember, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataBotCommandScopeChatMember []byte
+			if dataBotCommandScopeChatMember, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["scope"] = string(dataBotCommandScopeChatMember)
+			values["scope"] = string(dataBotCommandScopeChatMember)
+		}
 	}
 
 	return

@@ -32,26 +32,32 @@ func (r *SetChatMenuButton) GetValues() (values map[string]interface{}, err erro
 
 	switch value := r.MenuButton.(type) {
 	case *telegram.MenuButtonCommands:
-		var dataMenuButtonCommands []byte
-		if dataMenuButtonCommands, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataMenuButtonCommands []byte
+			if dataMenuButtonCommands, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["menu_button"] = string(dataMenuButtonCommands)
+			values["menu_button"] = string(dataMenuButtonCommands)
+		}
 	case *telegram.MenuButtonWebApp:
-		var dataMenuButtonWebApp []byte
-		if dataMenuButtonWebApp, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataMenuButtonWebApp []byte
+			if dataMenuButtonWebApp, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["menu_button"] = string(dataMenuButtonWebApp)
+			values["menu_button"] = string(dataMenuButtonWebApp)
+		}
 	case *telegram.MenuButtonDefault:
-		var dataMenuButtonDefault []byte
-		if dataMenuButtonDefault, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataMenuButtonDefault []byte
+			if dataMenuButtonDefault, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["menu_button"] = string(dataMenuButtonDefault)
+			values["menu_button"] = string(dataMenuButtonDefault)
+		}
 	}
 
 	return

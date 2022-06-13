@@ -225,7 +225,7 @@ func GenerateRequestFile(t *template.Template, method string, requestBody *opena
 					}
 
 					variant := RequestField{
-						IsRequired:    true,
+						IsRequired:    required[key],
 						IsRef:         ref.Ref != "" && ref.Ref != RefInputFile,
 						IsInputFile:   ref.Ref == RefInputFile,
 						Name:          GenerateValueType(ref, true, ""),

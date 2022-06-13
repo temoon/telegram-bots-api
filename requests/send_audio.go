@@ -104,33 +104,41 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 
 	switch value := r.ReplyMarkup.(type) {
 	case *telegram.InlineKeyboardMarkup:
-		var dataInlineKeyboardMarkup []byte
-		if dataInlineKeyboardMarkup, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataInlineKeyboardMarkup []byte
+			if dataInlineKeyboardMarkup, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["reply_markup"] = string(dataInlineKeyboardMarkup)
+			values["reply_markup"] = string(dataInlineKeyboardMarkup)
+		}
 	case *telegram.ReplyKeyboardMarkup:
-		var dataReplyKeyboardMarkup []byte
-		if dataReplyKeyboardMarkup, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataReplyKeyboardMarkup []byte
+			if dataReplyKeyboardMarkup, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["reply_markup"] = string(dataReplyKeyboardMarkup)
+			values["reply_markup"] = string(dataReplyKeyboardMarkup)
+		}
 	case *telegram.ReplyKeyboardRemove:
-		var dataReplyKeyboardRemove []byte
-		if dataReplyKeyboardRemove, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataReplyKeyboardRemove []byte
+			if dataReplyKeyboardRemove, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["reply_markup"] = string(dataReplyKeyboardRemove)
+			values["reply_markup"] = string(dataReplyKeyboardRemove)
+		}
 	case *telegram.ForceReply:
-		var dataForceReply []byte
-		if dataForceReply, err = json.Marshal(value); err != nil {
-			return
-		}
+		if value != nil {
+			var dataForceReply []byte
+			if dataForceReply, err = json.Marshal(value); err != nil {
+				return
+			}
 
-		values["reply_markup"] = string(dataForceReply)
+			values["reply_markup"] = string(dataForceReply)
+		}
 	}
 
 	if r.ReplyToMessageId != nil {
