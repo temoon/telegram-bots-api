@@ -91,6 +91,8 @@ paths:
                     type: string
                 drop_pending_updates:
                   type: boolean
+                secret_token:
+                  type: string
               required:
                 - url
         required: true
@@ -5015,6 +5017,143 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /createInvoiceLink:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                payload:
+                  type: string
+                provider_token:
+                  type: string
+                currency:
+                  type: string
+                prices:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LabeledPrice'
+                max_tip_amount:
+                  type: integer
+                suggested_tip_amounts:
+                  type: array
+                  items:
+                    type: integer
+                provider_data:
+                  type: string
+                photo_url:
+                  type: string
+                photo_size:
+                  type: integer
+                photo_width:
+                  type: integer
+                photo_height:
+                  type: integer
+                need_name:
+                  type: boolean
+                need_phone_number:
+                  type: boolean
+                need_email:
+                  type: boolean
+                need_shipping_address:
+                  type: boolean
+                send_phone_number_to_provider:
+                  type: boolean
+                send_email_to_provider:
+                  type: boolean
+                is_flexible:
+                  type: boolean
+              required:
+                - title
+                - description
+                - payload
+                - provider_token
+                - currency
+                - prices
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                payload:
+                  type: string
+                provider_token:
+                  type: string
+                currency:
+                  type: string
+                prices:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/LabeledPrice'
+                max_tip_amount:
+                  type: integer
+                suggested_tip_amounts:
+                  type: array
+                  items:
+                    type: integer
+                provider_data:
+                  type: string
+                photo_url:
+                  type: string
+                photo_size:
+                  type: integer
+                photo_width:
+                  type: integer
+                photo_height:
+                  type: integer
+                need_name:
+                  type: boolean
+                need_phone_number:
+                  type: boolean
+                need_email:
+                  type: boolean
+                need_shipping_address:
+                  type: boolean
+                send_phone_number_to_provider:
+                  type: boolean
+                send_email_to_provider:
+                  type: boolean
+                is_flexible:
+                  type: boolean
+              required:
+                - title
+                - description
+                - payload
+                - provider_token
+                - currency
+                - prices
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    type: string
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /answerShippingQuery:
     post:
       requestBody:
@@ -5491,6 +5630,10 @@ components:
           type: string
         language_code:
           type: string
+        is_premium:
+          type: boolean
+        added_to_attachment_menu:
+          type: boolean
         can_join_groups:
           type: boolean
         can_read_all_group_messages:
@@ -5529,6 +5672,10 @@ components:
         bio:
           type: string
         has_private_forwards:
+          type: boolean
+        join_to_send_messages:
+          type: boolean
+        join_by_request:
           type: boolean
         invite_link:
           type: string
@@ -5773,6 +5920,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
       required:
         - file_id
         - file_unique_id
@@ -5798,6 +5946,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
         thumb:
           $ref: '#/components/schemas/PhotoSize'
       required:
@@ -5819,6 +5968,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
       required:
         - file_id
         - file_unique_id
@@ -5843,6 +5993,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
       required:
         - file_id
         - file_unique_id
@@ -5882,6 +6033,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
       required:
         - file_id
         - file_unique_id
@@ -6104,6 +6256,7 @@ components:
           type: string
         file_size:
           type: integer
+          format: int64
         file_path:
           type: string
       required:
@@ -6842,6 +6995,8 @@ components:
           type: string
         set_name:
           type: string
+        premium_animation:
+          $ref: '#/components/schemas/File'
         mask_position:
           $ref: '#/components/schemas/MaskPosition'
         file_size:

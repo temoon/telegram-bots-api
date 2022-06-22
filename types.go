@@ -7,7 +7,7 @@ type Animation struct {
 	Height       int32      `json:"height"`
 	Width        int32      `json:"width"`
 	FileName     *string    `json:"file_name,omitempty"`
-	FileSize     *int32     `json:"file_size,omitempty"`
+	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
@@ -17,7 +17,7 @@ type Audio struct {
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
 	FileName     *string    `json:"file_name,omitempty"`
-	FileSize     *int32     `json:"file_size,omitempty"`
+	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	Performer    *string    `json:"performer,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
@@ -85,6 +85,8 @@ type Chat struct {
 	HasPrivateForwards    *bool            `json:"has_private_forwards,omitempty"`
 	HasProtectedContent   *bool            `json:"has_protected_content,omitempty"`
 	InviteLink            *string          `json:"invite_link,omitempty"`
+	JoinByRequest         *bool            `json:"join_by_request,omitempty"`
+	JoinToSendMessages    *bool            `json:"join_to_send_messages,omitempty"`
 	LastName              *string          `json:"last_name,omitempty"`
 	LinkedChatId          *int64           `json:"linked_chat_id,omitempty"`
 	Location              *ChatLocation    `json:"location,omitempty"`
@@ -245,7 +247,7 @@ type Document struct {
 	FileId       string     `json:"file_id"`
 	FileUniqueId string     `json:"file_unique_id"`
 	FileName     *string    `json:"file_name,omitempty"`
-	FileSize     *int32     `json:"file_size,omitempty"`
+	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
@@ -280,7 +282,7 @@ type File struct {
 	FileId       string  `json:"file_id"`
 	FileUniqueId string  `json:"file_unique_id"`
 	FilePath     *string `json:"file_path,omitempty"`
-	FileSize     *int32  `json:"file_size,omitempty"`
+	FileSize     *int64  `json:"file_size,omitempty"`
 }
 
 type ForceReply struct {
@@ -1037,17 +1039,18 @@ type ShippingQuery struct {
 }
 
 type Sticker struct {
-	FileId       string        `json:"file_id"`
-	FileUniqueId string        `json:"file_unique_id"`
-	Height       int32         `json:"height"`
-	IsAnimated   bool          `json:"is_animated"`
-	IsVideo      bool          `json:"is_video"`
-	Width        int32         `json:"width"`
-	Emoji        *string       `json:"emoji,omitempty"`
-	FileSize     *int32        `json:"file_size,omitempty"`
-	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
-	SetName      *string       `json:"set_name,omitempty"`
-	Thumb        *PhotoSize    `json:"thumb,omitempty"`
+	FileId           string        `json:"file_id"`
+	FileUniqueId     string        `json:"file_unique_id"`
+	Height           int32         `json:"height"`
+	IsAnimated       bool          `json:"is_animated"`
+	IsVideo          bool          `json:"is_video"`
+	Width            int32         `json:"width"`
+	Emoji            *string       `json:"emoji,omitempty"`
+	FileSize         *int32        `json:"file_size,omitempty"`
+	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`
+	PremiumAnimation *File         `json:"premium_animation,omitempty"`
+	SetName          *string       `json:"set_name,omitempty"`
+	Thumb            *PhotoSize    `json:"thumb,omitempty"`
 }
 
 type StickerSet struct {
@@ -1092,8 +1095,10 @@ type User struct {
 	FirstName               string  `json:"first_name"`
 	Id                      int64   `json:"id"`
 	IsBot                   bool    `json:"is_bot"`
+	AddedToAttachmentMenu   *bool   `json:"added_to_attachment_menu,omitempty"`
 	CanJoinGroups           *bool   `json:"can_join_groups,omitempty"`
 	CanReadAllGroupMessages *bool   `json:"can_read_all_group_messages,omitempty"`
+	IsPremium               *bool   `json:"is_premium,omitempty"`
 	LanguageCode            *string `json:"language_code,omitempty"`
 	LastName                *string `json:"last_name,omitempty"`
 	SupportsInlineQueries   *bool   `json:"supports_inline_queries,omitempty"`
@@ -1122,7 +1127,7 @@ type Video struct {
 	Height       int32      `json:"height"`
 	Width        int32      `json:"width"`
 	FileName     *string    `json:"file_name,omitempty"`
-	FileSize     *int32     `json:"file_size,omitempty"`
+	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	Thumb        *PhotoSize `json:"thumb,omitempty"`
 }
@@ -1156,7 +1161,7 @@ type Voice struct {
 	Duration     int32   `json:"duration"`
 	FileId       string  `json:"file_id"`
 	FileUniqueId string  `json:"file_unique_id"`
-	FileSize     *int32  `json:"file_size,omitempty"`
+	FileSize     *int64  `json:"file_size,omitempty"`
 	MimeType     *string `json:"mime_type,omitempty"`
 }
 

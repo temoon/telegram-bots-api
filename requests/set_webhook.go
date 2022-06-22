@@ -14,6 +14,7 @@ type SetWebhook struct {
 	DropPendingUpdates *bool
 	IpAddress          *string
 	MaxConnections     *int32
+	SecretToken        *string
 	Url                string
 }
 
@@ -57,6 +58,10 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 
 	if r.MaxConnections != nil {
 		values["max_connections"] = strconv.FormatInt(int64(*r.MaxConnections), 10)
+	}
+
+	if r.SecretToken != nil {
+		values["secret_token"] = *r.SecretToken
 	}
 
 	values["url"] = r.Url
