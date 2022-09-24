@@ -10,15 +10,15 @@ import (
 )
 
 type CreateNewStickerSet struct {
-	ContainsMasks *bool
-	Emojis        string
-	MaskPosition  *telegram.MaskPosition
-	Name          string
-	PngSticker    interface{}
-	TgsSticker    interface{}
-	Title         string
-	UserId        int64
-	WebmSticker   interface{}
+	Emojis       string
+	MaskPosition *telegram.MaskPosition
+	Name         string
+	PngSticker   interface{}
+	StickerType  *string
+	TgsSticker   interface{}
+	Title        string
+	UserId       int64
+	WebmSticker  interface{}
 }
 
 func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -33,14 +33,6 @@ func (r *CreateNewStickerSet) IsMultipart() (multipart bool) {
 
 func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	if r.ContainsMasks != nil {
-		if *r.ContainsMasks {
-			values["contains_masks"] = "1"
-		} else {
-			values["contains_masks"] = "0"
-		}
-	}
 
 	values["emojis"] = r.Emojis
 
@@ -60,6 +52,10 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 		values["png_sticker"] = value
 	case string:
 		values["png_sticker"] = value
+	}
+
+	if r.StickerType != nil {
+		values["sticker_type"] = *r.StickerType
 	}
 
 	if r.TgsSticker != nil {

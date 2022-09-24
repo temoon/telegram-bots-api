@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.0.0
+  version: 6.2.0
 paths:
   /getUpdates:
     post:
@@ -4486,6 +4486,55 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /getCustomEmojiStickers:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                custom_emoji_ids:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - custom_emoji_ids
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                custom_emoji_ids:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - custom_emoji_ids
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Sticker'
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /uploadStickerFile:
     post:
       requestBody:
@@ -4548,10 +4597,10 @@ paths:
                   $ref: '#/components/schemas/InputFile'
                 webm_sticker:
                   $ref: '#/components/schemas/InputFile'
+                sticker_type:
+                  type: string
                 emojis:
                   type: string
-                contains_masks:
-                  type: boolean
                 mask_position:
                   $ref: '#/components/schemas/MaskPosition'
               required:
@@ -5673,6 +5722,8 @@ components:
           type: string
         has_private_forwards:
           type: boolean
+        has_restricted_voice_and_video_messages:
+          type: boolean
         join_to_send_messages:
           type: boolean
         join_by_request:
@@ -5876,6 +5927,8 @@ components:
         user:
           $ref: '#/components/schemas/User'
         language:
+          type: string
+        custom_emoji_id:
           type: string
       required:
         - type
@@ -6981,6 +7034,8 @@ components:
           type: string
         file_unique_id:
           type: string
+        type:
+          type: string
         width:
           type: integer
         height:
@@ -6999,11 +7054,14 @@ components:
           $ref: '#/components/schemas/File'
         mask_position:
           $ref: '#/components/schemas/MaskPosition'
+        custom_emoji_id:
+          type: string
         file_size:
           type: integer
       required:
         - file_id
         - file_unique_id
+        - type
         - width
         - height
         - is_animated
@@ -7015,11 +7073,11 @@ components:
           type: string
         title:
           type: string
+        sticker_type:
+          type: string
         is_animated:
           type: boolean
         is_video:
-          type: boolean
-        contains_masks:
           type: boolean
         stickers:
           type: array
@@ -7030,9 +7088,9 @@ components:
       required:
         - name
         - title
+        - sticker_type
         - is_animated
         - is_video
-        - contains_masks
         - stickers
     MaskPosition:
       type: object

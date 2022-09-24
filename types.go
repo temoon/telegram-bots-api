@@ -76,28 +76,29 @@ type CallbackQuery struct {
 }
 
 type Chat struct {
-	Id                    int64            `json:"id"`
-	Type                  string           `json:"type"`
-	Bio                   *string          `json:"bio,omitempty"`
-	CanSetStickerSet      *bool            `json:"can_set_sticker_set,omitempty"`
-	Description           *string          `json:"description,omitempty"`
-	FirstName             *string          `json:"first_name,omitempty"`
-	HasPrivateForwards    *bool            `json:"has_private_forwards,omitempty"`
-	HasProtectedContent   *bool            `json:"has_protected_content,omitempty"`
-	InviteLink            *string          `json:"invite_link,omitempty"`
-	JoinByRequest         *bool            `json:"join_by_request,omitempty"`
-	JoinToSendMessages    *bool            `json:"join_to_send_messages,omitempty"`
-	LastName              *string          `json:"last_name,omitempty"`
-	LinkedChatId          *int64           `json:"linked_chat_id,omitempty"`
-	Location              *ChatLocation    `json:"location,omitempty"`
-	MessageAutoDeleteTime *int32           `json:"message_auto_delete_time,omitempty"`
-	Permissions           *ChatPermissions `json:"permissions,omitempty"`
-	Photo                 *ChatPhoto       `json:"photo,omitempty"`
-	PinnedMessage         *Message         `json:"pinned_message,omitempty"`
-	SlowModeDelay         *int32           `json:"slow_mode_delay,omitempty"`
-	StickerSetName        *string          `json:"sticker_set_name,omitempty"`
-	Title                 *string          `json:"title,omitempty"`
-	Username              *string          `json:"username,omitempty"`
+	Id                                 int64            `json:"id"`
+	Type                               string           `json:"type"`
+	Bio                                *string          `json:"bio,omitempty"`
+	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
+	Description                        *string          `json:"description,omitempty"`
+	FirstName                          *string          `json:"first_name,omitempty"`
+	HasPrivateForwards                 *bool            `json:"has_private_forwards,omitempty"`
+	HasProtectedContent                *bool            `json:"has_protected_content,omitempty"`
+	HasRestrictedVoiceAndVideoMessages *bool            `json:"has_restricted_voice_and_video_messages,omitempty"`
+	InviteLink                         *string          `json:"invite_link,omitempty"`
+	JoinByRequest                      *bool            `json:"join_by_request,omitempty"`
+	JoinToSendMessages                 *bool            `json:"join_to_send_messages,omitempty"`
+	LastName                           *string          `json:"last_name,omitempty"`
+	LinkedChatId                       *int64           `json:"linked_chat_id,omitempty"`
+	Location                           *ChatLocation    `json:"location,omitempty"`
+	MessageAutoDeleteTime              *int32           `json:"message_auto_delete_time,omitempty"`
+	Permissions                        *ChatPermissions `json:"permissions,omitempty"`
+	Photo                              *ChatPhoto       `json:"photo,omitempty"`
+	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`
+	SlowModeDelay                      *int32           `json:"slow_mode_delay,omitempty"`
+	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
+	Title                              *string          `json:"title,omitempty"`
+	Username                           *string          `json:"username,omitempty"`
 }
 
 type ChatAdministratorRights struct {
@@ -848,12 +849,13 @@ type MessageAutoDeleteTimerChanged struct {
 }
 
 type MessageEntity struct {
-	Length   int32   `json:"length"`
-	Offset   int32   `json:"offset"`
-	Type     string  `json:"type"`
-	Language *string `json:"language,omitempty"`
-	Url      *string `json:"url,omitempty"`
-	User     *User   `json:"user,omitempty"`
+	Length        int32   `json:"length"`
+	Offset        int32   `json:"offset"`
+	Type          string  `json:"type"`
+	CustomEmojiId *string `json:"custom_emoji_id,omitempty"`
+	Language      *string `json:"language,omitempty"`
+	Url           *string `json:"url,omitempty"`
+	User          *User   `json:"user,omitempty"`
 }
 
 type MessageId struct {
@@ -1044,7 +1046,9 @@ type Sticker struct {
 	Height           int32         `json:"height"`
 	IsAnimated       bool          `json:"is_animated"`
 	IsVideo          bool          `json:"is_video"`
+	Type             string        `json:"type"`
 	Width            int32         `json:"width"`
+	CustomEmojiId    *string       `json:"custom_emoji_id,omitempty"`
 	Emoji            *string       `json:"emoji,omitempty"`
 	FileSize         *int32        `json:"file_size,omitempty"`
 	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`
@@ -1054,13 +1058,13 @@ type Sticker struct {
 }
 
 type StickerSet struct {
-	ContainsMasks bool       `json:"contains_masks"`
-	IsAnimated    bool       `json:"is_animated"`
-	IsVideo       bool       `json:"is_video"`
-	Name          string     `json:"name"`
-	Stickers      []Sticker  `json:"stickers"`
-	Title         string     `json:"title"`
-	Thumb         *PhotoSize `json:"thumb,omitempty"`
+	IsAnimated  bool       `json:"is_animated"`
+	IsVideo     bool       `json:"is_video"`
+	Name        string     `json:"name"`
+	StickerType string     `json:"sticker_type"`
+	Stickers    []Sticker  `json:"stickers"`
+	Title       string     `json:"title"`
+	Thumb       *PhotoSize `json:"thumb,omitempty"`
 }
 
 type SuccessfulPayment struct {

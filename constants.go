@@ -1,7 +1,7 @@
 package telegram
 
 const Name = "Telegram Bot API"
-const Version = "6.0.0"
+const Version = "6.2.0"
 
 const ParseModeMarkdown = "Markdown"
 const ParseModeMarkdownV2 = "MarkdownV2"
@@ -29,6 +29,7 @@ const MessageEntityTypeCode = "code"
 const MessageEntityTypePre = "pre"
 const MessageEntityTypeTextLink = "text_link"
 const MessageEntityTypeTextMention = "text_mention"
+const MessageEntityTypeCustomEmoji = "custom_emoji"
 
 const ChatMemberStatusCreator = "creator"
 const ChatMemberStatusAdministrator = "administrator"
@@ -90,3 +91,7 @@ const EncryptedPassportElementTypePassportRegistration = "passport_registration"
 const EncryptedPassportElementTypeTemporaryRegistration = "temporary_registration"
 const EncryptedPassportElementTypePhoneNumber = "phone_number"
 const EncryptedPassportElementTypeEmail = "email"
+
+const StickerTypeRegular = "regular"
+const StickerTypeMask = "mask"
+const StickerTypeCustomEmoji = "custom_emoji"
