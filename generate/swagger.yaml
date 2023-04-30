@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.5.0
+  version: 6.6.0
 paths:
   /getUpdates:
     post:
@@ -656,7 +656,7 @@ paths:
                   type: string
                 title:
                   type: string
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
@@ -719,7 +719,7 @@ paths:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
@@ -798,7 +798,7 @@ paths:
                   type: integer
                 height:
                   type: integer
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
@@ -879,7 +879,7 @@ paths:
                   type: integer
                 height:
                   type: integer
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
@@ -1025,7 +1025,7 @@ paths:
                   type: integer
                 length:
                   type: integer
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
@@ -4570,6 +4570,172 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /setMyDescription:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                description:
+                  type: string
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /getMyDescription:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/BotDescription'
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setMyShortDescription:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                short_description:
+                  type: string
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                short_description:
+                  type: string
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /getMyShortDescription:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/BotShortDescription'
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /setChatMenuButton:
     post:
       requestBody:
@@ -5147,6 +5313,8 @@ paths:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
+                emoji:
+                  type: string
                 disable_notification:
                   type: boolean
                 protect_content:
@@ -5290,11 +5458,18 @@ paths:
                 user_id:
                   type: integer
                   format: int64
-                png_sticker:
-                  $ref: '#/components/schemas/InputFile'
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
+                sticker_format:
+                  type: string
+                  enum:
+                    - static
+                    - animated
+                    - video
               required:
                 - user_id
-                - png_sticker
+                - sticker
+                - sticker_format
         required: true
       responses:
         '200':
@@ -5331,27 +5506,36 @@ paths:
                   format: int64
                 name:
                   type: string
+                  minLength: 1
+                  maxLength: 64
                 title:
                   type: string
-                png_sticker:
-                  anyOf:
-                    - $ref: '#/components/schemas/InputFile'
-                    - type: string
-                tgs_sticker:
-                  $ref: '#/components/schemas/InputFile'
-                webm_sticker:
-                  $ref: '#/components/schemas/InputFile'
+                  minLength: 1
+                  maxLength: 64
+                stickers:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/InputSticker'
+                sticker_format:
+                  type: string
+                  enum:
+                    - static
+                    - animated
+                    - video
                 sticker_type:
                   type: string
-                emojis:
-                  type: string
-                mask_position:
-                  $ref: '#/components/schemas/MaskPosition'
+                  enum:
+                    - regular
+                    - mask
+                    - custom_emoji
+                needs_repainting:
+                  type: boolean
               required:
                 - user_id
                 - name
                 - title
-                - emojis
+                - stickers
+                - sticker_format
         required: true
       responses:
         '200':
@@ -5389,22 +5573,12 @@ paths:
                   format: int64
                 name:
                   type: string
-                png_sticker:
-                  anyOf:
-                    - $ref: '#/components/schemas/InputFile'
-                    - type: string
-                tgs_sticker:
-                  $ref: '#/components/schemas/InputFile'
-                webm_sticker:
-                  $ref: '#/components/schemas/InputFile'
-                emojis:
-                  type: string
-                mask_position:
-                  $ref: '#/components/schemas/MaskPosition'
+                sticker:
+                  $ref: '#/components/schemas/InputSticker'
               required:
                 - user_id
                 - name
-                - emojis
+                - sticker
         required: true
       responses:
         '200':
@@ -5523,7 +5697,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
-  /setStickerSetThumb:
+  /setStickerSetThumbnail:
     post:
       requestBody:
         content:
@@ -5536,13 +5710,327 @@ paths:
                 user_id:
                   type: integer
                   format: int64
-                thumb:
+                thumbnail:
                   anyOf:
                     - $ref: '#/components/schemas/InputFile'
                     - type: string
               required:
                 - name
                 - user_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setStickerSetTitle:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 64
+              required:
+                - name
+                - title
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 64
+              required:
+                - name
+                - title
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setStickerEmojiList:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                emoji_list:
+                  type: array
+                  minItems: 1
+                  maxItems: 20
+                  items:
+                    type: string
+              required:
+                - sticker
+                - emoji_list
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                emoji_list:
+                  type: array
+                  minItems: 1
+                  maxItems: 20
+                  items:
+                    type: string
+              required:
+                - sticker
+                - emoji_list
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setStickerKeywords:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                keywords:
+                  type: array
+                  minItems: 0
+                  maxItems: 20
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 64
+              required:
+                - sticker
+                - keywords
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                keywords:
+                  type: array
+                  minItems: 0
+                  maxItems: 20
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 64
+              required:
+                - sticker
+                - keywords
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setStickerMaskPosition:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                mask_position:
+                  $ref: '#/components/schemas/MaskPosition'
+              required:
+                - sticker
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sticker:
+                  type: string
+                mask_position:
+                  $ref: '#/components/schemas/MaskPosition'
+              required:
+                - sticker
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /setCustomEmojiStickerSetThumbnail:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                custom_emoji_id:
+                  type: string
+              required:
+                - name
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                custom_emoji_id:
+                  type: string
+              required:
+                - name
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /deleteStickerSet:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+              required:
+                - name
         required: true
       responses:
         '200':
@@ -6769,7 +7257,7 @@ components:
           type: integer
         duration:
           type: integer
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
         file_name:
           type: string
@@ -6804,7 +7292,7 @@ components:
         file_size:
           type: integer
           format: int64
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
       required:
         - file_id
@@ -6817,7 +7305,7 @@ components:
           type: string
         file_unique_id:
           type: string
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
         file_name:
           type: string
@@ -6842,7 +7330,7 @@ components:
           type: integer
         duration:
           type: integer
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
         file_name:
           type: string
@@ -6868,7 +7356,7 @@ components:
           type: integer
         duration:
           type: integer
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
         file_size:
           type: integer
@@ -7785,6 +8273,27 @@ components:
         - type
         - chat_id
         - user_id
+    BotName:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    BotDescription:
+      type: object
+      properties:
+        description:
+          type: string
+      required:
+        - description
+    BotShortDescription:
+      type: object
+      properties:
+        short_description:
+          type: string
+      required:
+        - short_description
     MenuButton:
       anyOf:
         - $ref: '#/components/schemas/MenuButtonCommands'
@@ -7859,7 +8368,7 @@ components:
           type: string
         media:
           type: string
-        thumb:
+        thumbnail:
           anyOf:
             - $ref: '#/components/schemas/InputFile'
             - type: string
@@ -7891,7 +8400,7 @@ components:
           type: string
         media:
           type: string
-        thumb:
+        thumbnail:
           anyOf:
             - $ref: '#/components/schemas/InputFile'
             - type: string
@@ -7921,7 +8430,7 @@ components:
           type: string
         media:
           type: string
-        thumb:
+        thumbnail:
           anyOf:
             - $ref: '#/components/schemas/InputFile'
             - type: string
@@ -7949,7 +8458,7 @@ components:
           type: string
         media:
           type: string
-        thumb:
+        thumbnail:
           anyOf:
             - $ref: '#/components/schemas/InputFile'
             - type: string
@@ -7966,6 +8475,26 @@ components:
       required:
         - type
         - media
+    InputSticker:
+      type: object
+      properties:
+        sticker:
+          anyOf:
+            - $ref: '#/components/schemas/InputFile'
+            - type: string
+        emoji_list:
+          type: array
+          items:
+            type: string
+        mask_position:
+          $ref: '#/components/schemas/MaskPosition'
+        keywords:
+          type: array
+          items:
+            type: string
+      required:
+        - sticker
+        - emoji_list
     InputFile: { }
     Sticker:
       type: object
@@ -7984,7 +8513,7 @@ components:
           type: boolean
         is_video:
           type: boolean
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
         emoji:
           type: string
@@ -7996,6 +8525,8 @@ components:
           $ref: '#/components/schemas/MaskPosition'
         custom_emoji_id:
           type: string
+        needs_repainting:
+          type: boolean
         file_size:
           type: integer
       required:
@@ -8023,7 +8554,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Sticker'
-        thumb:
+        thumbnail:
           $ref: '#/components/schemas/PhotoSize'
       required:
         - name
@@ -8120,11 +8651,11 @@ components:
           type: boolean
         description:
           type: string
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_width:
+        thumbnail_width:
           type: integer
-        thumb_height:
+        thumbnail_height:
           type: integer
       required:
         - type
@@ -8140,7 +8671,7 @@ components:
           type: string
         photo_url:
           type: string
-        thumb_url:
+        thumbnail_url:
           type: string
         description:
           type: string
@@ -8166,7 +8697,7 @@ components:
         - type
         - id
         - photo_url
-        - thumb_url
+        - thumbnail_url
     InlineQueryResultGif:
       type: object
       properties:
@@ -8182,9 +8713,9 @@ components:
           type: integer
         gif_duration:
           type: integer
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_mime_type:
+        thumbnail_mime_type:
           default: image/jpeg
           type: string
           enum:
@@ -8209,7 +8740,7 @@ components:
         - type
         - id
         - gif_url
-        - thumb_url
+        - thumbnail_url
     InlineQueryResultMpeg4Gif:
       type: object
       properties:
@@ -8225,9 +8756,9 @@ components:
           type: integer
         mpeg4_duration:
           type: integer
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_mime_type:
+        thumbnail_mime_type:
           default: image/jpeg
           type: string
           enum:
@@ -8252,7 +8783,7 @@ components:
         - type
         - id
         - mpeg4_url
-        - thumb_url
+        - thumbnail_url
     InlineQueryResultVideo:
       type: object
       properties:
@@ -8264,7 +8795,7 @@ components:
           type: string
         mime_type:
           type: string
-        thumb_url:
+        thumbnail_url:
           type: string
         description:
           type: string
@@ -8293,7 +8824,7 @@ components:
         - id
         - video_url
         - mime_type
-        - thumb_url
+        - thumbnail_url
         - title
     InlineQueryResultAudio:
       type: object
@@ -8387,11 +8918,11 @@ components:
           $ref: '#/components/schemas/InlineKeyboardMarkup'
         input_message_content:
           $ref: '#/components/schemas/InputMessageContent'
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_width:
+        thumbnail_width:
           type: integer
-        thumb_height:
+        thumbnail_height:
           type: integer
       required:
         - type
@@ -8424,11 +8955,11 @@ components:
           $ref: '#/components/schemas/InlineKeyboardMarkup'
         input_message_content:
           $ref: '#/components/schemas/InputMessageContent'
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_width:
+        thumbnail_width:
           type: integer
-        thumb_height:
+        thumbnail_height:
           type: integer
       required:
         - type
@@ -8463,11 +8994,11 @@ components:
           $ref: '#/components/schemas/InlineKeyboardMarkup'
         input_message_content:
           $ref: '#/components/schemas/InputMessageContent'
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_width:
+        thumbnail_width:
           type: integer
-        thumb_height:
+        thumbnail_height:
           type: integer
       required:
         - type
@@ -8495,11 +9026,11 @@ components:
           $ref: '#/components/schemas/InlineKeyboardMarkup'
         input_message_content:
           $ref: '#/components/schemas/InputMessageContent'
-        thumb_url:
+        thumbnail_url:
           type: string
-        thumb_width:
+        thumbnail_width:
           type: integer
-        thumb_height:
+        thumbnail_height:
           type: integer
       required:
         - type

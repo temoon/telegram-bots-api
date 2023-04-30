@@ -19,7 +19,7 @@ type SendVideoNote struct {
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
-	Thumb                    interface{}
+	Thumbnail                interface{}
 	VideoNote                interface{}
 }
 
@@ -122,11 +122,11 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
 	}
 
-	switch value := r.Thumb.(type) {
+	switch value := r.Thumbnail.(type) {
 	case io.Reader:
-		values["thumb"] = value
+		values["thumbnail"] = value
 	case string:
-		values["thumb"] = value
+		values["thumbnail"] = value
 	}
 
 	switch value := r.VideoNote.(type) {

@@ -9,7 +9,7 @@ type Animation struct {
 	FileName     *string    `json:"file_name,omitempty"`
 	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
-	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
 }
 
 type Audio struct {
@@ -20,7 +20,7 @@ type Audio struct {
 	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
 	Performer    *string    `json:"performer,omitempty"`
-	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
 	Title        *string    `json:"title,omitempty"`
 }
 
@@ -59,6 +59,18 @@ type BotCommandScopeChatMember struct {
 
 type BotCommandScopeDefault struct {
 	Type string `json:"type"`
+}
+
+type BotDescription struct {
+	Description string `json:"description"`
+}
+
+type BotName struct {
+	Name string `json:"name"`
+}
+
+type BotShortDescription struct {
+	ShortDescription string `json:"short_description"`
 }
 
 type CallbackGame struct {
@@ -270,7 +282,7 @@ type Document struct {
 	FileName     *string    `json:"file_name,omitempty"`
 	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
-	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
 }
 
 type EncryptedCredentials struct {
@@ -394,9 +406,9 @@ type InlineQueryResultArticle struct {
 	Description         *string               `json:"description,omitempty"`
 	HideUrl             *bool                 `json:"hide_url,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         *int32                `json:"thumb_height,omitempty"`
-	ThumbUrl            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          *int32                `json:"thumb_width,omitempty"`
+	ThumbnailHeight     *int32                `json:"thumbnail_height,omitempty"`
+	ThumbnailUrl        *string               `json:"thumbnail_url,omitempty"`
+	ThumbnailWidth      *int32                `json:"thumbnail_width,omitempty"`
 	Url                 *string               `json:"url,omitempty"`
 }
 
@@ -516,9 +528,9 @@ type InlineQueryResultContact struct {
 	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	LastName            *string               `json:"last_name,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         *int32                `json:"thumb_height,omitempty"`
-	ThumbUrl            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          *int32                `json:"thumb_width,omitempty"`
+	ThumbnailHeight     *int32                `json:"thumbnail_height,omitempty"`
+	ThumbnailUrl        *string               `json:"thumbnail_url,omitempty"`
+	ThumbnailWidth      *int32                `json:"thumbnail_width,omitempty"`
 	Vcard               *string               `json:"vcard,omitempty"`
 }
 
@@ -534,9 +546,9 @@ type InlineQueryResultDocument struct {
 	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           *string               `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         *int32                `json:"thumb_height,omitempty"`
-	ThumbUrl            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          *int32                `json:"thumb_width,omitempty"`
+	ThumbnailHeight     *int32                `json:"thumbnail_height,omitempty"`
+	ThumbnailUrl        *string               `json:"thumbnail_url,omitempty"`
+	ThumbnailWidth      *int32                `json:"thumbnail_width,omitempty"`
 }
 
 type InlineQueryResultGame struct {
@@ -549,7 +561,7 @@ type InlineQueryResultGame struct {
 type InlineQueryResultGif struct {
 	GifUrl              string                `json:"gif_url"`
 	Id                  string                `json:"id"`
-	ThumbUrl            string                `json:"thumb_url"`
+	ThumbnailUrl        string                `json:"thumbnail_url"`
 	Type                string                `json:"type"`
 	Caption             *string               `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
@@ -559,7 +571,7 @@ type InlineQueryResultGif struct {
 	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ParseMode           *string               `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbMimeType       *string               `json:"thumb_mime_type,omitempty"`
+	ThumbnailMimeType   *string               `json:"thumbnail_mime_type,omitempty"`
 	Title               *string               `json:"title,omitempty"`
 }
 
@@ -575,15 +587,15 @@ type InlineQueryResultLocation struct {
 	LivePeriod           *int32                `json:"live_period,omitempty"`
 	ProximityAlertRadius *int32                `json:"proximity_alert_radius,omitempty"`
 	ReplyMarkup          *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight          *int32                `json:"thumb_height,omitempty"`
-	ThumbUrl             *string               `json:"thumb_url,omitempty"`
-	ThumbWidth           *int32                `json:"thumb_width,omitempty"`
+	ThumbnailHeight      *int32                `json:"thumbnail_height,omitempty"`
+	ThumbnailUrl         *string               `json:"thumbnail_url,omitempty"`
+	ThumbnailWidth       *int32                `json:"thumbnail_width,omitempty"`
 }
 
 type InlineQueryResultMpeg4Gif struct {
 	Id                  string                `json:"id"`
 	Mpeg4Url            string                `json:"mpeg4_url"`
-	ThumbUrl            string                `json:"thumb_url"`
+	ThumbnailUrl        string                `json:"thumbnail_url"`
 	Type                string                `json:"type"`
 	Caption             *string               `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
@@ -593,14 +605,14 @@ type InlineQueryResultMpeg4Gif struct {
 	Mpeg4Width          *int32                `json:"mpeg4_width,omitempty"`
 	ParseMode           *string               `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbMimeType       *string               `json:"thumb_mime_type,omitempty"`
+	ThumbnailMimeType   *string               `json:"thumbnail_mime_type,omitempty"`
 	Title               *string               `json:"title,omitempty"`
 }
 
 type InlineQueryResultPhoto struct {
 	Id                  string                `json:"id"`
 	PhotoUrl            string                `json:"photo_url"`
-	ThumbUrl            string                `json:"thumb_url"`
+	ThumbnailUrl        string                `json:"thumbnail_url"`
 	Type                string                `json:"type"`
 	Caption             *string               `json:"caption,omitempty"`
 	CaptionEntities     []MessageEntity       `json:"caption_entities,omitempty"`
@@ -626,15 +638,15 @@ type InlineQueryResultVenue struct {
 	GooglePlaceType     *string               `json:"google_place_type,omitempty"`
 	InputMessageContent interface{}           `json:"input_message_content,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
-	ThumbHeight         *int32                `json:"thumb_height,omitempty"`
-	ThumbUrl            *string               `json:"thumb_url,omitempty"`
-	ThumbWidth          *int32                `json:"thumb_width,omitempty"`
+	ThumbnailHeight     *int32                `json:"thumbnail_height,omitempty"`
+	ThumbnailUrl        *string               `json:"thumbnail_url,omitempty"`
+	ThumbnailWidth      *int32                `json:"thumbnail_width,omitempty"`
 }
 
 type InlineQueryResultVideo struct {
 	Id                  string                `json:"id"`
 	MimeType            string                `json:"mime_type"`
-	ThumbUrl            string                `json:"thumb_url"`
+	ThumbnailUrl        string                `json:"thumbnail_url"`
 	Title               string                `json:"title"`
 	Type                string                `json:"type"`
 	VideoUrl            string                `json:"video_url"`
@@ -710,7 +722,7 @@ type InputMediaAnimation struct {
 	HasSpoiler      *bool           `json:"has_spoiler,omitempty"`
 	Height          *int32          `json:"height,omitempty"`
 	ParseMode       *string         `json:"parse_mode,omitempty"`
-	Thumb           interface{}     `json:"thumb,omitempty"`
+	Thumbnail       interface{}     `json:"thumbnail,omitempty"`
 	Width           *int32          `json:"width,omitempty"`
 }
 
@@ -722,7 +734,7 @@ type InputMediaAudio struct {
 	Duration        *int32          `json:"duration,omitempty"`
 	ParseMode       *string         `json:"parse_mode,omitempty"`
 	Performer       *string         `json:"performer,omitempty"`
-	Thumb           interface{}     `json:"thumb,omitempty"`
+	Thumbnail       interface{}     `json:"thumbnail,omitempty"`
 	Title           *string         `json:"title,omitempty"`
 }
 
@@ -733,7 +745,7 @@ type InputMediaDocument struct {
 	CaptionEntities             []MessageEntity `json:"caption_entities,omitempty"`
 	DisableContentTypeDetection *bool           `json:"disable_content_type_detection,omitempty"`
 	ParseMode                   *string         `json:"parse_mode,omitempty"`
-	Thumb                       interface{}     `json:"thumb,omitempty"`
+	Thumbnail                   interface{}     `json:"thumbnail,omitempty"`
 }
 
 type InputMediaPhoto struct {
@@ -755,8 +767,15 @@ type InputMediaVideo struct {
 	Height            *int32          `json:"height,omitempty"`
 	ParseMode         *string         `json:"parse_mode,omitempty"`
 	SupportsStreaming *bool           `json:"supports_streaming,omitempty"`
-	Thumb             interface{}     `json:"thumb,omitempty"`
+	Thumbnail         interface{}     `json:"thumbnail,omitempty"`
 	Width             *int32          `json:"width,omitempty"`
+}
+
+type InputSticker struct {
+	EmojiList    []string      `json:"emoji_list"`
+	Sticker      interface{}   `json:"sticker"`
+	Keywords     []string      `json:"keywords,omitempty"`
+	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
 }
 
 type InputTextMessageContent struct {
@@ -1141,9 +1160,10 @@ type Sticker struct {
 	Emoji            *string       `json:"emoji,omitempty"`
 	FileSize         *int32        `json:"file_size,omitempty"`
 	MaskPosition     *MaskPosition `json:"mask_position,omitempty"`
+	NeedsRepainting  *bool         `json:"needs_repainting,omitempty"`
 	PremiumAnimation *File         `json:"premium_animation,omitempty"`
 	SetName          *string       `json:"set_name,omitempty"`
-	Thumb            *PhotoSize    `json:"thumb,omitempty"`
+	Thumbnail        *PhotoSize    `json:"thumbnail,omitempty"`
 }
 
 type StickerSet struct {
@@ -1153,7 +1173,7 @@ type StickerSet struct {
 	StickerType string     `json:"sticker_type"`
 	Stickers    []Sticker  `json:"stickers"`
 	Title       string     `json:"title"`
-	Thumb       *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail   *PhotoSize `json:"thumbnail,omitempty"`
 }
 
 type SuccessfulPayment struct {
@@ -1227,7 +1247,7 @@ type Video struct {
 	FileName     *string    `json:"file_name,omitempty"`
 	FileSize     *int64     `json:"file_size,omitempty"`
 	MimeType     *string    `json:"mime_type,omitempty"`
-	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
 }
 
 type VideoChatEnded struct {
@@ -1252,7 +1272,7 @@ type VideoNote struct {
 	FileUniqueId string     `json:"file_unique_id"`
 	Length       int32      `json:"length"`
 	FileSize     *int32     `json:"file_size,omitempty"`
-	Thumb        *PhotoSize `json:"thumb,omitempty"`
+	Thumbnail    *PhotoSize `json:"thumbnail,omitempty"`
 }
 
 type Voice struct {

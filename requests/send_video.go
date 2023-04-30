@@ -24,7 +24,7 @@ type SendVideo struct {
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
 	SupportsStreaming        *bool
-	Thumb                    interface{}
+	Thumbnail                interface{}
 	Video                    interface{}
 	Width                    *int32
 }
@@ -161,11 +161,11 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	switch value := r.Thumb.(type) {
+	switch value := r.Thumbnail.(type) {
 	case io.Reader:
-		values["thumb"] = value
+		values["thumbnail"] = value
 	case string:
-		values["thumb"] = value
+		values["thumbnail"] = value
 	}
 
 	switch value := r.Video.(type) {

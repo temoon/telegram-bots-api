@@ -13,6 +13,7 @@ type SendSticker struct {
 	AllowSendingWithoutReply *bool
 	ChatId                   interface{}
 	DisableNotification      *bool
+	Emoji                    *string
 	MessageThreadId          *int32
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -54,6 +55,10 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.Emoji != nil {
+		values["emoji"] = *r.Emoji
 	}
 
 	if r.MessageThreadId != nil {
