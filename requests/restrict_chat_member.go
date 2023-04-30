@@ -9,10 +9,11 @@ import (
 )
 
 type RestrictChatMember struct {
-	ChatId      interface{}
-	Permissions telegram.ChatPermissions
-	UntilDate   *int32
-	UserId      int64
+	ChatId                        interface{}
+	Permissions                   telegram.ChatPermissions
+	UntilDate                     *int32
+	UseIndependentChatPermissions *bool
+	UserId                        int64
 }
 
 func (r *RestrictChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -44,6 +45,14 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 
 	if r.UntilDate != nil {
 		values["until_date"] = strconv.FormatInt(int64(*r.UntilDate), 10)
+	}
+
+	if r.UseIndependentChatPermissions != nil {
+		if *r.UseIndependentChatPermissions {
+			values["use_independent_chat_permissions"] = "1"
+		} else {
+			values["use_independent_chat_permissions"] = "0"
+		}
 	}
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)

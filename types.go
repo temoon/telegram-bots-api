@@ -137,6 +137,7 @@ type ChatJoinRequest struct {
 	Chat       Chat            `json:"chat"`
 	Date       int32           `json:"date"`
 	From       User            `json:"from"`
+	UserChatId int64           `json:"user_chat_id"`
 	Bio        *string         `json:"bio,omitempty"`
 	InviteLink *ChatInviteLink `json:"invite_link,omitempty"`
 }
@@ -193,10 +194,15 @@ type ChatMemberRestricted struct {
 	CanChangeInfo         bool   `json:"can_change_info"`
 	CanInviteUsers        bool   `json:"can_invite_users"`
 	CanPinMessages        bool   `json:"can_pin_messages"`
-	CanSendMediaMessages  bool   `json:"can_send_media_messages"`
+	CanSendAudios         bool   `json:"can_send_audios"`
+	CanSendDocuments      bool   `json:"can_send_documents"`
 	CanSendMessages       bool   `json:"can_send_messages"`
 	CanSendOtherMessages  bool   `json:"can_send_other_messages"`
+	CanSendPhotos         bool   `json:"can_send_photos"`
 	CanSendPolls          bool   `json:"can_send_polls"`
+	CanSendVideoNotes     bool   `json:"can_send_video_notes"`
+	CanSendVideos         bool   `json:"can_send_videos"`
+	CanSendVoiceNotes     bool   `json:"can_send_voice_notes"`
 	IsMember              bool   `json:"is_member"`
 	Status                string `json:"status"`
 	UntilDate             int32  `json:"until_date"`
@@ -230,6 +236,11 @@ type ChatPhoto struct {
 	BigFileUniqueId   string `json:"big_file_unique_id"`
 	SmallFileId       string `json:"small_file_id"`
 	SmallFileUniqueId string `json:"small_file_unique_id"`
+}
+
+type ChatShared struct {
+	ChatId    *int64 `json:"chat_id,omitempty"`
+	RequestId *int32 `json:"request_id,omitempty"`
 }
 
 type ChosenInlineResult struct {
@@ -775,15 +786,34 @@ type Invoice struct {
 }
 
 type KeyboardButton struct {
-	Text            string                  `json:"text"`
-	RequestContact  *bool                   `json:"request_contact,omitempty"`
-	RequestLocation *bool                   `json:"request_location,omitempty"`
-	RequestPoll     *KeyboardButtonPollType `json:"request_poll,omitempty"`
-	WebApp          *WebAppInfo             `json:"web_app,omitempty"`
+	Text            string                     `json:"text"`
+	RequestChat     *KeyboardButtonRequestChat `json:"request_chat,omitempty"`
+	RequestContact  *bool                      `json:"request_contact,omitempty"`
+	RequestLocation *bool                      `json:"request_location,omitempty"`
+	RequestPoll     *KeyboardButtonPollType    `json:"request_poll,omitempty"`
+	RequestUser     *KeyboardButtonRequestUser `json:"request_user,omitempty"`
+	WebApp          *WebAppInfo                `json:"web_app,omitempty"`
 }
 
 type KeyboardButtonPollType struct {
 	Type *string `json:"type,omitempty"`
+}
+
+type KeyboardButtonRequestChat struct {
+	ChatIsChannel           bool                     `json:"chat_is_channel"`
+	RequestId               int32                    `json:"request_id"`
+	BotAdministratorRights  *ChatAdministratorRights `json:"bot_administrator_rights,omitempty"`
+	BotIsMember             *bool                    `json:"bot_is_member,omitempty"`
+	ChatHasUsername         *bool                    `json:"chat_has_username,omitempty"`
+	ChatIsCreated           *bool                    `json:"chat_is_created,omitempty"`
+	ChatIsForum             *bool                    `json:"chat_is_forum,omitempty"`
+	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
+}
+
+type KeyboardButtonRequestUser struct {
+	RequestId     int32 `json:"request_id"`
+	UserIsBot     *bool `json:"user_is_bot,omitempty"`
+	UserIsPremium *bool `json:"user_is_premium,omitempty"`
 }
 
 type LabeledPrice struct {
@@ -838,6 +868,7 @@ type Message struct {
 	Caption                       *string                        `json:"caption,omitempty"`
 	CaptionEntities               []MessageEntity                `json:"caption_entities,omitempty"`
 	ChannelChatCreated            *bool                          `json:"channel_chat_created,omitempty"`
+	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	Contact                       *Contact                       `json:"contact,omitempty"`
 	DeleteChatPhoto               *bool                          `json:"delete_chat_photo,omitempty"`
@@ -887,6 +918,7 @@ type Message struct {
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
 	SupergroupChatCreated         *bool                          `json:"supergroup_chat_created,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
+	UserShared                    *UserShared                    `json:"user_shared,omitempty"`
 	Venue                         *Venue                         `json:"venue,omitempty"`
 	ViaBot                        *User                          `json:"via_bot,omitempty"`
 	Video                         *Video                         `json:"video,omitempty"`
@@ -1169,6 +1201,11 @@ type User struct {
 type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`
 	TotalCount int32         `json:"total_count"`
+}
+
+type UserShared struct {
+	RequestId *int32 `json:"request_id,omitempty"`
+	UserId    *int64 `json:"user_id,omitempty"`
 }
 
 type Venue struct {

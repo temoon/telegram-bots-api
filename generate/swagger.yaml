@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.4.0
+  version: 6.5.0
 paths:
   /getUpdates:
     post:
@@ -2163,6 +2163,8 @@ paths:
                   format: int64
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
+                use_independent_chat_permissions:
+                  type: boolean
                 until_date:
                   type: integer
               required:
@@ -2183,6 +2185,8 @@ paths:
                   format: int64
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
+                use_independent_chat_permissions:
+                  type: boolean
                 until_date:
                   type: integer
               required:
@@ -2514,6 +2518,8 @@ paths:
                     - type: string
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
+                use_independent_chat_permissions:
+                  type: boolean
               required:
                 - chat_id
                 - permissions
@@ -2528,6 +2534,8 @@ paths:
                     - type: string
                 permissions:
                   $ref: '#/components/schemas/ChatPermissions'
+                use_independent_chat_permissions:
+                  type: boolean
               required:
                 - chat_id
                 - permissions
@@ -6645,6 +6653,10 @@ components:
           $ref: '#/components/schemas/Invoice'
         successful_payment:
           $ref: '#/components/schemas/SuccessfulPayment'
+        user_shared:
+          $ref: '#/components/schemas/UserShared'
+        chat_shared:
+          $ref: '#/components/schemas/ChatShared'
         connected_website:
           type: string
         write_access_allowed:
@@ -7088,6 +7100,22 @@ components:
       type: object
     GeneralForumTopicUnhidden:
       type: object
+    UserShared:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        user_id:
+          type: integer
+          format: int64
+    ChatShared:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        chat_id:
+          type: integer
+          format: int64
     WriteAccessAllowed:
       type: object
       properties:
@@ -7185,6 +7213,10 @@ components:
       properties:
         text:
           type: string
+        request_user:
+          $ref: '#/components/schemas/KeyboardButtonRequestUser'
+        request_chat:
+          $ref: '#/components/schemas/KeyboardButtonRequestChat'
         request_contact:
           type: boolean
         request_location:
@@ -7195,6 +7227,39 @@ components:
           $ref: '#/components/schemas/WebAppInfo'
       required:
         - text
+    KeyboardButtonRequestUser:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        user_is_bot:
+          type: boolean
+        user_is_premium:
+          type: boolean
+      required:
+        - request_id
+    KeyboardButtonRequestChat:
+      type: object
+      properties:
+        request_id:
+          type: integer
+        chat_is_channel:
+          type: boolean
+        chat_is_forum:
+          type: boolean
+        chat_has_username:
+          type: boolean
+        chat_is_created:
+          type: boolean
+        user_administrator_rights:
+          $ref: '#/components/schemas/ChatAdministratorRights'
+        bot_administrator_rights:
+          $ref: '#/components/schemas/ChatAdministratorRights'
+        bot_is_member:
+          type: boolean
+      required:
+        - request_id
+        - chat_is_channel
     KeyboardButtonPollType:
       type: object
       properties:
@@ -7478,7 +7543,17 @@ components:
           type: boolean
         can_send_messages:
           type: boolean
-        can_send_media_messages:
+        can_send_audios:
+          type: boolean
+        can_send_documents:
+          type: boolean
+        can_send_photos:
+          type: boolean
+        can_send_videos:
+          type: boolean
+        can_send_video_notes:
+          type: boolean
+        can_send_voice_notes:
           type: boolean
         can_send_polls:
           type: boolean
@@ -7496,7 +7571,12 @@ components:
         - can_invite_users
         - can_pin_messages
         - can_send_messages
-        - can_send_media_messages
+        - can_send_audios
+        - can_send_documents
+        - can_send_photos
+        - can_send_videos
+        - can_send_video_notes
+        - can_send_voice_notes
         - can_send_polls
         - can_send_other_messages
         - can_add_web_page_previews
@@ -7556,6 +7636,9 @@ components:
           $ref: '#/components/schemas/Chat'
         from:
           $ref: '#/components/schemas/User'
+        user_chat_id:
+          type: integer
+          format: int64
         date:
           type: integer
         bio:
@@ -7565,6 +7648,7 @@ components:
       required:
         - chat
         - from
+        - user_chat_id
         - date
     ChatPermissions:
       type: object

@@ -9,8 +9,9 @@ import (
 )
 
 type SetChatPermissions struct {
-	ChatId      interface{}
-	Permissions telegram.ChatPermissions
+	ChatId                        interface{}
+	Permissions                   telegram.ChatPermissions
+	UseIndependentChatPermissions *bool
 }
 
 func (r *SetChatPermissions) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -39,6 +40,14 @@ func (r *SetChatPermissions) GetValues() (values map[string]interface{}, err err
 	}
 
 	values["permissions"] = string(dataPermissions)
+
+	if r.UseIndependentChatPermissions != nil {
+		if *r.UseIndependentChatPermissions {
+			values["use_independent_chat_permissions"] = "1"
+		} else {
+			values["use_independent_chat_permissions"] = "0"
+		}
+	}
 
 	return
 }
