@@ -15,6 +15,7 @@ type SendPhoto struct {
 	CaptionEntities          []telegram.MessageEntity
 	ChatId                   interface{}
 	DisableNotification      *bool
+	HasSpoiler               *bool
 	MessageThreadId          *int32
 	ParseMode                *string
 	Photo                    interface{}
@@ -69,6 +70,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.HasSpoiler != nil {
+		if *r.HasSpoiler {
+			values["has_spoiler"] = "1"
+		} else {
+			values["has_spoiler"] = "0"
 		}
 	}
 

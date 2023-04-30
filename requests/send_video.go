@@ -16,6 +16,7 @@ type SendVideo struct {
 	ChatId                   interface{}
 	DisableNotification      *bool
 	Duration                 *int32
+	HasSpoiler               *bool
 	Height                   *int32
 	MessageThreadId          *int32
 	ParseMode                *string
@@ -79,6 +80,14 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Duration != nil {
 		values["duration"] = strconv.FormatInt(int64(*r.Duration), 10)
+	}
+
+	if r.HasSpoiler != nil {
+		if *r.HasSpoiler {
+			values["has_spoiler"] = "1"
+		} else {
+			values["has_spoiler"] = "0"
+		}
 	}
 
 	if r.Height != nil {

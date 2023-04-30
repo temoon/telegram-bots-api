@@ -84,6 +84,8 @@ type Chat struct {
 	Description                        *string          `json:"description,omitempty"`
 	EmojiStatusCustomEmojiId           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
 	FirstName                          *string          `json:"first_name,omitempty"`
+	HasAggressiveAntiSpamEnabled       *bool            `json:"has_aggressive_anti_spam_enabled,omitempty"`
+	HasHiddenMembers                   *bool            `json:"has_hidden_members,omitempty"`
 	HasPrivateForwards                 *bool            `json:"has_private_forwards,omitempty"`
 	HasProtectedContent                *bool            `json:"has_protected_content,omitempty"`
 	HasRestrictedVoiceAndVideoMessages *bool            `json:"has_restricted_voice_and_video_messages,omitempty"`
@@ -316,6 +318,11 @@ type ForumTopicCreated struct {
 	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
 }
 
+type ForumTopicEdited struct {
+	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+	Name              *string `json:"name,omitempty"`
+}
+
 type ForumTopicReopened struct {
 	// Hold no information
 }
@@ -333,6 +340,14 @@ type GameHighScore struct {
 	Position int32 `json:"position"`
 	Score    int32 `json:"score"`
 	User     User  `json:"user"`
+}
+
+type GeneralForumTopicHidden struct {
+	// Hold no information
+}
+
+type GeneralForumTopicUnhidden struct {
+	// Hold no information
 }
 
 type InlineKeyboardButton struct {
@@ -681,6 +696,7 @@ type InputMediaAnimation struct {
 	Caption         *string         `json:"caption,omitempty"`
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
 	Duration        *int32          `json:"duration,omitempty"`
+	HasSpoiler      *bool           `json:"has_spoiler,omitempty"`
 	Height          *int32          `json:"height,omitempty"`
 	ParseMode       *string         `json:"parse_mode,omitempty"`
 	Thumb           interface{}     `json:"thumb,omitempty"`
@@ -714,6 +730,7 @@ type InputMediaPhoto struct {
 	Type            string          `json:"type"`
 	Caption         *string         `json:"caption,omitempty"`
 	CaptionEntities []MessageEntity `json:"caption_entities,omitempty"`
+	HasSpoiler      *bool           `json:"has_spoiler,omitempty"`
 	ParseMode       *string         `json:"parse_mode,omitempty"`
 }
 
@@ -723,6 +740,7 @@ type InputMediaVideo struct {
 	Caption           *string         `json:"caption,omitempty"`
 	CaptionEntities   []MessageEntity `json:"caption_entities,omitempty"`
 	Duration          *int32          `json:"duration,omitempty"`
+	HasSpoiler        *bool           `json:"has_spoiler,omitempty"`
 	Height            *int32          `json:"height,omitempty"`
 	ParseMode         *string         `json:"parse_mode,omitempty"`
 	SupportsStreaming *bool           `json:"supports_streaming,omitempty"`
@@ -829,6 +847,7 @@ type Message struct {
 	Entities                      []MessageEntity                `json:"entities,omitempty"`
 	ForumTopicClosed              *ForumTopicClosed              `json:"forum_topic_closed,omitempty"`
 	ForumTopicCreated             *ForumTopicCreated             `json:"forum_topic_created,omitempty"`
+	ForumTopicEdited              *ForumTopicEdited              `json:"forum_topic_edited,omitempty"`
 	ForumTopicReopened            *ForumTopicReopened            `json:"forum_topic_reopened,omitempty"`
 	ForwardDate                   *int32                         `json:"forward_date,omitempty"`
 	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
@@ -838,7 +857,10 @@ type Message struct {
 	ForwardSignature              *string                        `json:"forward_signature,omitempty"`
 	From                          *User                          `json:"from,omitempty"`
 	Game                          *Game                          `json:"game,omitempty"`
+	GeneralForumTopicHidden       *GeneralForumTopicHidden       `json:"general_forum_topic_hidden,omitempty"`
+	GeneralForumTopicUnhidden     *GeneralForumTopicUnhidden     `json:"general_forum_topic_unhidden,omitempty"`
 	GroupChatCreated              *bool                          `json:"group_chat_created,omitempty"`
+	HasMediaSpoiler               *bool                          `json:"has_media_spoiler,omitempty"`
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
@@ -875,6 +897,7 @@ type Message struct {
 	VideoNote                     *VideoNote                     `json:"video_note,omitempty"`
 	Voice                         *Voice                         `json:"voice,omitempty"`
 	WebAppData                    *WebAppData                    `json:"web_app_data,omitempty"`
+	WriteAccessAllowed            *WriteAccessAllowed            `json:"write_access_allowed,omitempty"`
 }
 
 type MessageAutoDeleteTimerChanged struct {
@@ -1032,6 +1055,7 @@ type ProximityAlertTriggered struct {
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`
 	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"`
+	IsPersistent          *bool              `json:"is_persistent,omitempty"`
 	OneTimeKeyboard       *bool              `json:"one_time_keyboard,omitempty"`
 	ResizeKeyboard        *bool              `json:"resize_keyboard,omitempty"`
 	Selective             *bool              `json:"selective,omitempty"`
@@ -1221,4 +1245,8 @@ type WebhookInfo struct {
 	LastErrorMessage             *string  `json:"last_error_message,omitempty"`
 	LastSynchronizationErrorDate *int32   `json:"last_synchronization_error_date,omitempty"`
 	MaxConnections               *int32   `json:"max_connections,omitempty"`
+}
+
+type WriteAccessAllowed struct {
+	WebAppName *string `json:"web_app_name,omitempty"`
 }

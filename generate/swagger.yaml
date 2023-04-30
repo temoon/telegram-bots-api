@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.3.0
+  version: 6.4.0
 paths:
   /getUpdates:
     post:
@@ -581,6 +581,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/MessageEntity'
+                has_spoiler:
+                  type: boolean
                 disable_notification:
                   type: boolean
                 protect_content:
@@ -808,6 +810,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/MessageEntity'
+                has_spoiler:
+                  type: boolean
                 supports_streaming:
                   type: boolean
                 disable_notification:
@@ -887,6 +891,8 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/MessageEntity'
+                has_spoiler:
+                  type: boolean
                 disable_notification:
                   type: boolean
                 protect_content:
@@ -1854,8 +1860,22 @@ paths:
                     - type: integer
                       format: int64
                     - type: string
+                message_thread_id:
+                  type: integer
                 action:
                   type: string
+                  enum:
+                    - typing
+                    - upload_photo
+                    - record_video
+                    - upload_video
+                    - record_voice
+                    - upload_voice
+                    - upload_document
+                    - choose_sticker
+                    - find_location
+                    - record_video_note
+                    - upload_video_note
               required:
                 - chat_id
                 - action
@@ -3681,6 +3701,8 @@ paths:
                     - type: string
                 name:
                   type: string
+                  minLength: 1
+                  maxLength: 128
                 icon_color:
                   type: integer
                 icon_custom_emoji_id:
@@ -3699,6 +3721,8 @@ paths:
                     - type: string
                 name:
                   type: string
+                  minLength: 1
+                  maxLength: 128
                 icon_color:
                   type: integer
                 icon_custom_emoji_id:
@@ -3746,6 +3770,8 @@ paths:
                   type: integer
                 name:
                   type: string
+                  minLength: 0
+                  maxLength: 128
                 icon_custom_emoji_id:
                   type: string
               required:
@@ -3764,6 +3790,8 @@ paths:
                   type: integer
                 name:
                   type: string
+                  minLength: 0
+                  maxLength: 128
                 icon_custom_emoji_id:
                   type: string
               required:
@@ -3993,6 +4021,266 @@ paths:
               required:
                 - chat_id
                 - message_thread_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /editGeneralForumTopic:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+              required:
+                - chat_id
+                - name
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 128
+              required:
+                - chat_id
+                - name
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /closeGeneralForumTopic:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /reopenGeneralForumTopic:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /hideGeneralForumTopic:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /unhideGeneralForumTopic:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
         required: true
       responses:
         '200':
@@ -6218,6 +6506,10 @@ components:
           type: integer
         message_auto_delete_time:
           type: integer
+        has_aggressive_anti_spam_enabled:
+          type: boolean
+        has_hidden_members:
+          type: boolean
         has_protected_content:
           type: boolean
         sticker_set_name:
@@ -6305,6 +6597,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MessageEntity'
+        has_media_spoiler:
+          type: boolean
         contact:
           $ref: '#/components/schemas/Contact'
         dice:
@@ -6353,16 +6647,24 @@ components:
           $ref: '#/components/schemas/SuccessfulPayment'
         connected_website:
           type: string
+        write_access_allowed:
+          $ref: '#/components/schemas/WriteAccessAllowed'
         passport_data:
           $ref: '#/components/schemas/PassportData'
         proximity_alert_triggered:
           $ref: '#/components/schemas/ProximityAlertTriggered'
         forum_topic_created:
           $ref: '#/components/schemas/ForumTopicCreated'
+        forum_topic_edited:
+          $ref: '#/components/schemas/ForumTopicEdited'
         forum_topic_closed:
           $ref: '#/components/schemas/ForumTopicClosed'
         forum_topic_reopened:
           $ref: '#/components/schemas/ForumTopicReopened'
+        general_forum_topic_hidden:
+          $ref: '#/components/schemas/GeneralForumTopicHidden'
+        general_forum_topic_unhidden:
+          $ref: '#/components/schemas/GeneralForumTopicUnhidden'
         video_chat_scheduled:
           $ref: '#/components/schemas/VideoChatScheduled'
         video_chat_started:
@@ -6771,10 +7073,26 @@ components:
       required:
         - name
         - icon_color
+    ForumTopicEdited:
+      type: object
+      properties:
+        name:
+          type: string
+        icon_custom_emoji_id:
+          type: string
     ForumTopicClosed:
       type: object
     ForumTopicReopened:
       type: object
+    GeneralForumTopicHidden:
+      type: object
+    GeneralForumTopicUnhidden:
+      type: object
+    WriteAccessAllowed:
+      type: object
+      properties:
+        web_app_name:
+          type: string
     VideoChatScheduled:
       type: object
       properties:
@@ -6845,6 +7163,9 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/KeyboardButton'
+        is_persistent:
+          default: false
+          type: boolean
         resize_keyboard:
           default: false
           type: boolean
@@ -7442,6 +7763,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MessageEntity'
+        has_spoiler:
+          type: boolean
       required:
         - type
         - media
@@ -7472,6 +7795,8 @@ components:
           type: integer
         supports_streaming:
           type: boolean
+        has_spoiler:
+          type: boolean
       required:
         - type
         - media
@@ -7500,6 +7825,8 @@ components:
           type: integer
         duration:
           type: integer
+        has_spoiler:
+          type: boolean
       required:
         - type
         - media
