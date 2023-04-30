@@ -223,12 +223,13 @@ type ChatMemberRestricted struct {
 }
 
 type ChatMemberUpdated struct {
-	Chat          Chat            `json:"chat"`
-	Date          int32           `json:"date"`
-	From          User            `json:"from"`
-	NewChatMember interface{}     `json:"new_chat_member"`
-	OldChatMember interface{}     `json:"old_chat_member"`
-	InviteLink    *ChatInviteLink `json:"invite_link,omitempty"`
+	Chat                    Chat            `json:"chat"`
+	Date                    int32           `json:"date"`
+	From                    User            `json:"from"`
+	NewChatMember           interface{}     `json:"new_chat_member"`
+	OldChatMember           interface{}     `json:"old_chat_member"`
+	InviteLink              *ChatInviteLink `json:"invite_link,omitempty"`
+	ViaChatFolderInviteLink *bool           `json:"via_chat_folder_invite_link,omitempty"`
 }
 
 type ChatPermissions struct {
@@ -374,15 +375,16 @@ type GeneralForumTopicUnhidden struct {
 }
 
 type InlineKeyboardButton struct {
-	Text                         string        `json:"text"`
-	CallbackData                 *string       `json:"callback_data,omitempty"`
-	CallbackGame                 *CallbackGame `json:"callback_game,omitempty"`
-	LoginUrl                     *LoginUrl     `json:"login_url,omitempty"`
-	Pay                          *bool         `json:"pay,omitempty"`
-	SwitchInlineQuery            *string       `json:"switch_inline_query,omitempty"`
-	SwitchInlineQueryCurrentChat *string       `json:"switch_inline_query_current_chat,omitempty"`
-	Url                          *string       `json:"url,omitempty"`
-	WebApp                       *WebAppInfo   `json:"web_app,omitempty"`
+	Text                         string                       `json:"text"`
+	CallbackData                 *string                      `json:"callback_data,omitempty"`
+	CallbackGame                 *CallbackGame                `json:"callback_game,omitempty"`
+	LoginUrl                     *LoginUrl                    `json:"login_url,omitempty"`
+	Pay                          *bool                        `json:"pay,omitempty"`
+	SwitchInlineQuery            *string                      `json:"switch_inline_query,omitempty"`
+	SwitchInlineQueryChosenChat  *SwitchInlineQueryChosenChat `json:"switch_inline_query_chosen_chat,omitempty"`
+	SwitchInlineQueryCurrentChat *string                      `json:"switch_inline_query_current_chat,omitempty"`
+	Url                          *string                      `json:"url,omitempty"`
+	WebApp                       *WebAppInfo                  `json:"web_app,omitempty"`
 }
 
 type InlineKeyboardMarkup struct {
@@ -672,6 +674,12 @@ type InlineQueryResultVoice struct {
 	ParseMode           *string               `json:"parse_mode,omitempty"`
 	ReplyMarkup         *InlineKeyboardMarkup `json:"reply_markup,omitempty"`
 	VoiceDuration       *int32                `json:"voice_duration,omitempty"`
+}
+
+type InlineQueryResultsButton struct {
+	Text           string      `json:"text"`
+	StartParameter *string     `json:"start_parameter,omitempty"`
+	WebApp         *WebAppInfo `json:"web_app,omitempty"`
 }
 
 type InputContactMessageContent struct {
@@ -1184,6 +1192,14 @@ type SuccessfulPayment struct {
 	TotalAmount             int32      `json:"total_amount"`
 	OrderInfo               *OrderInfo `json:"order_info,omitempty"`
 	ShippingOptionId        *string    `json:"shipping_option_id,omitempty"`
+}
+
+type SwitchInlineQueryChosenChat struct {
+	AllowBotChats     *bool   `json:"allow_bot_chats,omitempty"`
+	AllowChannelChats *bool   `json:"allow_channel_chats,omitempty"`
+	AllowGroupChats   *bool   `json:"allow_group_chats,omitempty"`
+	AllowUserChats    *bool   `json:"allow_user_chats,omitempty"`
+	Query             *string `json:"query,omitempty"`
 }
 
 type Update struct {

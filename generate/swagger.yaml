@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.6.0
+  version: 6.7.0
 paths:
   /getUpdates:
     post:
@@ -4570,6 +4570,93 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /setMyName:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  minLength: 0
+                  maxLength: 64
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
+  /getMyName:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                language_code:
+                  type: string
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    $ref: '#/components/schemas/BotDescription'
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /setMyDescription:
     post:
       requestBody:
@@ -4580,6 +4667,8 @@ paths:
               properties:
                 description:
                   type: string
+                  minLength: 0
+                  maxLength: 512
                 language_code:
                   type: string
           multipart/form-data:
@@ -4588,6 +4677,8 @@ paths:
               properties:
                 description:
                   type: string
+                  minLength: 0
+                  maxLength: 512
                 language_code:
                   type: string
         required: true
@@ -4663,6 +4754,8 @@ paths:
               properties:
                 short_description:
                   type: string
+                  minLength: 0
+                  maxLength: 120
                 language_code:
                   type: string
           multipart/form-data:
@@ -4671,6 +4764,8 @@ paths:
               properties:
                 short_description:
                   type: string
+                  minLength: 0
+                  maxLength: 120
                 language_code:
                   type: string
         required: true
@@ -6076,10 +6171,8 @@ paths:
                   type: boolean
                 next_offset:
                   type: string
-                switch_pm_text:
-                  type: string
-                switch_pm_parameter:
-                  type: string
+                button:
+                  $ref: '#/components/schemas/InlineQueryResultsButton'
               required:
                 - inline_query_id
                 - results
@@ -7790,6 +7883,8 @@ components:
           type: string
         switch_inline_query_current_chat:
           type: string
+        switch_inline_query_chosen_chat:
+          $ref: '#/components/schemas/SwitchInlineQueryChosenChat'
         callback_game:
           $ref: '#/components/schemas/CallbackGame'
         pay:
@@ -7809,6 +7904,19 @@ components:
           type: boolean
       required:
         - url
+    SwitchInlineQueryChosenChat:
+      type: object
+      properties:
+        query:
+          type: string
+        allow_user_chats:
+          type: boolean
+        allow_bot_chats:
+          type: boolean
+        allow_group_chats:
+          type: boolean
+        allow_channel_chats:
+          type: boolean
     CallbackQuery:
       type: object
       properties:
@@ -8111,6 +8219,8 @@ components:
           $ref: '#/components/schemas/ChatMember'
         invite_link:
           $ref: '#/components/schemas/ChatInviteLink'
+        via_chat_folder_invite_link:
+          type: boolean
       required:
         - chat
         - from
@@ -8610,6 +8720,19 @@ components:
         - from
         - query
         - offset
+    InlineQueryResultsButton:
+      type: object
+      properties:
+        text:
+          type: string
+        web_app:
+          $ref: '#/components/schemas/WebAppInfo'
+        start_parameter:
+          type: string
+          minLength: 1
+          maxLength: 64
+      required:
+        - text
     InlineQueryResult:
       anyOf:
         - $ref: '#/components/schemas/InlineQueryResultCachedAudio'

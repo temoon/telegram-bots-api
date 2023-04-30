@@ -9,13 +9,12 @@ import (
 )
 
 type AnswerInlineQuery struct {
-	CacheTime         *int32
-	InlineQueryId     string
-	IsPersonal        *bool
-	NextOffset        *string
-	Results           []interface{}
-	SwitchPmParameter *string
-	SwitchPmText      *string
+	Button        *telegram.InlineQueryResultsButton
+	CacheTime     *int32
+	InlineQueryId string
+	IsPersonal    *bool
+	NextOffset    *string
+	Results       []interface{}
 }
 
 func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -30,6 +29,15 @@ func (r *AnswerInlineQuery) IsMultipart() (multipart bool) {
 
 func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	if r.Button != nil {
+		var dataButton []byte
+		if dataButton, err = json.Marshal(r.Button); err != nil {
+			return
+		}
+
+		values["button"] = string(dataButton)
+	}
 
 	if r.CacheTime != nil {
 		values["cache_time"] = strconv.FormatInt(int64(*r.CacheTime), 10)
@@ -55,14 +63,6 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 	}
 
 	values["results"] = string(dataResults)
-
-	if r.SwitchPmParameter != nil {
-		values["switch_pm_parameter"] = *r.SwitchPmParameter
-	}
-
-	if r.SwitchPmText != nil {
-		values["switch_pm_text"] = *r.SwitchPmText
-	}
 
 	return
 }
