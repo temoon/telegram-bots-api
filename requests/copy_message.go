@@ -16,6 +16,7 @@ type CopyMessage struct {
 	DisableNotification      *bool
 	FromChatId               interface{}
 	MessageId                int32
+	MessageThreadId          *int32
 	ParseMode                *string
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -79,6 +80,10 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
+	}
 
 	if r.ParseMode != nil {
 		values["parse_mode"] = *r.ParseMode

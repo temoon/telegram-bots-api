@@ -13,6 +13,7 @@ type SendDice struct {
 	ChatId                   interface{}
 	DisableNotification      *bool
 	Emoji                    *string
+	MessageThreadId          *int32
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
@@ -56,6 +57,10 @@ func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Emoji != nil {
 		values["emoji"] = *r.Emoji
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ProtectContent != nil {

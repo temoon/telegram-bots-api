@@ -13,6 +13,7 @@ type SendMediaGroup struct {
 	ChatId                   interface{}
 	DisableNotification      *bool
 	Media                    []interface{}
+	MessageThreadId          *int32
 	ProtectContent           *bool
 	ReplyToMessageId         *int32
 }
@@ -59,6 +60,10 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 	}
 
 	values["media"] = string(dataMedia)
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
+	}
 
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {

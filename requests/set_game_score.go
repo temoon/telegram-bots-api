@@ -8,7 +8,7 @@ import (
 )
 
 type SetGameScore struct {
-	ChatId             *int64
+	ChatId             interface{}
 	DisableEditMessage *bool
 	Force              *bool
 	InlineMessageId    *string
@@ -30,8 +30,11 @@ func (r *SetGameScore) IsMultipart() (multipart bool) {
 func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ChatId != nil {
-		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
 	}
 
 	if r.DisableEditMessage != nil {

@@ -17,6 +17,7 @@ type SendVideo struct {
 	DisableNotification      *bool
 	Duration                 *int32
 	Height                   *int32
+	MessageThreadId          *int32
 	ParseMode                *string
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -82,6 +83,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Height != nil {
 		values["height"] = strconv.FormatInt(int64(*r.Height), 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ParseMode != nil {

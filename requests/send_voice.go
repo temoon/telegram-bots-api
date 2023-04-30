@@ -16,6 +16,7 @@ type SendVoice struct {
 	ChatId                   interface{}
 	DisableNotification      *bool
 	Duration                 *int32
+	MessageThreadId          *int32
 	ParseMode                *string
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -74,6 +75,10 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Duration != nil {
 		values["duration"] = strconv.FormatInt(int64(*r.Duration), 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ParseMode != nil {

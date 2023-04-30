@@ -17,6 +17,7 @@ type SendDocument struct {
 	DisableContentTypeDetection *bool
 	DisableNotification         *bool
 	Document                    interface{}
+	MessageThreadId             *int32
 	ParseMode                   *string
 	ProtectContent              *bool
 	ReplyMarkup                 interface{}
@@ -86,6 +87,10 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		values["document"] = value
 	case string:
 		values["document"] = value
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ParseMode != nil {

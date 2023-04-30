@@ -15,6 +15,7 @@ type SendPhoto struct {
 	CaptionEntities          []telegram.MessageEntity
 	ChatId                   interface{}
 	DisableNotification      *bool
+	MessageThreadId          *int32
 	ParseMode                *string
 	Photo                    interface{}
 	ProtectContent           *bool
@@ -69,6 +70,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ParseMode != nil {

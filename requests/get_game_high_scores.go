@@ -8,7 +8,7 @@ import (
 )
 
 type GetGameHighScores struct {
-	ChatId          *int64
+	ChatId          interface{}
 	InlineMessageId *string
 	MessageId       *int32
 	UserId          int64
@@ -27,8 +27,11 @@ func (r *GetGameHighScores) IsMultipart() (multipart bool) {
 func (r *GetGameHighScores) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ChatId != nil {
-		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
 	}
 
 	if r.InlineMessageId != nil {

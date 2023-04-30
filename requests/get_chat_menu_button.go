@@ -9,7 +9,7 @@ import (
 )
 
 type GetChatMenuButton struct {
-	ChatId *int64
+	ChatId interface{}
 }
 
 func (r *GetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,8 +36,11 @@ func (r *GetChatMenuButton) IsMultipart() (multipart bool) {
 func (r *GetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ChatId != nil {
-		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
 	}
 
 	return

@@ -10,12 +10,13 @@ import (
 
 type SendInvoice struct {
 	AllowSendingWithoutReply  *bool
-	ChatId                    int64
+	ChatId                    interface{}
 	Currency                  string
 	Description               string
 	DisableNotification       *bool
 	IsFlexible                *bool
 	MaxTipAmount              *int32
+	MessageThreadId           *int32
 	NeedEmail                 *bool
 	NeedName                  *bool
 	NeedPhoneNumber           *bool
@@ -59,7 +60,12 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
 	values["currency"] = r.Currency
 
@@ -83,6 +89,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.MaxTipAmount != nil {
 		values["max_tip_amount"] = strconv.FormatInt(int64(*r.MaxTipAmount), 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.NeedEmail != nil {

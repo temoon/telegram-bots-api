@@ -14,6 +14,7 @@ type SendContact struct {
 	DisableNotification      *bool
 	FirstName                string
 	LastName                 *string
+	MessageThreadId          *int32
 	PhoneNumber              string
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -61,6 +62,10 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 
 	if r.LastName != nil {
 		values["last_name"] = *r.LastName
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	values["phone_number"] = r.PhoneNumber

@@ -10,9 +10,10 @@ import (
 
 type SendGame struct {
 	AllowSendingWithoutReply *bool
-	ChatId                   int64
+	ChatId                   interface{}
 	DisableNotification      *bool
 	GameShortName            string
+	MessageThreadId          *int32
 	ProtectContent           *bool
 	ReplyMarkup              *telegram.InlineKeyboardMarkup
 	ReplyToMessageId         *int32
@@ -39,7 +40,12 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
@@ -50,6 +56,10 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	values["game_short_name"] = r.GameShortName
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
+	}
 
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {

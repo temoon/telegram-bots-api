@@ -14,6 +14,7 @@ type SendMessage struct {
 	DisableNotification      *bool
 	DisableWebPagePreview    *bool
 	Entities                 []telegram.MessageEntity
+	MessageThreadId          *int32
 	ParseMode                *string
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
@@ -72,6 +73,10 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["entities"] = string(dataEntities)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ParseMode != nil {

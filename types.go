@@ -78,14 +78,17 @@ type CallbackQuery struct {
 type Chat struct {
 	Id                                 int64            `json:"id"`
 	Type                               string           `json:"type"`
+	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`
 	Bio                                *string          `json:"bio,omitempty"`
 	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
 	Description                        *string          `json:"description,omitempty"`
+	EmojiStatusCustomEmojiId           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
 	FirstName                          *string          `json:"first_name,omitempty"`
 	HasPrivateForwards                 *bool            `json:"has_private_forwards,omitempty"`
 	HasProtectedContent                *bool            `json:"has_protected_content,omitempty"`
 	HasRestrictedVoiceAndVideoMessages *bool            `json:"has_restricted_voice_and_video_messages,omitempty"`
 	InviteLink                         *string          `json:"invite_link,omitempty"`
+	IsForum                            *bool            `json:"is_forum,omitempty"`
 	JoinByRequest                      *bool            `json:"join_by_request,omitempty"`
 	JoinToSendMessages                 *bool            `json:"join_to_send_messages,omitempty"`
 	LastName                           *string          `json:"last_name,omitempty"`
@@ -111,6 +114,7 @@ type ChatAdministratorRights struct {
 	CanRestrictMembers  bool  `json:"can_restrict_members"`
 	IsAnonymous         bool  `json:"is_anonymous"`
 	CanEditMessages     *bool `json:"can_edit_messages,omitempty"`
+	CanManageTopics     *bool `json:"can_manage_topics,omitempty"`
 	CanPinMessages      *bool `json:"can_pin_messages,omitempty"`
 	CanPostMessages     *bool `json:"can_post_messages,omitempty"`
 }
@@ -153,6 +157,7 @@ type ChatMemberAdministrator struct {
 	Status              string  `json:"status"`
 	User                User    `json:"user"`
 	CanEditMessages     *bool   `json:"can_edit_messages,omitempty"`
+	CanManageTopics     *bool   `json:"can_manage_topics,omitempty"`
 	CanPinMessages      *bool   `json:"can_pin_messages,omitempty"`
 	CanPostMessages     *bool   `json:"can_post_messages,omitempty"`
 	CustomTitle         *string `json:"custom_title,omitempty"`
@@ -194,6 +199,7 @@ type ChatMemberRestricted struct {
 	Status                string `json:"status"`
 	UntilDate             int32  `json:"until_date"`
 	User                  User   `json:"user"`
+	CanManageTopics       *bool  `json:"can_manage_topics,omitempty"`
 }
 
 type ChatMemberUpdated struct {
@@ -209,6 +215,7 @@ type ChatPermissions struct {
 	CanAddWebPagePreviews *bool `json:"can_add_web_page_previews,omitempty"`
 	CanChangeInfo         *bool `json:"can_change_info,omitempty"`
 	CanInviteUsers        *bool `json:"can_invite_users,omitempty"`
+	CanManageTopics       *bool `json:"can_manage_topics,omitempty"`
 	CanPinMessages        *bool `json:"can_pin_messages,omitempty"`
 	CanSendMediaMessages  *bool `json:"can_send_media_messages,omitempty"`
 	CanSendMessages       *bool `json:"can_send_messages,omitempty"`
@@ -290,6 +297,27 @@ type ForceReply struct {
 	ForceReply            bool    `json:"force_reply"`
 	InputFieldPlaceholder *string `json:"input_field_placeholder,omitempty"`
 	Selective             *bool   `json:"selective,omitempty"`
+}
+
+type ForumTopic struct {
+	IconColor         int32   `json:"icon_color"`
+	MessageThreadId   int32   `json:"message_thread_id"`
+	Name              string  `json:"name"`
+	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+}
+
+type ForumTopicClosed struct {
+	// Hold no information
+}
+
+type ForumTopicCreated struct {
+	IconColor         int32   `json:"icon_color"`
+	Name              string  `json:"name"`
+	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+}
+
+type ForumTopicReopened struct {
+	// Hold no information
 }
 
 type Game struct {
@@ -799,6 +827,9 @@ type Message struct {
 	Document                      *Document                      `json:"document,omitempty"`
 	EditDate                      *int32                         `json:"edit_date,omitempty"`
 	Entities                      []MessageEntity                `json:"entities,omitempty"`
+	ForumTopicClosed              *ForumTopicClosed              `json:"forum_topic_closed,omitempty"`
+	ForumTopicCreated             *ForumTopicCreated             `json:"forum_topic_created,omitempty"`
+	ForumTopicReopened            *ForumTopicReopened            `json:"forum_topic_reopened,omitempty"`
 	ForwardDate                   *int32                         `json:"forward_date,omitempty"`
 	ForwardFrom                   *User                          `json:"forward_from,omitempty"`
 	ForwardFromChat               *Chat                          `json:"forward_from_chat,omitempty"`
@@ -811,10 +842,12 @@ type Message struct {
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
+	IsTopicMessage                *bool                          `json:"is_topic_message,omitempty"`
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
 	Location                      *Location                      `json:"location,omitempty"`
 	MediaGroupId                  *string                        `json:"media_group_id,omitempty"`
 	MessageAutoDeleteTimerChanged *MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed,omitempty"`
+	MessageThreadId               *int32                         `json:"message_thread_id,omitempty"`
 	MigrateFromChatId             *int64                         `json:"migrate_from_chat_id,omitempty"`
 	MigrateToChatId               *int64                         `json:"migrate_to_chat_id,omitempty"`
 	NewChatMembers                []User                         `json:"new_chat_members,omitempty"`

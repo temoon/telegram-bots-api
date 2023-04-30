@@ -20,6 +20,7 @@ type SendPoll struct {
 	ExplanationParseMode     *string
 	IsAnonymous              *bool
 	IsClosed                 *bool
+	MessageThreadId          *int32
 	OpenPeriod               *int32
 	Options                  []string
 	ProtectContent           *bool
@@ -112,6 +113,10 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["is_closed"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.OpenPeriod != nil {

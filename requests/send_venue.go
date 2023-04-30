@@ -19,6 +19,7 @@ type SendVenue struct {
 	GooglePlaceType          *string
 	Latitude                 float64
 	Longitude                float64
+	MessageThreadId          *int32
 	ProtectContent           *bool
 	ReplyMarkup              interface{}
 	ReplyToMessageId         *int32
@@ -77,6 +78,10 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 	if r.GooglePlaceType != nil {
 		values["google_place_type"] = *r.GooglePlaceType
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 	}
 
 	if r.ProtectContent != nil {

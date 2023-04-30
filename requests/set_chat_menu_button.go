@@ -9,7 +9,7 @@ import (
 )
 
 type SetChatMenuButton struct {
-	ChatId     *int64
+	ChatId     interface{}
 	MenuButton interface{}
 }
 
@@ -26,8 +26,11 @@ func (r *SetChatMenuButton) IsMultipart() (multipart bool) {
 func (r *SetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ChatId != nil {
-		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
 	}
 
 	switch value := r.MenuButton.(type) {
