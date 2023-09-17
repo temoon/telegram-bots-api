@@ -2,9 +2,8 @@ package requests
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type LeaveChat struct {

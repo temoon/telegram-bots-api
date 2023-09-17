@@ -3,9 +3,8 @@ package requests
 import (
 	"context"
 	"errors"
-	"strconv"
-
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type GetChatMenuButton struct {

@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.7.0
+  version: 6.8.0
 paths:
   /getUpdates:
     post:
@@ -4313,6 +4313,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /unpinAllGeneralForumTopicMessages:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+              required:
+                - chat_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /answerCallbackQuery:
     post:
       requestBody:
@@ -7075,6 +7125,9 @@ components:
             type: string
         emoji_status_custom_emoji_id:
           type: string
+        emoji_status_expiration_date:
+          type: integer
+          format: int32
         bio:
           type: string
         has_private_forwards:
@@ -7174,6 +7227,8 @@ components:
             $ref: '#/components/schemas/PhotoSize'
         sticker:
           $ref: '#/components/schemas/Sticker'
+        story:
+          $ref: '#/components/schemas/Story'
         video:
           $ref: '#/components/schemas/Video'
         video_note:
@@ -7337,6 +7392,8 @@ components:
         - file_unique_id
         - width
         - height
+    Story:
+      type: object
     Animation:
       type: object
       properties:
@@ -7518,6 +7575,8 @@ components:
       properties:
         poll_id:
           type: string
+        voter_chat:
+          $ref: '#/components/schemas/Chat'
         user:
           $ref: '#/components/schemas/User'
         option_ids:

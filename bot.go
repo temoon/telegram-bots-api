@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -95,7 +94,7 @@ func (b *Bot) CallMethod(ctx context.Context, method string, request Request, re
 	defer httpResponse.Body.Close()
 
 	var data []byte
-	if data, err = ioutil.ReadAll(httpResponse.Body); err != nil {
+	if data, err = io.ReadAll(httpResponse.Body); err != nil {
 		return
 	}
 

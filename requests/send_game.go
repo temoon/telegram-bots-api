@@ -3,9 +3,8 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"strconv"
-
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type SendGame struct {

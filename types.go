@@ -95,6 +95,7 @@ type Chat struct {
 	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
 	Description                        *string          `json:"description,omitempty"`
 	EmojiStatusCustomEmojiId           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
+	EmojiStatusExpirationDate          *int32           `json:"emoji_status_expiration_date,omitempty"`
 	FirstName                          *string          `json:"first_name,omitempty"`
 	HasAggressiveAntiSpamEnabled       *bool            `json:"has_aggressive_anti_spam_enabled,omitempty"`
 	HasHiddenMembers                   *bool            `json:"has_hidden_members,omitempty"`
@@ -942,6 +943,7 @@ type Message struct {
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
+	Story                         *Story                         `json:"story,omitempty"`
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
 	SupergroupChatCreated         *bool                          `json:"supergroup_chat_created,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
@@ -1088,6 +1090,7 @@ type PollAnswer struct {
 	OptionIds []int32 `json:"option_ids"`
 	PollId    string  `json:"poll_id"`
 	User      User    `json:"user"`
+	VoterChat *Chat   `json:"voter_chat,omitempty"`
 }
 
 type PollOption struct {
@@ -1182,6 +1185,10 @@ type StickerSet struct {
 	Stickers    []Sticker  `json:"stickers"`
 	Title       string     `json:"title"`
 	Thumbnail   *PhotoSize `json:"thumbnail,omitempty"`
+}
+
+type Story struct {
+	// Hold no information
 }
 
 type SuccessfulPayment struct {
