@@ -16,6 +16,7 @@ import (
 	"time"
 )
 
+//goland:noinspection GoUnusedConst
 const EnvProduction = "prod"
 const EnvTest = "test"
 
@@ -49,6 +50,7 @@ type Response struct {
 	Parameters  *ResponseParameters `json:"parameters,omitempty"`
 }
 
+//goland:noinspection GoUnusedExportedFunction
 func NewBot(opts *BotOpts) *Bot {
 	if opts.Client == nil {
 		opts.Client = &http.Client{

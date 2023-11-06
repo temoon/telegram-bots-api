@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Telegram Bot API
-  version: 6.8.0
+  version: 6.9.0
 paths:
   /getUpdates:
     post:
@@ -2253,6 +2253,12 @@ paths:
                   type: boolean
                 can_pin_messages:
                   type: boolean
+                can_post_stories:
+                  type: boolean
+                can_edit_stories:
+                  type: boolean
+                can_delete_stories:
+                  type: boolean
                 can_manage_topics:
                   type: boolean
                 can_promote_members:
@@ -2291,6 +2297,12 @@ paths:
                 can_restrict_members:
                   type: boolean
                 can_pin_messages:
+                  type: boolean
+                can_post_stories:
+                  type: boolean
+                can_edit_stories:
+                  type: boolean
+                can_delete_stories:
                   type: boolean
                 can_manage_topics:
                   type: boolean
@@ -7759,8 +7771,12 @@ components:
     WriteAccessAllowed:
       type: object
       properties:
+        from_request:
+          type: boolean
         web_app_name:
           type: string
+        from_attachment_menu:
+          type: boolean
     VideoChatScheduled:
       type: object
       properties:
@@ -8080,6 +8096,12 @@ components:
           type: boolean
         can_pin_messages:
           type: boolean
+        can_post_stories:
+          type: boolean
+        can_edit_stories:
+          type: boolean
+        can_delete_stories:
+          type: boolean
         can_manage_topics:
           type: boolean
       required:
@@ -8148,6 +8170,12 @@ components:
         can_edit_messages:
           type: boolean
         can_pin_messages:
+          type: boolean
+        can_post_stories:
+          type: boolean
+        can_edit_stories:
+          type: boolean
+        can_delete_stories:
           type: boolean
         can_manage_topics:
           type: boolean

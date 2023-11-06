@@ -9,13 +9,16 @@ import (
 type PromoteChatMember struct {
 	CanChangeInfo       *bool
 	CanDeleteMessages   *bool
+	CanDeleteStories    *bool
 	CanEditMessages     *bool
+	CanEditStories      *bool
 	CanInviteUsers      *bool
 	CanManageChat       *bool
 	CanManageTopics     *bool
 	CanManageVideoChats *bool
 	CanPinMessages      *bool
 	CanPostMessages     *bool
+	CanPostStories      *bool
 	CanPromoteMembers   *bool
 	CanRestrictMembers  *bool
 	ChatId              interface{}
@@ -52,11 +55,27 @@ func (r *PromoteChatMember) GetValues() (values map[string]interface{}, err erro
 		}
 	}
 
+	if r.CanDeleteStories != nil {
+		if *r.CanDeleteStories {
+			values["can_delete_stories"] = "1"
+		} else {
+			values["can_delete_stories"] = "0"
+		}
+	}
+
 	if r.CanEditMessages != nil {
 		if *r.CanEditMessages {
 			values["can_edit_messages"] = "1"
 		} else {
 			values["can_edit_messages"] = "0"
+		}
+	}
+
+	if r.CanEditStories != nil {
+		if *r.CanEditStories {
+			values["can_edit_stories"] = "1"
+		} else {
+			values["can_edit_stories"] = "0"
 		}
 	}
 
@@ -105,6 +124,14 @@ func (r *PromoteChatMember) GetValues() (values map[string]interface{}, err erro
 			values["can_post_messages"] = "1"
 		} else {
 			values["can_post_messages"] = "0"
+		}
+	}
+
+	if r.CanPostStories != nil {
+		if *r.CanPostStories {
+			values["can_post_stories"] = "1"
+		} else {
+			values["can_post_stories"] = "0"
 		}
 	}
 
