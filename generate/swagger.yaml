@@ -1917,6 +1917,70 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: ''
+  /setMessageReaction:
+    post:
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                message_id:
+                  type: integer
+                reaction:
+                  $ref: '#/components/schemas/ReactionType'
+                is_big:
+                  type: boolean
+              required:
+                - chat_id
+                - message_id
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chat_id:
+                  anyOf:
+                    - type: integer
+                      format: int64
+                    - type: string
+                message_id:
+                  type: integer
+                reaction:
+                  $ref: '#/components/schemas/ReactionType'
+                is_big:
+                  type: boolean
+              required:
+                - chat_id
+                - message_id
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    default: true
+                    type: boolean
+                  result:
+                    default: true
+                    type: boolean
+                required:
+                  - ok
+                  - result
+          description: ''
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: ''
   /getUserProfilePhotos:
     post:
       requestBody:
@@ -7025,6 +7089,10 @@ components:
           $ref: '#/components/schemas/Message'
         edited_channel_post:
           $ref: '#/components/schemas/Message'
+        message_reaction:
+          $ref: '#/components/schemas/MessageReactionUpdated'
+        message_reaction_count:
+          $ref: '#/components/schemas/MessageReactionCountUpdated'
         inline_query:
           $ref: '#/components/schemas/InlineQuery'
         chosen_inline_result:
@@ -7135,6 +7203,10 @@ components:
           type: array
           items:
             type: string
+        available_reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReactionType'
         emoji_status_custom_emoji_id:
           type: string
         emoji_status_expiration_date:
@@ -8366,6 +8438,77 @@ components:
       required:
         - location
         - address
+    ReactionType:
+      anyOf:
+        - $ref: '#/components/schemas/ReactionTypeEmoji'
+        - $ref: '#/components/schemas/ReactionTypeCustomEmoji'
+    ReactionTypeEmoji:
+      type: object
+      properties:
+        type:
+          type: string
+        emoji:
+          type: string
+      required:
+        - type
+        - emoji
+    ReactionTypeCustomEmoji:
+      type: object
+      properties:
+        type:
+          type: string
+        custom_emoji_id:
+          type: string
+      required:
+        - type
+        - custom_emoji_id
+    MessageReactionUpdated:
+      type: object
+      properties:
+        chat:
+          $ref: '#/components/schemas/Chat'
+        message_id:
+          type: integer
+          format: int32
+        user:
+          $ref: '#/components/schemas/User'
+        actor_chat:
+          $ref: '#/components/schemas/Chat'
+        date:
+          type: integer
+        old_reaction:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReactionType'
+        new_reaction:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReactionType'
+      required:
+        - chat
+        - message_id
+        - date
+        - old_reaction
+        - new_reaction
+    MessageReactionCountUpdated:
+      type: object
+      properties:
+        chat:
+          $ref: '#/components/schemas/Chat'
+        message_id:
+          type: integer
+          format: int32
+        date:
+          type: integer
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReactionType'
+      required:
+        - chat
+        - message_id
+        - date
+        - reactions
     BotCommand:
       type: object
       properties:

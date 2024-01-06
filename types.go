@@ -91,6 +91,7 @@ type Chat struct {
 	Id                                 int64            `json:"id"`
 	Type                               string           `json:"type"`
 	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`
+	AvailableReactions                 []interface{}    `json:"available_reactions,omitempty"`
 	Bio                                *string          `json:"bio,omitempty"`
 	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
 	Description                        *string          `json:"description,omitempty"`
@@ -985,6 +986,23 @@ type MessageId struct {
 	MessageId int32 `json:"message_id"`
 }
 
+type MessageReactionCountUpdated struct {
+	Chat      Chat          `json:"chat"`
+	Date      int32         `json:"date"`
+	MessageId int32         `json:"message_id"`
+	Reactions []interface{} `json:"reactions"`
+}
+
+type MessageReactionUpdated struct {
+	Chat        Chat          `json:"chat"`
+	Date        int32         `json:"date"`
+	MessageId   int32         `json:"message_id"`
+	NewReaction []interface{} `json:"new_reaction"`
+	OldReaction []interface{} `json:"old_reaction"`
+	ActorChat   *Chat         `json:"actor_chat,omitempty"`
+	User        *User         `json:"user,omitempty"`
+}
+
 type OrderInfo struct {
 	Email           *string          `json:"email,omitempty"`
 	Name            *string          `json:"name,omitempty"`
@@ -1120,6 +1138,16 @@ type ProximityAlertTriggered struct {
 	Watcher  User  `json:"watcher"`
 }
 
+type ReactionTypeCustomEmoji struct {
+	CustomEmojiId string `json:"custom_emoji_id"`
+	Type          string `json:"type"`
+}
+
+type ReactionTypeEmoji struct {
+	Emoji string `json:"emoji"`
+	Type  string `json:"type"`
+}
+
 type ReplyKeyboardMarkup struct {
 	Keyboard              [][]KeyboardButton `json:"keyboard"`
 	InputFieldPlaceholder *string            `json:"input_field_placeholder,omitempty"`
@@ -1216,21 +1244,23 @@ type SwitchInlineQueryChosenChat struct {
 }
 
 type Update struct {
-	UpdateId           int32               `json:"update_id"`
-	CallbackQuery      *CallbackQuery      `json:"callback_query,omitempty"`
-	ChannelPost        *Message            `json:"channel_post,omitempty"`
-	ChatJoinRequest    *ChatJoinRequest    `json:"chat_join_request,omitempty"`
-	ChatMember         *ChatMemberUpdated  `json:"chat_member,omitempty"`
-	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result,omitempty"`
-	EditedChannelPost  *Message            `json:"edited_channel_post,omitempty"`
-	EditedMessage      *Message            `json:"edited_message,omitempty"`
-	InlineQuery        *InlineQuery        `json:"inline_query,omitempty"`
-	Message            *Message            `json:"message,omitempty"`
-	MyChatMember       *ChatMemberUpdated  `json:"my_chat_member,omitempty"`
-	Poll               *Poll               `json:"poll,omitempty"`
-	PollAnswer         *PollAnswer         `json:"poll_answer,omitempty"`
-	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query,omitempty"`
-	ShippingQuery      *ShippingQuery      `json:"shipping_query,omitempty"`
+	UpdateId             int32                        `json:"update_id"`
+	CallbackQuery        *CallbackQuery               `json:"callback_query,omitempty"`
+	ChannelPost          *Message                     `json:"channel_post,omitempty"`
+	ChatJoinRequest      *ChatJoinRequest             `json:"chat_join_request,omitempty"`
+	ChatMember           *ChatMemberUpdated           `json:"chat_member,omitempty"`
+	ChosenInlineResult   *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`
+	EditedChannelPost    *Message                     `json:"edited_channel_post,omitempty"`
+	EditedMessage        *Message                     `json:"edited_message,omitempty"`
+	InlineQuery          *InlineQuery                 `json:"inline_query,omitempty"`
+	Message              *Message                     `json:"message,omitempty"`
+	MessageReaction      *MessageReactionUpdated      `json:"message_reaction,omitempty"`
+	MessageReactionCount *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
+	MyChatMember         *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
+	Poll                 *Poll                        `json:"poll,omitempty"`
+	PollAnswer           *PollAnswer                  `json:"poll_answer,omitempty"`
+	PreCheckoutQuery     *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
+	ShippingQuery        *ShippingQuery               `json:"shipping_query,omitempty"`
 }
 
 type User struct {
