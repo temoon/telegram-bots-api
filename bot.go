@@ -1,5 +1,6 @@
 package telegram
 
+//go:generate go run generate/parse-api-doc.go
 //go:generate go run generate/generate.go
 //go:generate gofmt -w types.go
 //go:generate gofmt -w requests

@@ -23,7 +23,7 @@ const TypesFile = "types.go"
 
 const RequestFileTemplate = "request.tmpl"
 
-type Type struct {
+type TypeB struct {
 	Name   string
 	Fields []TypeField
 }
@@ -138,7 +138,7 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 			return iRequired+fields[i].Key < jRequired+fields[j].Key
 		})
 
-		data := Type{
+		data := TypeB{
 			Name:   name,
 			Fields: fields,
 		}

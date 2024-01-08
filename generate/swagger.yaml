@@ -7458,6 +7458,8 @@ components:
         - type
         - offset
         - length
+    ExternalReplyInfo:
+      type: object
     PhotoSize:
       type: object
       properties:
