@@ -25,6 +25,11 @@ type FindOpts struct {
 	MaxResults int
 }
 
+func (opts *FindOpts) ResetCounters() {
+	opts.level = 0
+	opts.results = 0
+}
+
 func (opts *FindOpts) IsMaxLevel() bool {
 	return opts.MaxLevel != 0 && opts.level > opts.MaxLevel
 }
@@ -48,9 +53,9 @@ func (opts *FindOpts) IncResultsCount() {
 type Fields map[string]*Field
 
 type Field struct {
-	Type        string
 	Name        string
 	Description string
+	Type        string
 	Required    bool
 }
 
@@ -78,7 +83,7 @@ func main() {
 	var err error
 
 	var doc *html.Node
-	if doc, err = fetch(TelegramBotsApiUrl); err != nil {
+	if doc, err = fetch(); err != nil {
 		log.Fatalln(err)
 	}
 
@@ -92,11 +97,11 @@ func main() {
 	log.Println(methods, types, version)
 }
 
-func fetch(url string) (doc *html.Node, err error) {
+func fetch() (doc *html.Node, err error) {
 	log.Print("Fetching content... ")
 
 	var res *http.Response
-	if res, err = http.Get(url); err != nil {
+	if res, err = http.Get(TelegramBotsApiUrl); err != nil {
 		return
 	}
 	defer res.Body.Close()
@@ -152,6 +157,17 @@ func parse(doc *html.Node) (methods Methods, types Types, version string, err er
 	methods = make(Methods)
 	types = make(Types)
 
+	findAnchor := FindOpts{
+		Criteria: func(node *html.Node) bool {
+			if node.Type == html.ElementNode && node.Data == "a" {
+				attrs := getNodeAttributes(node)
+				return attrs["class"] == "anchor" && !strings.Contains(attrs["name"], "-")
+			}
+
+			return false
+		},
+	}
+
 	var currentBlock, currentName string
 	for node := doc.FirstChild; node != nil; node = node.NextSibling {
 		if node.Type != html.ElementNode {
@@ -164,26 +180,16 @@ func parse(doc *html.Node) (methods Methods, types Types, version string, err er
 		}
 
 		if node.Data == "h4" {
-			findA := FindOpts{
-				Criteria: func(node *html.Node) bool {
-					if node.Type == html.ElementNode && node.Data == "a" {
-						attrs := getNodeAttributes(node)
-						return attrs["class"] == "anchor" && !strings.Contains(attrs["name"], "-")
-					}
-
-					return false
-				},
-			}
-
-			a := findNextNode(node, &findA)
-			if a == nil {
+			findAnchor.ResetCounters()
+			anchor := findNextNode(node, &findAnchor)
+			if anchor == nil {
 				currentBlock = BlockNone
 				currentName = ""
 
 				continue
 			}
 
-			attrs := getNodeAttributes(a)
+			attrs := getNodeAttributes(anchor)
 			currentName = getNodeText(node)
 
 			if unicode.IsUpper(rune(currentName[0])) {
@@ -227,11 +233,11 @@ func parse(doc *html.Node) (methods Methods, types Types, version string, err er
 			switch currentBlock {
 			case BlockMethods:
 				if m, ok := methods[currentName]; ok {
-					m.Fields = getBlockFields(node)
+					m.Fields = getBlockFields(node, currentBlock)
 				}
 			case BlockTypes:
 				if t, ok := types[currentName]; ok {
-					t.Fields = getBlockFields(node)
+					t.Fields = getBlockFields(node, currentBlock)
 				}
 			}
 		}
@@ -254,10 +260,64 @@ func getBlockDescription(node *html.Node) string {
 	return getNodeText(node)
 }
 
-func getBlockFields(node *html.Node) (fields Fields) {
+func getBlockFields(node *html.Node, currentBlock string) (fields Fields) {
 	fields = make(Fields)
 
-	// TODO: ...
+	findBodyOpts := FindOpts{
+		Criteria: func(node *html.Node) bool {
+			return node.Type == html.ElementNode && node.Data == "tbody"
+		},
+	}
+
+	tableBody := findNextNode(node, &findBodyOpts)
+	if tableBody == nil {
+		return
+	}
+
+	findRowsOpts := FindOpts{
+		Criteria: func(node *html.Node) bool {
+			return node.Type == html.ElementNode && node.Data == "tr"
+		},
+	}
+
+	tableRows := findAllNodes(tableBody, &findRowsOpts)
+	if len(tableRows) == 0 {
+		return
+	}
+
+	findColsOpts := FindOpts{
+		Criteria: func(node *html.Node) bool {
+			return node.Type == html.ElementNode && node.Data == "td"
+		},
+	}
+
+	for _, row := range tableRows {
+		findColsOpts.ResetCounters()
+		tableCols := findAllNodes(row, &findColsOpts)
+		if currentBlock == BlockMethods && len(tableCols) == 4 {
+			name := getNodeText(tableCols[0])
+			desc := getNodeText(tableCols[3])
+
+			fields[name] = &Field{
+				Name:        name,
+				Description: desc,
+				Type:        getNodeText(tableCols[1]),
+				Required:    getNodeText(tableCols[2]) == "Yes",
+			}
+		} else if currentBlock == BlockTypes && len(tableCols) == 3 {
+			name := getNodeText(tableCols[0])
+			desc := getNodeText(tableCols[2])
+
+			fields[name] = &Field{
+				Name:        name,
+				Description: desc,
+				Type:        getNodeText(tableCols[1]),
+				Required:    !strings.HasPrefix(desc, "Optional"),
+			}
+		} else {
+			log.Fatalln("Unexpected number of columns at fields table")
+		}
+	}
 
 	return
 }
@@ -265,7 +325,16 @@ func getBlockFields(node *html.Node) (fields Fields) {
 func getBlockSubtypes(node *html.Node) (types []string) {
 	types = make([]string, 0)
 
-	// TODO: ...
+	findItemsOpts := FindOpts{
+		Criteria: func(node *html.Node) bool {
+			return node.Type == html.ElementNode && node.Data == "li"
+		},
+	}
+
+	items := findAllNodes(node, &findItemsOpts)
+	for _, item := range items {
+		types = append(types, getNodeText(item))
+	}
 
 	return
 }
