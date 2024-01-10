@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"sort"
 	"strings"
 	"unicode"
 )
@@ -16,47 +17,32 @@ const BlockNone = ""
 const BlockMethods = "methods"
 const BlockTypes = "types"
 
-type FindOpts struct {
-	level   int
-	results int
+const InputFileType = "InputFile"
+const IoStreamType = "input"
 
-	Criteria   func(node *html.Node) bool
-	MaxLevel   int
-	MaxResults int
+type Types map[string]*Type
+
+func (t Types) GetFilteredNames() (names []string) {
+	names = make([]string, 0, len(t))
+	for name, value := range t {
+		if name == InputFileType || len(value.Subtypes) != 0 {
+			continue
+		}
+
+		names = append(names, name)
+	}
+
+	sort.Strings(names)
+
+	return
 }
 
-func (opts *FindOpts) ResetCounters() {
-	opts.level = 0
-	opts.results = 0
-}
-
-func (opts *FindOpts) IsMaxLevel() bool {
-	return opts.MaxLevel != 0 && opts.level > opts.MaxLevel
-}
-
-func (opts *FindOpts) IncLevel() {
-	opts.level += 1
-}
-
-func (opts *FindOpts) DecLevel() {
-	opts.level -= 1
-}
-
-func (opts *FindOpts) IsMaxResults() bool {
-	return opts.MaxResults != 0 && opts.results >= opts.MaxResults
-}
-
-func (opts *FindOpts) IncResultsCount() {
-	opts.results += 1
-}
-
-type Fields map[string]*Field
-
-type Field struct {
+type Type struct {
 	Name        string
 	Description string
-	Type        string
-	Required    bool
+	Anchor      string
+	Subtypes    []string
+	Fields      Fields
 }
 
 type Methods map[string]*Method
@@ -69,53 +55,47 @@ type Method struct {
 	Fields      Fields
 }
 
-type Types map[string]*Type
+type Fields map[string]*Field
 
-type Type struct {
-	Name        string
-	Description string
-	Anchor      string
-	Subtypes    []string
-	Fields      Fields
+func (f Fields) IsMultipart() bool {
+	return false // TODO: ...
 }
 
-func main() {
-	var err error
+type Field struct {
+	Name        string
+	Description string
+	Type        string
+	IsRequired  bool
+}
 
-	var doc *html.Node
-	if doc, err = fetch(); err != nil {
-		log.Fatalln(err)
-	}
+func (f *Field) IsArray() bool {
+	return strings.HasPrefix(f.Type, "[]")
+}
 
-	var methods Methods
-	var types Types
-	var version string
-	if methods, types, version, err = parse(doc); err != nil {
-		log.Fatalln(err)
-	}
+func (f *Field) IsObject() bool {
+	return unicode.IsUpper(rune(f.Type[0]))
+}
 
-	log.Println(methods, types, version)
+func (f *Field) IsInputFile() bool {
+	return f.Type == IoStreamType
 }
 
 func fetch() (doc *html.Node, err error) {
-	log.Print("Fetching content... ")
-
 	var res *http.Response
 	if res, err = http.Get(TelegramBotsApiUrl); err != nil {
 		return
 	}
+	//goland:noinspection GoUnhandledErrorResult
 	defer res.Body.Close()
 
 	if doc, err = html.Parse(res.Body); err != nil {
 		return
 	}
 
-	log.Println("Done!")
-
 	return
 }
 
-func parse(doc *html.Node) (methods Methods, types Types, version string, err error) {
+func parse(doc *html.Node) (methods Methods, types Types, err error) {
 	// Content
 	findContentOpts := FindOpts{
 		Criteria: func(node *html.Node) bool {
@@ -131,26 +111,6 @@ func parse(doc *html.Node) (methods Methods, types Types, version string, err er
 	if doc = findNextNode(doc, &findContentOpts); doc == nil {
 		err = errors.New("content not found")
 		return
-	}
-
-	// Version
-	findVersionOpts := FindOpts{
-		Criteria: func(node *html.Node) bool {
-			return node.Type == html.ElementNode && node.Data == "p"
-		},
-
-		MaxLevel: 1,
-	}
-
-	versionNode := findNextNode(doc, &findVersionOpts)
-	if versionNode == nil {
-		err = errors.New("version not found")
-		return
-	}
-
-	versionText := getNodeText(versionNode)
-	if len(versionText) > 8 { // len("Bot API ") == 8
-		version = versionText[8:]
 	}
 
 	// Methods and types
@@ -301,8 +261,8 @@ func getBlockFields(node *html.Node, currentBlock string) (fields Fields) {
 			fields[name] = &Field{
 				Name:        name,
 				Description: desc,
-				Type:        getNodeText(tableCols[1]),
-				Required:    getNodeText(tableCols[2]) == "Yes",
+				Type:        correctType(getNodeText(tableCols[1])),
+				IsRequired:  getNodeText(tableCols[2]) == "Yes",
 			}
 		} else if currentBlock == BlockTypes && len(tableCols) == 3 {
 			name := getNodeText(tableCols[0])
@@ -311,8 +271,8 @@ func getBlockFields(node *html.Node, currentBlock string) (fields Fields) {
 			fields[name] = &Field{
 				Name:        name,
 				Description: desc,
-				Type:        getNodeText(tableCols[1]),
-				Required:    !strings.HasPrefix(desc, "Optional"),
+				Type:        correctType(getNodeText(tableCols[1])),
+				IsRequired:  !strings.HasPrefix(desc, "Optional"),
 			}
 		} else {
 			log.Fatalln("Unexpected number of columns at fields table")
@@ -343,78 +303,36 @@ func getMethodReturnType(desc string) (returns string) {
 	re := regexp.MustCompile(`(?:Returns|On success,).*?((?:[Aa]rray of )?[A-Z]\w+)(?: that were sent| of the sent messages?)? (?:object|is returned|on success)`)
 	match := re.FindAllStringSubmatch(desc, -1)
 
-	switch match[0][1] {
-	case "array of MessageId":
-		return "Array of Int"
-	case "array of Messages":
-		return "Array of Message"
-	}
-
-	return
+	return correctType(match[0][1])
 }
 
-func getNodeText(node *html.Node) (text string) {
-	findOpts := FindOpts{
-		Criteria: func(node *html.Node) bool {
-			return node.Type == html.TextNode
-		},
-	}
+func correctType(t string) string {
+	tt := strings.Split(t, " or ")
 
-	if nodes := findAllNodes(node, &findOpts); nodes != nil {
-		for _, n := range nodes {
-			text += strings.Trim(n.Data, " ") + " "
+	var item string
+	for i := 0; i < len(tt); i++ {
+		item = strings.ToLower(tt[i])
+
+		if strings.HasPrefix(item, "array of ") {
+			tt[i] = "[]" + correctType(tt[i][9:])
+			continue
+		}
+
+		switch item {
+		case strings.ToLower(InputFileType):
+			tt[i] = IoStreamType
+		case "messages":
+			tt[i] = "Message"
+		case "boolean", "true":
+			tt[i] = "bool"
+		case "float", "float number":
+			tt[i] = "float64"
+		case "integer":
+			tt[i] = "int32"
+		case "string":
+			tt[i] = "string"
 		}
 	}
 
-	return strings.TrimRight(text, " ")
-}
-
-func findNextNode(node *html.Node, opts *FindOpts) *html.Node {
-	opts.MaxResults = 1
-
-	nodes := findAllNodes(node, opts)
-	if nodes == nil || len(nodes) == 0 {
-		return nil
-	}
-
-	return nodes[0]
-}
-
-func findAllNodes(node *html.Node, opts *FindOpts) (nodes []*html.Node) {
-	if opts.IsMaxLevel() || opts.IsMaxResults() {
-		return
-	}
-
-	opts.IncLevel()
-	defer opts.DecLevel()
-
-	nodes = make([]*html.Node, 0)
-
-	if opts.Criteria(node) {
-		nodes = append(nodes, node)
-		opts.IncResultsCount()
-	}
-
-	for child := node.FirstChild; child != nil; child = child.NextSibling {
-		foundNodes := findAllNodes(child, opts)
-		if foundNodes == nil {
-			return
-		}
-
-		nodes = append(nodes, foundNodes...)
-	}
-
-	return
-}
-
-func getNodeAttributes(node *html.Node) (attrs map[string]string) {
-	attrs = make(map[string]string)
-
-	if node != nil {
-		for _, attr := range node.Attr {
-			attrs[attr.Key] = attr.Val
-		}
-	}
-
-	return
+	return strings.Join(tt, " or ")
 }

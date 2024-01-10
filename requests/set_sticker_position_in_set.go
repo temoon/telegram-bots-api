@@ -1,14 +1,14 @@
 package requests
 
 import (
-	"context"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type SetStickerPositionInSet struct {
-	Position int32
-	Sticker  string
+Position int32
+Sticker string
 }
 
 func (r *SetStickerPositionInSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,16 +17,20 @@ func (r *SetStickerPositionInSet) Call(ctx context.Context, b *telegram.Bot) (re
 	return
 }
 
+
+
 func (r *SetStickerPositionInSet) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetStickerPositionInSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["position"] = strconv.FormatInt(int64(r.Position), 10)
-
-	values["sticker"] = r.Sticker
+	
+			values["position"] = strconv.FormatInt(int64(r.Position), 10)
+			
+			values["sticker"] = r.Sticker
+			
 
 	return
 }

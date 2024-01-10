@@ -1,13 +1,13 @@
 package requests
 
 import (
-	"context"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type SetStickerSetTitle struct {
-	Name  string
-	Title string
+Name string
+Title string
 }
 
 func (r *SetStickerSetTitle) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -16,16 +16,20 @@ func (r *SetStickerSetTitle) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
+
+
 func (r *SetStickerSetTitle) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetStickerSetTitle) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["name"] = r.Name
-
-	values["title"] = r.Title
+	
+			values["name"] = r.Name
+			
+			values["title"] = r.Title
+			
 
 	return
 }

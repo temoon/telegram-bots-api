@@ -1,12 +1,12 @@
 package requests
 
 import (
-	"context"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type DeleteWebhook struct {
-	DropPendingUpdates *bool
+DropPendingUpdates *bool
 }
 
 func (r *DeleteWebhook) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -15,20 +15,24 @@ func (r *DeleteWebhook) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
+
+
 func (r *DeleteWebhook) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *DeleteWebhook) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.DropPendingUpdates != nil {
-		if *r.DropPendingUpdates {
-			values["drop_pending_updates"] = "1"
-		} else {
-			values["drop_pending_updates"] = "0"
-		}
-	}
+	
+			if r.DropPendingUpdates != nil {
+			if *r.DropPendingUpdates {
+					values["drop_pending_updates"] = "1"
+				} else {
+					values["drop_pending_updates"] = "0"
+				}
+			}
+			
 
 	return
 }

@@ -1,7 +1,7 @@
 package requests
 
 import (
-	"context"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
@@ -14,10 +14,14 @@ func (r *GetWebhookInfo) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
+
+
 func (r *GetWebhookInfo) IsMultipart() (multipart bool) {
 	return
-}
+	}
 
 func (r *GetWebhookInfo) GetValues() (values map[string]interface{}, err error) {
+	
+
 	return
 }

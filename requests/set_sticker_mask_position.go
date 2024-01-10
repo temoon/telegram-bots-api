@@ -1,14 +1,14 @@
 package requests
 
 import (
-	"context"
-	"encoding/json"
+"encoding/json"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type SetStickerMaskPosition struct {
-	MaskPosition *telegram.MaskPosition
-	Sticker      string
+MaskPosition *telegram.MaskPosition
+Sticker string
 }
 
 func (r *SetStickerMaskPosition) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,23 +17,27 @@ func (r *SetStickerMaskPosition) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
+
+
 func (r *SetStickerMaskPosition) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetStickerMaskPosition) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.MaskPosition != nil {
-		var dataMaskPosition []byte
-		if dataMaskPosition, err = json.Marshal(r.MaskPosition); err != nil {
-			return
-		}
+	
+			if r.MaskPosition != nil {
+			var dataMaskPosition []byte
+				if dataMaskPosition, err = json.Marshal(r.MaskPosition); err != nil {
+					return
+				}
 
-		values["mask_position"] = string(dataMaskPosition)
-	}
-
-	values["sticker"] = r.Sticker
+				values["mask_position"] = string(dataMaskPosition)
+			}
+			
+			values["sticker"] = r.Sticker
+			
 
 	return
 }

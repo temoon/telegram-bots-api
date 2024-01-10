@@ -1,13 +1,13 @@
 package requests
 
 import (
-	"context"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type SetCustomEmojiStickerSetThumbnail struct {
-	CustomEmojiId *string
-	Name          string
+CustomEmojiId *string
+Name string
 }
 
 func (r *SetCustomEmojiStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -16,18 +16,22 @@ func (r *SetCustomEmojiStickerSetThumbnail) Call(ctx context.Context, b *telegra
 	return
 }
 
+
+
 func (r *SetCustomEmojiStickerSetThumbnail) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetCustomEmojiStickerSetThumbnail) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.CustomEmojiId != nil {
-		values["custom_emoji_id"] = *r.CustomEmojiId
-	}
-
-	values["name"] = r.Name
+	
+			if r.CustomEmojiId != nil {
+			values["custom_emoji_id"] = *r.CustomEmojiId
+			}
+			
+			values["name"] = r.Name
+			
 
 	return
 }

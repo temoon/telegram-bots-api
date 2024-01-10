@@ -1,16 +1,17 @@
 package requests
 
 import (
-	"context"
-	"encoding/json"
+"encoding/json"
+"errors"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type StopPoll struct {
-	ChatId      interface{}
-	MessageId   int32
-	ReplyMarkup *telegram.InlineKeyboardMarkup
+ChatId interface{}
+MessageId int32
+ReplyMarkup *telegram.InlineKeyboardMarkup
 }
 
 func (r *StopPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,30 +20,37 @@ func (r *StopPoll) Call(ctx context.Context, b *telegram.Bot) (response interfac
 	return
 }
 
+
+
 func (r *StopPoll) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *StopPoll) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	}
+	
+			switch value := r.ChatId.(type) {
+			case int64:
+					values["chat_id"] = strconv.FormatInt(value, 10)
+				case string:
+					values["chat_id"] = value
+				default:
+				err = errors.New("invalid chat_id field type")
+				return
+			}
+		
+			values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
+			
+			if r.ReplyMarkup != nil {
+			var dataReplyMarkup []byte
+				if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
+					return
+				}
 
-	values["message_id"] = strconv.FormatInt(int64(r.MessageId), 10)
-
-	if r.ReplyMarkup != nil {
-		var dataReplyMarkup []byte
-		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
-			return
-		}
-
-		values["reply_markup"] = string(dataReplyMarkup)
-	}
+				values["reply_markup"] = string(dataReplyMarkup)
+			}
+			
 
 	return
 }

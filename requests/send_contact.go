@@ -1,24 +1,24 @@
 package requests
 
 import (
-	"context"
-	"encoding/json"
+"encoding/json"
+"errors"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type SendContact struct {
-	AllowSendingWithoutReply *bool
-	ChatId                   interface{}
-	DisableNotification      *bool
-	FirstName                string
-	LastName                 *string
-	MessageThreadId          *int32
-	PhoneNumber              string
-	ProtectContent           *bool
-	ReplyMarkup              interface{}
-	ReplyToMessageId         *int32
-	Vcard                    *string
+ChatId interface{}
+DisableNotification *bool
+FirstName string
+LastName *string
+MessageThreadId *int32
+PhoneNumber string
+ProtectContent *bool
+ReplyMarkup *telegram.InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
+ReplyParameters *telegram.ReplyParameters
+Vcard *string
 }
 
 func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,102 +27,76 @@ func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response inter
 	return
 }
 
+
+
 func (r *SendContact) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.AllowSendingWithoutReply != nil {
-		if *r.AllowSendingWithoutReply {
-			values["allow_sending_without_reply"] = "1"
-		} else {
-			values["allow_sending_without_reply"] = "0"
-		}
-	}
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	values["first_name"] = r.FirstName
-
-	if r.LastName != nil {
-		values["last_name"] = *r.LastName
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
-	}
-
-	values["phone_number"] = r.PhoneNumber
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
-	}
-
-	switch value := r.ReplyMarkup.(type) {
-	case *telegram.InlineKeyboardMarkup:
-		if value != nil {
-			var dataInlineKeyboardMarkup []byte
-			if dataInlineKeyboardMarkup, err = json.Marshal(value); err != nil {
+	
+			switch value := r.ChatId.(type) {
+			case int64:
+					values["chat_id"] = strconv.FormatInt(value, 10)
+				case string:
+					values["chat_id"] = value
+				default:
+				err = errors.New("invalid chat_id field type")
 				return
 			}
-
-			values["reply_markup"] = string(dataInlineKeyboardMarkup)
-		}
-	case *telegram.ReplyKeyboardMarkup:
-		if value != nil {
-			var dataReplyKeyboardMarkup []byte
-			if dataReplyKeyboardMarkup, err = json.Marshal(value); err != nil {
-				return
+		
+			if r.DisableNotification != nil {
+			if *r.DisableNotification {
+					values["disable_notification"] = "1"
+				} else {
+					values["disable_notification"] = "0"
+				}
 			}
-
-			values["reply_markup"] = string(dataReplyKeyboardMarkup)
-		}
-	case *telegram.ReplyKeyboardRemove:
-		if value != nil {
-			var dataReplyKeyboardRemove []byte
-			if dataReplyKeyboardRemove, err = json.Marshal(value); err != nil {
-				return
+			
+			values["first_name"] = r.FirstName
+			
+			if r.LastName != nil {
+			values["last_name"] = *r.LastName
 			}
-
-			values["reply_markup"] = string(dataReplyKeyboardRemove)
-		}
-	case *telegram.ForceReply:
-		if value != nil {
-			var dataForceReply []byte
-			if dataForceReply, err = json.Marshal(value); err != nil {
-				return
+			
+			if r.MessageThreadId != nil {
+			values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
 			}
+			
+			values["phone_number"] = r.PhoneNumber
+			
+			if r.ProtectContent != nil {
+			if *r.ProtectContent {
+					values["protect_content"] = "1"
+				} else {
+					values["protect_content"] = "0"
+				}
+			}
+			
+			if r.ReplyMarkup != nil {
+			var dataReplyMarkup []byte
+				if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
+					return
+				}
 
-			values["reply_markup"] = string(dataForceReply)
-		}
-	}
+				values["reply_markup"] = string(dataReplyMarkup)
+			}
+			
+			if r.ReplyParameters != nil {
+			var dataReplyParameters []byte
+				if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+					return
+				}
 
-	if r.ReplyToMessageId != nil {
-		values["reply_to_message_id"] = strconv.FormatInt(int64(*r.ReplyToMessageId), 10)
-	}
-
-	if r.Vcard != nil {
-		values["vcard"] = *r.Vcard
-	}
+				values["reply_parameters"] = string(dataReplyParameters)
+			}
+			
+			if r.Vcard != nil {
+			values["vcard"] = *r.Vcard
+			}
+			
 
 	return
 }

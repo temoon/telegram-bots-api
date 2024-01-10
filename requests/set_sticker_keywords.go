@@ -1,14 +1,14 @@
 package requests
 
 import (
-	"context"
-	"encoding/json"
+"encoding/json"
+"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type SetStickerKeywords struct {
-	Keywords []string
-	Sticker  string
+Keywords []string
+Sticker string
 }
 
 func (r *SetStickerKeywords) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,21 +17,27 @@ func (r *SetStickerKeywords) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
+
+
 func (r *SetStickerKeywords) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetStickerKeywords) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	var dataKeywords []byte
-	if dataKeywords, err = json.Marshal(r.Keywords); err != nil {
-		return
-	}
+	
+			if r.Keywords != nil {
+			var dataKeywords []byte
+				if dataKeywords, err = json.Marshal(r.Keywords); err != nil {
+					return
+				}
 
-	values["keywords"] = string(dataKeywords)
-
-	values["sticker"] = r.Sticker
+				values["keywords"] = string(dataKeywords)
+			}
+			
+			values["sticker"] = r.Sticker
+			
 
 	return
 }

@@ -10,7 +10,7 @@ import (
 type AddStickerToSet struct {
 	Name    string
 	Sticker telegram.InputSticker
-	UserId  int64
+	UserId  int32
 }
 
 func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,7 +20,7 @@ func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response i
 }
 
 func (r *AddStickerToSet) IsMultipart() (multipart bool) {
-	return true
+	return false
 }
 
 func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error) {
@@ -35,7 +35,7 @@ func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error)
 
 	values["sticker"] = string(dataSticker)
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
 
 	return
 }

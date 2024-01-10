@@ -1,14 +1,15 @@
 package requests
 
 import (
-	"context"
+"errors"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type BanChatSenderChat struct {
-	ChatId       interface{}
-	SenderChatId int64
+ChatId interface{}
+SenderChatId int32
 }
 
 func (r *BanChatSenderChat) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,21 +18,28 @@ func (r *BanChatSenderChat) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
+
+
 func (r *BanChatSenderChat) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *BanChatSenderChat) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	}
-
-	values["sender_chat_id"] = strconv.FormatInt(r.SenderChatId, 10)
+	
+			switch value := r.ChatId.(type) {
+			case int64:
+					values["chat_id"] = strconv.FormatInt(value, 10)
+				case string:
+					values["chat_id"] = value
+				default:
+				err = errors.New("invalid chat_id field type")
+				return
+			}
+		
+			values["sender_chat_id"] = strconv.FormatInt(int64(r.SenderChatId), 10)
+			
 
 	return
 }

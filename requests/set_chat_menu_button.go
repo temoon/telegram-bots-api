@@ -1,15 +1,15 @@
 package requests
 
 import (
-	"context"
-	"encoding/json"
+"encoding/json"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type SetChatMenuButton struct {
-	ChatId     interface{}
-	MenuButton interface{}
+ChatId *int32
+MenuButton interface{}
 }
 
 func (r *SetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -18,49 +18,29 @@ func (r *SetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
+
+
 func (r *SetChatMenuButton) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *SetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	}
-
-	switch value := r.MenuButton.(type) {
-	case *telegram.MenuButtonCommands:
-		if value != nil {
-			var dataMenuButtonCommands []byte
-			if dataMenuButtonCommands, err = json.Marshal(value); err != nil {
-				return
+	
+			if r.ChatId != nil {
+			values["chat_id"] = strconv.FormatInt(int64(*r.ChatId), 10)
 			}
+			
+			if r.MenuButton != nil {
+			var dataMenuButton []byte
+				if dataMenuButton, err = json.Marshal(r.MenuButton); err != nil {
+					return
+				}
 
-			values["menu_button"] = string(dataMenuButtonCommands)
-		}
-	case *telegram.MenuButtonWebApp:
-		if value != nil {
-			var dataMenuButtonWebApp []byte
-			if dataMenuButtonWebApp, err = json.Marshal(value); err != nil {
-				return
+				values["menu_button"] = string(dataMenuButton)
 			}
-
-			values["menu_button"] = string(dataMenuButtonWebApp)
-		}
-	case *telegram.MenuButtonDefault:
-		if value != nil {
-			var dataMenuButtonDefault []byte
-			if dataMenuButtonDefault, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["menu_button"] = string(dataMenuButtonDefault)
-		}
-	}
+			
 
 	return
 }

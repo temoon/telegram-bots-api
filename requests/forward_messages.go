@@ -8,29 +8,28 @@ import (
 	"github.com/temoon/telegram-bots-api"
 )
 
-type SendDice struct {
+type ForwardMessages struct {
 ChatId interface{}
 DisableNotification *bool
-Emoji *string
+FromChatId interface{}
+MessageIds []int32
 MessageThreadId *int32
 ProtectContent *bool
-ReplyMarkup *telegram.InlineKeyboardMarkup or ReplyKeyboardMarkup or ReplyKeyboardRemove or ForceReply
-ReplyParameters *telegram.ReplyParameters
 }
 
-func (r *SendDice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(telegram.Message)
-	err = b.CallMethod(ctx, "sendDice", r, response)
+func (r *ForwardMessages) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new([]telegram.MessageId)
+	err = b.CallMethod(ctx, "forwardMessages", r, response)
 	return
 }
 
 
 
-func (r *SendDice) IsMultipart() (multipart bool) {
+func (r *ForwardMessages) IsMultipart() (multipart bool) {
 	return false
 	}
 
-func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
+func (r *ForwardMessages) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	
@@ -52,9 +51,22 @@ func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
 				}
 			}
 			
-			if r.Emoji != nil {
-			values["emoji"] = *r.Emoji
+			switch value := r.FromChatId.(type) {
+			case int64:
+					values["from_chat_id"] = strconv.FormatInt(value, 10)
+				case string:
+					values["from_chat_id"] = value
+				default:
+				err = errors.New("invalid from_chat_id field type")
+				return
 			}
+		
+			var dataMessageIds []byte
+				if dataMessageIds, err = json.Marshal(r.MessageIds); err != nil {
+					return
+				}
+
+				values["message_ids"] = string(dataMessageIds)
 			
 			if r.MessageThreadId != nil {
 			values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
@@ -66,24 +78,6 @@ func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
 				} else {
 					values["protect_content"] = "0"
 				}
-			}
-			
-			if r.ReplyMarkup != nil {
-			var dataReplyMarkup []byte
-				if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
-					return
-				}
-
-				values["reply_markup"] = string(dataReplyMarkup)
-			}
-			
-			if r.ReplyParameters != nil {
-			var dataReplyParameters []byte
-				if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-					return
-				}
-
-				values["reply_parameters"] = string(dataReplyParameters)
 			}
 			
 

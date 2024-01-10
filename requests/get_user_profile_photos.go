@@ -1,15 +1,15 @@
 package requests
 
 import (
-	"context"
+"strconv"
+"context"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
 )
 
 type GetUserProfilePhotos struct {
-	Limit  *int32
-	Offset *int32
-	UserId int64
+Limit *int32
+Offset *int32
+UserId int32
 }
 
 func (r *GetUserProfilePhotos) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -18,22 +18,26 @@ func (r *GetUserProfilePhotos) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
+
+
 func (r *GetUserProfilePhotos) IsMultipart() (multipart bool) {
 	return false
-}
+	}
 
 func (r *GetUserProfilePhotos) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Limit != nil {
-		values["limit"] = strconv.FormatInt(int64(*r.Limit), 10)
-	}
-
-	if r.Offset != nil {
-		values["offset"] = strconv.FormatInt(int64(*r.Offset), 10)
-	}
-
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	
+			if r.Limit != nil {
+			values["limit"] = strconv.FormatInt(int64(*r.Limit), 10)
+			}
+			
+			if r.Offset != nil {
+			values["offset"] = strconv.FormatInt(int64(*r.Offset), 10)
+			}
+			
+			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
+			
 
 	return
 }

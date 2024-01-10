@@ -7,25 +7,24 @@ import (
 	"github.com/temoon/telegram-bots-api"
 )
 
-type SetChatAdministratorCustomTitle struct {
+type GetUserChatBoosts struct {
 ChatId interface{}
-CustomTitle string
 UserId int32
 }
 
-func (r *SetChatAdministratorCustomTitle) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(bool)
-	err = b.CallMethod(ctx, "setChatAdministratorCustomTitle", r, response)
+func (r *GetUserChatBoosts) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+	response = new(telegram.UserChatBoosts)
+	err = b.CallMethod(ctx, "getUserChatBoosts", r, response)
 	return
 }
 
 
 
-func (r *SetChatAdministratorCustomTitle) IsMultipart() (multipart bool) {
+func (r *GetUserChatBoosts) IsMultipart() (multipart bool) {
 	return false
 	}
 
-func (r *SetChatAdministratorCustomTitle) GetValues() (values map[string]interface{}, err error) {
+func (r *GetUserChatBoosts) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	
@@ -39,8 +38,6 @@ func (r *SetChatAdministratorCustomTitle) GetValues() (values map[string]interfa
 				return
 			}
 		
-			values["custom_title"] = r.CustomTitle
-			
 			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
 			
 

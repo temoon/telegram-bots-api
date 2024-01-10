@@ -10,21 +10,21 @@ import (
 
 type {{.Type}} struct {
 {{range $_, $f := .Fields -}}
-    {{$f.Name}} {{if or $f.IsInputFile (len $f.Variants)}}interface{}{{else}}{{$f.Type}}{{end}}
+    {{$f.Name}} {{if or $f.IsInputFile (len $f.Variants)}}interface{}{{else}}{{$f.FieldType}}{{end}}
 {{end -}}
 }
 
 func (r *{{.Type}}) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
 	response = new({{.ResponseType}})
-	err = b.CallMethod(ctx, "{{.Method}}", {{if .HasRequest}}r{{else}}nil{{end}}, response)
+	err = b.CallMethod(ctx, "{{.Method.Name}}", {{if len .Fields}}r{{else}}nil{{end}}, response)
 	return
 }
 
-{{if .ResponseTypes -}}
+{{if .ResponseVariants -}}
 func (r *{{.Type}}) CallWithResponse(ctx context.Context, b *telegram.Bot, response interface{}) (err error) {
 	switch response.(type) {
-	case {{range $index, $type := .ResponseTypes}}{{if $index}}, {{end}}{{$type}}{{end}}:
-		err = b.CallMethod(ctx, "{{.Method}}", {{if .HasRequest}}r{{else}}nil{{end}}, response)
+	case {{range $index, $type := .ResponseVariants}}{{if $index}}, {{end}}{{$type}}{{end}}:
+		err = b.CallMethod(ctx, "{{.Method.Name}}", {{if len .Fields}}r{{else}}nil{{end}}, response)
 	default:
 		err = errors.New("unexpected response type")
 	}
@@ -34,7 +34,7 @@ func (r *{{.Type}}) CallWithResponse(ctx context.Context, b *telegram.Bot, respo
 {{- end}}
 
 func (r *{{.Type}}) IsMultipart() (multipart bool) {
-	{{if .HasRequest -}}
+	{{if len .Fields -}}
 	return {{.IsMultipart}}
 	{{else -}}
 	return
@@ -42,125 +42,39 @@ func (r *{{.Type}}) IsMultipart() (multipart bool) {
 }
 
 func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
-	{{if .HasRequest -}}
+	{{if len .Fields -}}
 	values = make(map[string]interface{})
 
 	{{range $k, $f := .Fields -}}
-        {{if eq $f.RawType "string" -}}
-            {{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != nil {
-            {{end -}}
-			values["{{$k}}"] = {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}
-            {{if not $f.IsRequired -}}
-			}
-            {{end -}}
-        {{end}}
-
-		{{if eq $f.RawType "integer" -}}
-			{{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != nil {
-			{{end -}}
-			{{if eq $f.RawTypeFormat "int64" -}}
-			values["{{$k}}"] = strconv.FormatInt({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}, 10)
-			{{else -}}
-			values["{{$k}}"] = strconv.FormatInt(int64({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}), 10)
-			{{end -}}
-            {{if not $f.IsRequired -}}
-			}
-            {{end -}}
-		{{end}}
-
-		{{if eq $f.RawType "boolean" -}}
-            {{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != nil {
-            {{end -}}
-			if {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}} {
-				values["{{$k}}"] = "1"
-			} else {
-				values["{{$k}}"] = "0"
-			}
-            {{if not $f.IsRequired -}}
-			}
-            {{end -}}
-		{{end}}
-
-		{{if and (or $f.IsRef (eq $f.RawType "array")) (not (len $f.Variants)) -}}
-            {{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != nil {
-			{{end -}}
-			var data{{$f.Name}} []byte
-			if data{{$f.Name}}, err = json.Marshal(r.{{$f.Name}}); err != nil {
-				return
-			}
-
-			values["{{$k}}"] = string(data{{$f.Name}})
-            {{if not $f.IsRequired -}}
-			}
-			{{end -}}
-        {{end}}
-
-		{{if $f.IsInputFile}}
-            {{if not $f.IsRequired -}}
-			if r.{{$f.Name}} != nil {
-            {{end -}}
-			values["{{$k}}"] = r.{{$f.Name}}
-            {{if not $f.IsRequired -}}
-			}
-            {{end -}}
-		{{end}}
-
 		{{if len $f.Variants}}
 			switch value := r.{{$f.Name}}.(type) {
 			{{range $v := $f.Variants -}}
-				{{if eq $v.RawType "string" -}}
-				case string:
-					values["{{$k}}"] = value
-				{{end -}}
-
-				{{if eq $v.RawType "integer" -}}
-					{{if eq $v.Type "int32" -}}
-					case int32:
-						values["{{$k}}"] = strconv.FormatInt(int64(value), 10)
-					{{else -}}
-					case int64:
-						values["{{$k}}"] = strconv.FormatInt(value, 10)
-                    {{end -}}
-				{{end -}}
-
-				{{if eq $v.RawType "boolean" -}}
-				case bool:
+				{{if eq $v.Type "string" -}}
+					case {{if not $f.IsRequired}}*{{end}}string:
+					values["{{$k}}"] = {{if not $f.IsRequired}}*{{end}}value
+				{{else if "int64" -}}
+					case {{if not $f.IsRequired}}*{{end}}int64:
+					values["{{$k}}"] = strconv.FormatInt({{if not $f.IsRequired}}*{{end}}value, 10)
+				{{else if eq $v.Type "int32" -}}
+					case {{if not $f.IsRequired}}*{{end}}int32:
+					values["{{$k}}"] = strconv.FormatInt(int64({{if not $f.IsRequired}}*{{end}}value), 10)
+				{{else if eq $v.Type "float64" -}}
+					case {{if not $f.IsRequired}}*{{end}}float64:
+					values["{{$k}}"] = strconv.FormatFloat({{if not $f.IsRequired}}*{{end}}value, 'f', -1, 64)
+				{{else if eq $v.Type "bool" -}}
+					case bool:
 					if value {
 						values["{{$k}}"] = "1"
 					} else {
 						values["{{$k}}"] = "0"
 					}
-				{{end -}}
-
-                {{if $v.IsInputFile -}}
-				case io.Reader:
+				{{else if $v.IsInputFile -}}
+					case io.Reader:
 					values["{{$k}}"] = value
-                {{end -}}
-
-				{{if $v.IsRef -}}
-				case {{if not $f.IsRequired}}*{{end}}{{$v.Type}}:
+				{{else if or $v.IsObject $v.IsArray -}}
+					case {{if not $f.IsRequired}}*{{end}}{{$v.Type}}:
 					{{if not $v.IsRequired -}}
-					if value != nil {
-					{{end -}}
-					var data{{$v.Name}} []byte
-					if data{{$v.Name}}, err = json.Marshal(value); err != nil {
-						return
-					}
-
-					values["{{$k}}"] = string(data{{$v.Name}})
-					{{if not $v.IsRequired -}}
-					}
-					{{end -}}
-				{{end -}}
-
-                {{if eq $v.RawType "array" -}}
-				default:
-					{{if not $v.IsRequired -}}
-					if value != nil {
+						if value != nil {
 					{{end -}}
 					var data []byte
 					if data, err = json.Marshal(value); err != nil {
@@ -169,14 +83,48 @@ func (r *{{.Type}}) GetValues() (values map[string]interface{}, err error) {
 
 					values["{{$k}}"] = string(data)
 					{{if not $v.IsRequired -}}
-					}
+						}
 					{{end -}}
-                {{end -}}
-            {{end -}}
+				{{end -}}
+			{{end -}}
+			default:
+				err = errors.New("invalid {{$k}} field type")
+				return
 			}
-		{{end}}
+		{{else}}
+			{{if not $f.IsRequired -}}
+				if r.{{$f.Name}} != nil {
+			{{end -}}
+			{{if eq $f.Type "string" -}}
+				values["{{$k}}"] = {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}
+			{{else if eq $f.Type "int64" -}}
+				values["{{$k}}"] = strconv.FormatInt({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}, 10)
+			{{else if eq $f.Type "int32" -}}
+				values["{{$k}}"] = strconv.FormatInt(int64({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}), 10)
+			{{else if eq $f.Type "float64" -}}
+				values["{{$k}}"] = strconv.FormatFloat({{if not $f.IsRequired}}*{{end}}r.{{$f.Name}}, 'f', -1, 64)
+			{{else if eq $f.Type "bool" -}}
+				if {{if not $f.IsRequired}}*{{end}}r.{{$f.Name}} {
+					values["{{$k}}"] = "1"
+				} else {
+					values["{{$k}}"] = "0"
+				}
+			{{else if $f.IsInputFile}}
+				values["{{$k}}"] = r.{{$f.Name}}
+			{{else if or $f.IsObject $f.IsArray -}}
+				var data{{$f.Name}} []byte
+				if data{{$f.Name}}, err = json.Marshal(r.{{$f.Name}}); err != nil {
+					return
+				}
+
+				values["{{$k}}"] = string(data{{$f.Name}})
+			{{end -}}
+			{{if not $f.IsRequired -}}
+				}
+			{{end -}}
+		{{end -}}
 	{{end -}}
-    {{end -}}
+    {{end}}
 
 	return
 }

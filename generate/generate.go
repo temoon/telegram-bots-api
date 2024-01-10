@@ -1,84 +1,87 @@
 package main
 
 import (
-	"context"
+	"github.com/iancoleman/strcase"
+	"golang.org/x/net/html"
+	"golang.org/x/text/cases"
+	"golang.org/x/text/language"
 	"log"
 	"os"
 	"sort"
 	"strings"
 	"text/template"
-
-	"github.com/getkin/kin-openapi/openapi3"
-	"github.com/iancoleman/strcase"
+	"unicode"
 )
 
-const SchemaPrefix = "#/components/schemas/"
-const RefInputFile = SchemaPrefix + "InputFile"
-
 const TemplatesDir = "generate/templates/"
-
 const TypesHeaderTemplate = "types_header.tmpl"
 const TypesTemplate = "types.tmpl"
 const TypesFile = "types.go"
-
 const RequestFileTemplate = "request.tmpl"
 
-type TypeB struct {
+type TelegramType struct {
+	Type   *Type
 	Name   string
-	Fields []TypeField
+	Fields []TelegramTypeField
 }
 
-type TypeField struct {
+type TelegramTypeField struct {
+	Field      *Field
 	Key        string
 	Name       string
 	Type       string
 	IsRequired bool
 }
 
-type Request struct {
-	Imports       []string
-	Method        string
-	Type          string
-	Fields        map[string]RequestField
-	HasRequest    bool
-	ResponseType  string
-	ResponseTypes []string
-	IsMultipart   bool
+type TelegramRequest struct {
+	Imports          []string
+	Method           *Method
+	Type             string
+	Fields           map[string]TelegramRequestField
+	IsMultipart      bool
+	ResponseType     string
+	ResponseVariants []string
 }
 
-type RequestField struct {
-	IsRequired    bool
-	IsRef         bool
-	IsInputFile   bool
-	Name          string
-	Type          string
-	RawType       string
-	RawTypeFormat string
-	Variants      []RequestField
+func (r *TelegramRequest) HasRequest() bool {
+	return len(r.Fields) > 0
+}
+
+type TelegramRequestField struct {
+	Name        string
+	Type        string
+	FieldType   string
+	IsRequired  bool
+	IsArray     bool
+	IsObject    bool
+	IsInputFile bool
+	Variants    []TelegramRequestField
 }
 
 func main() {
-	loader := openapi3.NewLoader()
+	var err error
 
-	doc, err := loader.LoadFromFile("generate/swagger.yaml")
-	if err != nil {
+	var doc *html.Node
+	if doc, err = fetch(); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err = doc.Validate(context.Background()); err != nil {
+	var methods Methods
+	var types Types
+	if methods, types, err = parse(doc); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err = GenerateTypes(doc); err != nil {
+	if err = generateTypes(types); err != nil {
 		log.Fatalln(err)
 	}
 
-	if err = GenerateRequests(doc); err != nil {
+	if err = generateRequests(types, methods); err != nil {
 		log.Fatalln(err)
 	}
 }
 
-func GenerateTypes(doc *openapi3.T) (err error) {
+func generateTypes(types Types) (err error) {
 	var file *os.File
 	if file, err = os.Create(TypesFile); err != nil {
 		return
@@ -86,40 +89,25 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	//goland:noinspection GoUnhandledErrorResult
 	defer file.Close()
 
-	var t *template.Template
-	if t, err = template.ParseFiles(TemplatesDir+TypesHeaderTemplate, TemplatesDir+TypesTemplate); err != nil {
+	var tmpl *template.Template
+	if tmpl, err = template.ParseFiles(TemplatesDir+TypesHeaderTemplate, TemplatesDir+TypesTemplate); err != nil {
 		return
 	}
 
-	if err = t.ExecuteTemplate(file, TypesHeaderTemplate, nil); err != nil {
+	if err = tmpl.ExecuteTemplate(file, TypesHeaderTemplate, nil); err != nil {
 		return
 	}
 
-	schemas := make([]string, 0, len(doc.Components.Schemas))
-	for name, schema := range doc.Components.Schemas {
-		if SchemaPrefix+name == RefInputFile || len(schema.Value.AnyOf) != 0 {
-			continue
-		}
+	for _, name := range types.GetFilteredNames() {
+		item := types[name]
 
-		schemas = append(schemas, name)
-	}
-	sort.Strings(schemas)
-
-	for _, name := range schemas {
-		schema := doc.Components.Schemas[name]
-
-		required := make(map[string]bool)
-		for _, key := range schema.Value.Required {
-			required[key] = true
-		}
-
-		fields := make([]TypeField, 0, len(schema.Value.Properties))
-		for key, value := range schema.Value.Properties {
-			field := TypeField{
-				Key:        key,
-				Name:       strcase.ToCamel(key),
-				Type:       GenerateValueType(value, required[key], ""),
-				IsRequired: required[key],
+		fields := make([]TelegramTypeField, 0, len(item.Fields))
+		for _, field := range item.Fields {
+			field := TelegramTypeField{
+				Key:        field.Name,
+				Name:       strcase.ToCamel(field.Name),
+				Type:       generateValueType(types, field.Type, field.IsRequired, ""),
+				IsRequired: field.IsRequired,
 			}
 
 			fields = append(fields, field)
@@ -138,12 +126,12 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 			return iRequired+fields[i].Key < jRequired+fields[j].Key
 		})
 
-		data := TypeB{
+		data := TelegramType{
 			Name:   name,
 			Fields: fields,
 		}
 
-		if err = t.ExecuteTemplate(file, TypesTemplate, data); err != nil {
+		if err = tmpl.ExecuteTemplate(file, TypesTemplate, data); err != nil {
 			return
 		}
 	}
@@ -151,15 +139,14 @@ func GenerateTypes(doc *openapi3.T) (err error) {
 	return
 }
 
-func GenerateRequests(doc *openapi3.T) (err error) {
-	var t *template.Template
-	if t, err = template.ParseFiles(TemplatesDir + RequestFileTemplate); err != nil {
+func generateRequests(types Types, methods Methods) (err error) {
+	var tmpl *template.Template
+	if tmpl, err = template.ParseFiles(TemplatesDir + RequestFileTemplate); err != nil {
 		return
 	}
 
-	for method, path := range doc.Paths {
-		response := path.Post.Responses["200"].Value.Content.Get("application/json").Schema.Value.Properties["result"]
-		if err = GenerateRequestFile(t, method, path.Post.RequestBody, response); err != nil {
+	for _, item := range methods {
+		if err = generateRequestFile(tmpl, types, item); err != nil {
 			return
 		}
 	}
@@ -167,110 +154,111 @@ func GenerateRequests(doc *openapi3.T) (err error) {
 	return
 }
 
-func GenerateRequestFile(t *template.Template, method string, requestBody *openapi3.RequestBodyRef, response *openapi3.SchemaRef) (err error) {
+func generateRequestFile(tmpl *template.Template, types Types, method *Method) (err error) {
+	// TODO: clean requests dir
+
 	var file *os.File
-	if file, err = os.Create("requests/" + strcase.ToSnake(method[1:]) + ".go"); err != nil {
+	if file, err = os.Create("requests/" + strcase.ToSnake(method.Name) + ".go"); err != nil {
 		return
 	}
 	//goland:noinspection GoUnhandledErrorResult
 	defer file.Close()
 
-	var responseTypes []string
-	if response.Ref != "" && response.Ref != RefInputFile {
-		responseTypes = make([]string, 0, len(response.Value.AnyOf))
-		for _, responseType := range response.Value.AnyOf {
-			responseTypes = append(responseTypes, GenerateValueType(responseType, false, "telegram"))
-		}
-	}
-
-	data := Request{
-		Method:        method[1:],
-		Type:          strings.Title(method[1:]),
-		Fields:        make(map[string]RequestField),
-		HasRequest:    requestBody != nil,
-		ResponseType:  GenerateValueType(response, true, "telegram"),
-		ResponseTypes: responseTypes,
-	}
-
 	imports := make(map[string]bool)
-	if len(responseTypes) != 0 {
+
+	telegramRequest := TelegramRequest{
+		Method:       method,
+		Type:         cases.Title(language.English, cases.NoLower).String(method.Name),
+		Fields:       make(map[string]TelegramRequestField),
+		IsMultipart:  method.Fields.IsMultipart(),
+		ResponseType: generateValueType(types, method.Returns, true, "telegram"),
+	}
+
+	if t, ok := types[method.Returns]; ok && len(t.Subtypes) > 0 {
+		telegramRequest.ResponseVariants = make([]string, 0, len(t.Subtypes))
+		for _, subtype := range t.Subtypes {
+			telegramRequest.ResponseVariants = append(telegramRequest.ResponseVariants, generateValueType(types, subtype, false, "telegram"))
+		}
+
 		imports["errors"] = true
 	}
 
-	if requestBody != nil {
-		form := requestBody.Value.Content.Get("application/x-www-form-urlencoded")
-		if form == nil {
-			data.IsMultipart = true
-			form = requestBody.Value.Content.Get("multipart/form-data")
+	for name, field := range method.Fields {
+		telegramRequestField := TelegramRequestField{
+			Name:        strcase.ToCamel(name),
+			Type:        field.Type,
+			FieldType:   generateValueType(types, field.Type, field.IsRequired, "telegram"),
+			IsRequired:  field.IsRequired,
+			IsArray:     field.IsArray(),
+			IsObject:    field.IsObject(),
+			IsInputFile: field.IsInputFile(),
 		}
 
-		required := make(map[string]bool)
-		for _, key := range form.Schema.Value.Required {
-			required[key] = true
-		}
+		if field.Type == "int32" || field.Type == "int64" || field.Type == "float64" {
+			imports["strconv"] = true
+		} else if field.IsObject() || field.IsArray() {
+			imports["encoding/json"] = true
+		} else if field.IsInputFile() {
+			imports["io"] = true
+		} else {
+			subtypes := strings.Split(field.Type, " or ")
+			if len(subtypes) > 1 {
+				telegramRequestField.Variants = make([]TelegramRequestField, 0, len(subtypes))
+				for _, subtype := range subtypes {
+					isArray := strings.HasPrefix(subtype, "[]")
+					isObject := unicode.IsUpper(rune(subtype[0]))
+					isInputFile := subtype == IoStreamType
 
-		for key, value := range form.Schema.Value.Properties {
-			variants := make([]RequestField, 0)
-
-			if value.Value.Type == "integer" {
-				imports["strconv"] = true
-			} else if len(value.Value.AnyOf) != 0 {
-				for _, ref := range value.Value.AnyOf {
-					if ref.Ref != "" && ref.Ref != RefInputFile || ref.Value.Type == "array" {
-						imports["encoding/json"] = true
-					} else if ref.Ref == RefInputFile {
-						imports["io"] = true
-					} else if ref.Value.Type == "integer" {
+					if subtype == "int32" || subtype == "int64" || subtype == "float64" {
 						imports["strconv"] = true
+					} else if isInputFile {
+						imports["io"] = true
+					} else if isObject || isArray {
+						imports["encoding/json"] = true
 					}
 
-					variant := RequestField{
-						IsRequired:    required[key],
-						IsRef:         ref.Ref != "" && ref.Ref != RefInputFile,
-						IsInputFile:   ref.Ref == RefInputFile,
-						Name:          GenerateValueType(ref, true, ""),
-						Type:          GenerateValueType(ref, true, "telegram"),
-						RawType:       ref.Value.Type,
-						RawTypeFormat: ref.Value.Format,
+					variant := TelegramRequestField{
+						Type:        subtype, // generateValueType(types, subtype, true, "telegram"),
+						IsRequired:  field.IsRequired,
+						IsArray:     isArray,
+						IsObject:    isObject,
+						IsInputFile: isInputFile,
 					}
 
-					variants = append(variants, variant)
+					telegramRequestField.Variants = append(telegramRequestField.Variants, variant)
 				}
-			} else if value.Ref != "" && value.Ref != RefInputFile || value.Value.Type == "array" {
-				imports["encoding/json"] = true
-			}
 
-			data.Fields[key] = RequestField{
-				IsRequired:    required[key],
-				IsRef:         value.Ref != "" && value.Ref != RefInputFile,
-				IsInputFile:   value.Ref == RefInputFile,
-				Name:          strcase.ToCamel(key),
-				Type:          GenerateValueType(value, required[key], "telegram"),
-				RawType:       value.Value.Type,
-				RawTypeFormat: value.Value.Format,
-				Variants:      variants,
+				imports["errors"] = true
 			}
 		}
+
+		telegramRequest.Fields[name] = telegramRequestField
 	}
 
-	data.Imports = make([]string, 0)
+	telegramRequest.Imports = make([]string, 0)
 	for str := range imports {
-		data.Imports = append(data.Imports, str)
+		telegramRequest.Imports = append(telegramRequest.Imports, str)
 	}
-	sort.Strings(data.Imports)
+	sort.Strings(telegramRequest.Imports)
 
-	if err = t.ExecuteTemplate(file, RequestFileTemplate, &data); err != nil {
+	if err = tmpl.ExecuteTemplate(file, RequestFileTemplate, &telegramRequest); err != nil {
 		return
 	}
 
 	return
 }
 
-func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (t string) {
-	if value.Ref != "" && value.Ref != RefInputFile && len(value.Value.AnyOf) == 0 {
-		path := strings.Split(value.Ref, "/")
+func generateValueType(types Types, value string, isRequired bool, pkg string) (t string) {
+	isArray := strings.HasPrefix(value, "[]")
+	isObject := unicode.IsUpper(rune(value[0]))
 
-		t = path[len(path)-1]
+	isContainer := false
+	if t, ok := types[value]; ok && len(t.Subtypes) > 0 {
+		isContainer = true
+	}
+
+	if isObject && !isContainer {
+		t = value
 		if pkg != "" {
 			t = pkg + "." + t
 		}
@@ -279,40 +267,18 @@ func GenerateValueType(value *openapi3.SchemaRef, isRequired bool, pkg string) (
 			t = "*" + t
 		}
 	} else {
-		switch value.Value.Type {
-		case "boolean":
-			t = "bool"
-
+		switch value {
+		case "string", "int32", "int64", "float64", "bool":
+			t = value
 			if !isRequired {
-				t = "*" + t
+				t = "*" + value
 			}
-		case "number":
-			t = "float64"
-
-			if !isRequired {
-				t = "*" + t
-			}
-		case "integer":
-			switch value.Value.Format {
-			case "int64":
-				t = "int64"
-			default:
-				t = "int32"
-			}
-
-			if !isRequired {
-				t = "*" + t
-			}
-		case "string":
-			t = value.Value.Type
-
-			if !isRequired {
-				t = "*" + t
-			}
-		case "array":
-			t = "[]" + GenerateValueType(value.Value.Items, true, pkg)
 		default:
-			t = "interface{}"
+			if isArray {
+				t = "[]" + generateValueType(types, value[2:], true, pkg) // len("[]") = 2
+			} else {
+				t = "interface{}"
+			}
 		}
 	}
 
