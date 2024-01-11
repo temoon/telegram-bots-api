@@ -1,14 +1,14 @@
 package requests
 
 import (
-"errors"
-"strconv"
-"context"
+	"context"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type GetChatMenuButton struct {
-ChatId *int32
+	ChatId *int64
 }
 
 func (r *GetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -28,18 +28,16 @@ func (r *GetChatMenuButton) CallWithResponse(ctx context.Context, b *telegram.Bo
 	return
 }
 
-func (r *GetChatMenuButton) IsMultipart() (multipart bool) {
+func (r *GetChatMenuButton) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.ChatId != nil {
-			values["chat_id"] = strconv.FormatInt(int64(*r.ChatId), 10)
-			}
-			
+	if r.ChatId != nil {
+		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	}
 
 	return
 }

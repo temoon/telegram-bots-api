@@ -1,17 +1,17 @@
 package requests
 
 import (
-"encoding/json"
-"errors"
-"strconv"
-"context"
+	"context"
+	"encoding/json"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type SetChatPermissions struct {
-ChatId interface{}
-Permissions telegram.ChatPermissions
-UseIndependentChatPermissions *bool
+	ChatId                        interface{}
+	Permissions                   telegram.ChatPermissions
+	UseIndependentChatPermissions *bool
 }
 
 func (r *SetChatPermissions) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,41 +20,37 @@ func (r *SetChatPermissions) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
-
-
-func (r *SetChatPermissions) IsMultipart() (multipart bool) {
+func (r *SetChatPermissions) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *SetChatPermissions) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			switch value := r.ChatId.(type) {
-			case int64:
-					values["chat_id"] = strconv.FormatInt(value, 10)
-				case string:
-					values["chat_id"] = value
-				default:
-				err = errors.New("invalid chat_id field type")
-				return
-			}
-		
-			var dataPermissions []byte
-				if dataPermissions, err = json.Marshal(r.Permissions); err != nil {
-					return
-				}
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
+	default:
+		err = errors.New("invalid chat_id field type")
+		return
+	}
 
-				values["permissions"] = string(dataPermissions)
-			
-			if r.UseIndependentChatPermissions != nil {
-			if *r.UseIndependentChatPermissions {
-					values["use_independent_chat_permissions"] = "1"
-				} else {
-					values["use_independent_chat_permissions"] = "0"
-				}
-			}
-			
+	var dataPermissions []byte
+	if dataPermissions, err = json.Marshal(r.Permissions); err != nil {
+		return
+	}
+
+	values["permissions"] = string(dataPermissions)
+
+	if r.UseIndependentChatPermissions != nil {
+		if *r.UseIndependentChatPermissions {
+			values["use_independent_chat_permissions"] = "1"
+		} else {
+			values["use_independent_chat_permissions"] = "0"
+		}
+	}
 
 	return
 }

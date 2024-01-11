@@ -1,12 +1,12 @@
 package requests
 
 import (
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type GetMyShortDescription struct {
-LanguageCode *string
+	LanguageCode *string
 }
 
 func (r *GetMyShortDescription) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -15,20 +15,16 @@ func (r *GetMyShortDescription) Call(ctx context.Context, b *telegram.Bot) (resp
 	return
 }
 
-
-
-func (r *GetMyShortDescription) IsMultipart() (multipart bool) {
+func (r *GetMyShortDescription) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetMyShortDescription) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.LanguageCode != nil {
-			values["language_code"] = *r.LanguageCode
-			}
-			
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
 
 	return
 }

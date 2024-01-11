@@ -1,13 +1,13 @@
 package requests
 
 import (
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type SetMyName struct {
-LanguageCode *string
-Name *string
+	LanguageCode *string
+	Name         *string
 }
 
 func (r *SetMyName) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -16,24 +16,20 @@ func (r *SetMyName) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-
-
-func (r *SetMyName) IsMultipart() (multipart bool) {
+func (r *SetMyName) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *SetMyName) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.LanguageCode != nil {
-			values["language_code"] = *r.LanguageCode
-			}
-			
-			if r.Name != nil {
-			values["name"] = *r.Name
-			}
-			
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
+
+	if r.Name != nil {
+		values["name"] = *r.Name
+	}
 
 	return
 }

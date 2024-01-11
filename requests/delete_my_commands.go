@@ -1,14 +1,14 @@
 package requests
 
 import (
-"encoding/json"
-"context"
+	"context"
+	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type DeleteMyCommands struct {
-LanguageCode *string
-Scope interface{}
+	LanguageCode *string
+	Scope        interface{}
 }
 
 func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,29 +17,25 @@ func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-
-
-func (r *DeleteMyCommands) IsMultipart() (multipart bool) {
+func (r *DeleteMyCommands) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *DeleteMyCommands) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.LanguageCode != nil {
-			values["language_code"] = *r.LanguageCode
-			}
-			
-			if r.Scope != nil {
-			var dataScope []byte
-				if dataScope, err = json.Marshal(r.Scope); err != nil {
-					return
-				}
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
 
-				values["scope"] = string(dataScope)
-			}
-			
+	if r.Scope != nil {
+		var dataScope []byte
+		if dataScope, err = json.Marshal(r.Scope); err != nil {
+			return
+		}
+
+		values["scope"] = string(dataScope)
+	}
 
 	return
 }

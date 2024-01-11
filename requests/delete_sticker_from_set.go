@@ -1,12 +1,12 @@
 package requests
 
 import (
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type DeleteStickerFromSet struct {
-Sticker string
+	Sticker string
 }
 
 func (r *DeleteStickerFromSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -15,18 +15,14 @@ func (r *DeleteStickerFromSet) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
-
-
-func (r *DeleteStickerFromSet) IsMultipart() (multipart bool) {
+func (r *DeleteStickerFromSet) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *DeleteStickerFromSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			values["sticker"] = r.Sticker
-			
+	values["sticker"] = r.Sticker
 
 	return
 }

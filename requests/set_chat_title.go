@@ -1,15 +1,15 @@
 package requests
 
 import (
-"errors"
-"strconv"
-"context"
+	"context"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type SetChatTitle struct {
-ChatId interface{}
-Title string
+	ChatId interface{}
+	Title  string
 }
 
 func (r *SetChatTitle) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -18,28 +18,24 @@ func (r *SetChatTitle) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-
-
-func (r *SetChatTitle) IsMultipart() (multipart bool) {
+func (r *SetChatTitle) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *SetChatTitle) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			switch value := r.ChatId.(type) {
-			case int64:
-					values["chat_id"] = strconv.FormatInt(value, 10)
-				case string:
-					values["chat_id"] = value
-				default:
-				err = errors.New("invalid chat_id field type")
-				return
-			}
-		
-			values["title"] = r.Title
-			
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
+	default:
+		err = errors.New("invalid chat_id field type")
+		return
+	}
+
+	values["title"] = r.Title
 
 	return
 }

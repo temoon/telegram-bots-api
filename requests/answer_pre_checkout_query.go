@@ -17,7 +17,7 @@ func (r *AnswerPreCheckoutQuery) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *AnswerPreCheckoutQuery) IsMultipart() (multipart bool) {
+func (r *AnswerPreCheckoutQuery) IsMultipart() bool {
 	return false
 }
 

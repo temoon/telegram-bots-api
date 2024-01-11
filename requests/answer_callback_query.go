@@ -1,17 +1,17 @@
 package requests
 
 import (
-"strconv"
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type AnswerCallbackQuery struct {
-CacheTime *int32
-CallbackQueryId string
-ShowAlert *bool
-Text *string
-Url *string
+	CacheTime       *int64
+	CallbackQueryId string
+	ShowAlert       *bool
+	Text            *string
+	Url             *string
 }
 
 func (r *AnswerCallbackQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,38 +20,34 @@ func (r *AnswerCallbackQuery) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-
-
-func (r *AnswerCallbackQuery) IsMultipart() (multipart bool) {
+func (r *AnswerCallbackQuery) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.CacheTime != nil {
-			values["cache_time"] = strconv.FormatInt(int64(*r.CacheTime), 10)
-			}
-			
-			values["callback_query_id"] = r.CallbackQueryId
-			
-			if r.ShowAlert != nil {
-			if *r.ShowAlert {
-					values["show_alert"] = "1"
-				} else {
-					values["show_alert"] = "0"
-				}
-			}
-			
-			if r.Text != nil {
-			values["text"] = *r.Text
-			}
-			
-			if r.Url != nil {
-			values["url"] = *r.Url
-			}
-			
+	if r.CacheTime != nil {
+		values["cache_time"] = strconv.FormatInt(*r.CacheTime, 10)
+	}
+
+	values["callback_query_id"] = r.CallbackQueryId
+
+	if r.ShowAlert != nil {
+		if *r.ShowAlert {
+			values["show_alert"] = "1"
+		} else {
+			values["show_alert"] = "0"
+		}
+	}
+
+	if r.Text != nil {
+		values["text"] = *r.Text
+	}
+
+	if r.Url != nil {
+		values["url"] = *r.Url
+	}
 
 	return
 }

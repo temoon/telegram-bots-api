@@ -1,7 +1,7 @@
 package requests
 
 import (
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
@@ -14,14 +14,11 @@ func (r *GetForumTopicIconStickers) Call(ctx context.Context, b *telegram.Bot) (
 	return
 }
 
-
-
-func (r *GetForumTopicIconStickers) IsMultipart() (multipart bool) {
-	return
-	}
+func (r *GetForumTopicIconStickers) IsMultipart() bool {
+	return false
+}
 
 func (r *GetForumTopicIconStickers) GetValues() (values map[string]interface{}, err error) {
-	
 
 	return
 }

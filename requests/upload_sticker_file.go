@@ -1,16 +1,15 @@
 package requests
 
 import (
-"io"
-"strconv"
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type UploadStickerFile struct {
-Sticker interface{}
-StickerFormat string
-UserId int32
+	Sticker       interface{}
+	StickerFormat string
+	UserId        int64
 }
 
 func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,23 +18,18 @@ func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-
-
-func (r *UploadStickerFile) IsMultipart() (multipart bool) {
-	return false
-	}
+func (r *UploadStickerFile) IsMultipart() bool {
+	return true
+}
 
 func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			
-				values["sticker"] = r.Sticker
-			
-			values["sticker_format"] = r.StickerFormat
-			
-			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
-			
+	values["sticker"] = r.Sticker
+
+	values["sticker_format"] = r.StickerFormat
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

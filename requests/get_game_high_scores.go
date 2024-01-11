@@ -1,16 +1,16 @@
 package requests
 
 import (
-"strconv"
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type GetGameHighScores struct {
-ChatId *int32
-InlineMessageId *string
-MessageId *int32
-UserId int32
+	ChatId          *int64
+	InlineMessageId *string
+	MessageId       *int64
+	UserId          int64
 }
 
 func (r *GetGameHighScores) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,30 +19,26 @@ func (r *GetGameHighScores) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-
-
-func (r *GetGameHighScores) IsMultipart() (multipart bool) {
+func (r *GetGameHighScores) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetGameHighScores) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.ChatId != nil {
-			values["chat_id"] = strconv.FormatInt(int64(*r.ChatId), 10)
-			}
-			
-			if r.InlineMessageId != nil {
-			values["inline_message_id"] = *r.InlineMessageId
-			}
-			
-			if r.MessageId != nil {
-			values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
-			}
-			
-			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
-			
+	if r.ChatId != nil {
+		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	}
+
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

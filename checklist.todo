@@ -1,10 +1,8 @@
 New Telegram API version:
 
-  ☐ Up version at `generate/swagger.yaml`
   ☐ Up version at `constants.go`
-  ☐ Update OpenAPI specification file, `generate/swagger.yaml`
+  ☐ Copy requests and types from generator
   ☐ Make code changes, if needed
-  ☐ Execute `go generate`
   ☐ Run `Reformat Code` at Goland editor
   ☐ Commit changes to git
   ☐ Add git tag

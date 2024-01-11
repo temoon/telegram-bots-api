@@ -1,14 +1,14 @@
 package requests
 
 import (
-"errors"
-"strconv"
-"context"
+	"context"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type UnhideGeneralForumTopic struct {
-ChatId interface{}
+	ChatId interface{}
 }
 
 func (r *UnhideGeneralForumTopic) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,26 +17,22 @@ func (r *UnhideGeneralForumTopic) Call(ctx context.Context, b *telegram.Bot) (re
 	return
 }
 
-
-
-func (r *UnhideGeneralForumTopic) IsMultipart() (multipart bool) {
+func (r *UnhideGeneralForumTopic) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *UnhideGeneralForumTopic) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			switch value := r.ChatId.(type) {
-			case int64:
-					values["chat_id"] = strconv.FormatInt(value, 10)
-				case string:
-					values["chat_id"] = value
-				default:
-				err = errors.New("invalid chat_id field type")
-				return
-			}
-		
+	switch value := r.ChatId.(type) {
+	case int64:
+		values["chat_id"] = strconv.FormatInt(value, 10)
+	case string:
+		values["chat_id"] = value
+	default:
+		err = errors.New("invalid chat_id field type")
+		return
+	}
 
 	return
 }

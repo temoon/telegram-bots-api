@@ -1,22 +1,22 @@
 package requests
 
 import (
-"encoding/json"
-"errors"
-"strconv"
-"context"
+	"context"
+	"encoding/json"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type EditMessageText struct {
-ChatId interface{}
-Entities []telegram.MessageEntity
-InlineMessageId *string
-LinkPreviewOptions *telegram.LinkPreviewOptions
-MessageId *int32
-ParseMode *string
-ReplyMarkup *telegram.InlineKeyboardMarkup
-Text string
+	ChatId             interface{}
+	Entities           []telegram.MessageEntity
+	InlineMessageId    *string
+	LinkPreviewOptions *telegram.LinkPreviewOptions
+	MessageId          *int64
+	ParseMode          *string
+	ReplyMarkup        *telegram.InlineKeyboardMarkup
+	Text               string
 }
 
 func (r *EditMessageText) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -25,67 +25,65 @@ func (r *EditMessageText) Call(ctx context.Context, b *telegram.Bot) (response i
 	return
 }
 
-
-
-func (r *EditMessageText) IsMultipart() (multipart bool) {
+func (r *EditMessageText) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *EditMessageText) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			switch value := r.ChatId.(type) {
-			case *int64:
-					values["chat_id"] = strconv.FormatInt(*value, 10)
-				case *string:
-					values["chat_id"] = *value
-				default:
-				err = errors.New("invalid chat_id field type")
-				return
-			}
-		
-			if r.Entities != nil {
-			var dataEntities []byte
-				if dataEntities, err = json.Marshal(r.Entities); err != nil {
-					return
-				}
+	if r.ChatId != nil {
+		switch value := r.ChatId.(type) {
+		case int64:
+			values["chat_id"] = strconv.FormatInt(value, 10)
+		case string:
+			values["chat_id"] = value
+		default:
+			err = errors.New("invalid chat_id field type")
+			return
+		}
+	}
 
-				values["entities"] = string(dataEntities)
-			}
-			
-			if r.InlineMessageId != nil {
-			values["inline_message_id"] = *r.InlineMessageId
-			}
-			
-			if r.LinkPreviewOptions != nil {
-			var dataLinkPreviewOptions []byte
-				if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
-					return
-				}
+	if r.Entities != nil {
+		var dataEntities []byte
+		if dataEntities, err = json.Marshal(r.Entities); err != nil {
+			return
+		}
 
-				values["link_preview_options"] = string(dataLinkPreviewOptions)
-			}
-			
-			if r.MessageId != nil {
-			values["message_id"] = strconv.FormatInt(int64(*r.MessageId), 10)
-			}
-			
-			if r.ParseMode != nil {
-			values["parse_mode"] = *r.ParseMode
-			}
-			
-			if r.ReplyMarkup != nil {
-			var dataReplyMarkup []byte
-				if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
-					return
-				}
+		values["entities"] = string(dataEntities)
+	}
 
-				values["reply_markup"] = string(dataReplyMarkup)
-			}
-			
-			values["text"] = r.Text
-			
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	if r.LinkPreviewOptions != nil {
+		var dataLinkPreviewOptions []byte
+		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
+			return
+		}
+
+		values["link_preview_options"] = string(dataLinkPreviewOptions)
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.ReplyMarkup != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
+		}
+
+		values["reply_markup"] = string(dataReplyMarkup)
+	}
+
+	values["text"] = r.Text
 
 	return
 }

@@ -1,12 +1,12 @@
 package requests
 
 import (
-"context"
+	"context"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type GetFile struct {
-FileId string
+	FileId string
 }
 
 func (r *GetFile) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -15,18 +15,14 @@ func (r *GetFile) Call(ctx context.Context, b *telegram.Bot) (response interface
 	return
 }
 
-
-
-func (r *GetFile) IsMultipart() (multipart bool) {
+func (r *GetFile) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetFile) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			values["file_id"] = r.FileId
-			
+	values["file_id"] = r.FileId
 
 	return
 }

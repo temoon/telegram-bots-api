@@ -1,14 +1,14 @@
 package requests
 
 import (
-"encoding/json"
-"context"
+	"context"
+	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type AnswerWebAppQuery struct {
-Result interface{}
-WebAppQueryId string
+	Result        interface{}
+	WebAppQueryId string
 }
 
 func (r *AnswerWebAppQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,25 +17,21 @@ func (r *AnswerWebAppQuery) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-
-
-func (r *AnswerWebAppQuery) IsMultipart() (multipart bool) {
+func (r *AnswerWebAppQuery) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *AnswerWebAppQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			var dataResult []byte
-				if dataResult, err = json.Marshal(r.Result); err != nil {
-					return
-				}
+	var dataResult []byte
+	if dataResult, err = json.Marshal(r.Result); err != nil {
+		return
+	}
 
-				values["result"] = string(dataResult)
-			
-			values["web_app_query_id"] = r.WebAppQueryId
-			
+	values["result"] = string(dataResult)
+
+	values["web_app_query_id"] = r.WebAppQueryId
 
 	return
 }

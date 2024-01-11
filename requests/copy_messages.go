@@ -12,8 +12,8 @@ type CopyMessages struct {
 	ChatId              interface{}
 	DisableNotification *bool
 	FromChatId          interface{}
-	MessageIds          []int32
-	MessageThreadId     *int32
+	MessageIds          []int64
+	MessageThreadId     *int64
 	ProtectContent      *bool
 	RemoveCaption       *bool
 }
@@ -24,7 +24,7 @@ func (r *CopyMessages) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *CopyMessages) IsMultipart() (multipart bool) {
+func (r *CopyMessages) IsMultipart() bool {
 	return false
 }
 
@@ -67,7 +67,7 @@ func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 	values["message_ids"] = string(dataMessageIds)
 
 	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(int64(*r.MessageThreadId), 10)
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ProtectContent != nil {

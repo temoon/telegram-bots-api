@@ -1,13 +1,13 @@
 package requests
 
 import (
-"encoding/json"
-"context"
+	"context"
+	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
 )
 
 type GetCustomEmojiStickers struct {
-CustomEmojiIds []string
+	CustomEmojiIds []string
 }
 
 func (r *GetCustomEmojiStickers) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -16,23 +16,19 @@ func (r *GetCustomEmojiStickers) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-
-
-func (r *GetCustomEmojiStickers) IsMultipart() (multipart bool) {
+func (r *GetCustomEmojiStickers) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetCustomEmojiStickers) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			var dataCustomEmojiIds []byte
-				if dataCustomEmojiIds, err = json.Marshal(r.CustomEmojiIds); err != nil {
-					return
-				}
+	var dataCustomEmojiIds []byte
+	if dataCustomEmojiIds, err = json.Marshal(r.CustomEmojiIds); err != nil {
+		return
+	}
 
-				values["custom_emoji_ids"] = string(dataCustomEmojiIds)
-			
+	values["custom_emoji_ids"] = string(dataCustomEmojiIds)
 
 	return
 }

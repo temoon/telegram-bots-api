@@ -1,20 +1,20 @@
 package requests
 
 import (
-"encoding/json"
-"strconv"
-"context"
+	"context"
+	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type CreateNewStickerSet struct {
-Name string
-NeedsRepainting *bool
-StickerFormat string
-StickerType *string
-Stickers []telegram.InputSticker
-Title string
-UserId int32
+	Name            string
+	NeedsRepainting *bool
+	StickerFormat   string
+	StickerType     *string
+	Stickers        []telegram.InputSticker
+	Title           string
+	UserId          int64
 }
 
 func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,43 +23,39 @@ func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-
-
-func (r *CreateNewStickerSet) IsMultipart() (multipart bool) {
+func (r *CreateNewStickerSet) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			values["name"] = r.Name
-			
-			if r.NeedsRepainting != nil {
-			if *r.NeedsRepainting {
-					values["needs_repainting"] = "1"
-				} else {
-					values["needs_repainting"] = "0"
-				}
-			}
-			
-			values["sticker_format"] = r.StickerFormat
-			
-			if r.StickerType != nil {
-			values["sticker_type"] = *r.StickerType
-			}
-			
-			var dataStickers []byte
-				if dataStickers, err = json.Marshal(r.Stickers); err != nil {
-					return
-				}
+	values["name"] = r.Name
 
-				values["stickers"] = string(dataStickers)
-			
-			values["title"] = r.Title
-			
-			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
-			
+	if r.NeedsRepainting != nil {
+		if *r.NeedsRepainting {
+			values["needs_repainting"] = "1"
+		} else {
+			values["needs_repainting"] = "0"
+		}
+	}
+
+	values["sticker_format"] = r.StickerFormat
+
+	if r.StickerType != nil {
+		values["sticker_type"] = *r.StickerType
+	}
+
+	var dataStickers []byte
+	if dataStickers, err = json.Marshal(r.Stickers); err != nil {
+		return
+	}
+
+	values["stickers"] = string(dataStickers)
+
+	values["title"] = r.Title
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

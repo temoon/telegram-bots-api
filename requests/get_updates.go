@@ -1,17 +1,17 @@
 package requests
 
 import (
-"encoding/json"
-"strconv"
-"context"
+	"context"
+	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"strconv"
 )
 
 type GetUpdates struct {
-AllowedUpdates []string
-Limit *int32
-Offset *int32
-Timeout *int32
+	AllowedUpdates []string
+	Limit          *int64
+	Offset         *int64
+	Timeout        *int64
 }
 
 func (r *GetUpdates) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,37 +20,33 @@ func (r *GetUpdates) Call(ctx context.Context, b *telegram.Bot) (response interf
 	return
 }
 
-
-
-func (r *GetUpdates) IsMultipart() (multipart bool) {
+func (r *GetUpdates) IsMultipart() bool {
 	return false
-	}
+}
 
 func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			if r.AllowedUpdates != nil {
-			var dataAllowedUpdates []byte
-				if dataAllowedUpdates, err = json.Marshal(r.AllowedUpdates); err != nil {
-					return
-				}
+	if r.AllowedUpdates != nil {
+		var dataAllowedUpdates []byte
+		if dataAllowedUpdates, err = json.Marshal(r.AllowedUpdates); err != nil {
+			return
+		}
 
-				values["allowed_updates"] = string(dataAllowedUpdates)
-			}
-			
-			if r.Limit != nil {
-			values["limit"] = strconv.FormatInt(int64(*r.Limit), 10)
-			}
-			
-			if r.Offset != nil {
-			values["offset"] = strconv.FormatInt(int64(*r.Offset), 10)
-			}
-			
-			if r.Timeout != nil {
-			values["timeout"] = strconv.FormatInt(int64(*r.Timeout), 10)
-			}
-			
+		values["allowed_updates"] = string(dataAllowedUpdates)
+	}
+
+	if r.Limit != nil {
+		values["limit"] = strconv.FormatInt(*r.Limit, 10)
+	}
+
+	if r.Offset != nil {
+		values["offset"] = strconv.FormatInt(*r.Offset, 10)
+	}
+
+	if r.Timeout != nil {
+		values["timeout"] = strconv.FormatInt(*r.Timeout, 10)
+	}
 
 	return
 }

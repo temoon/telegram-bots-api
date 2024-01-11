@@ -1,17 +1,17 @@
 package requests
 
 import (
-"errors"
-"io"
-"strconv"
-"context"
+	"context"
+	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
+	"strconv"
 )
 
 type SetStickerSetThumbnail struct {
-Name string
-Thumbnail interface{}
-UserId int32
+	Name      string
+	Thumbnail interface{}
+	UserId    int64
 }
 
 func (r *SetStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,30 +20,28 @@ func (r *SetStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-
-
-func (r *SetStickerSetThumbnail) IsMultipart() (multipart bool) {
-	return false
-	}
+func (r *SetStickerSetThumbnail) IsMultipart() bool {
+	return true
+}
 
 func (r *SetStickerSetThumbnail) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	
-			values["name"] = r.Name
-			
-			switch value := r.Thumbnail.(type) {
-			case *int64:
-					values["thumbnail"] = strconv.FormatInt(*value, 10)
-				case *string:
-					values["thumbnail"] = *value
-				default:
-				err = errors.New("invalid thumbnail field type")
-				return
-			}
-		
-			values["user_id"] = strconv.FormatInt(int64(r.UserId), 10)
-			
+	values["name"] = r.Name
+
+	if r.Thumbnail != nil {
+		switch value := r.Thumbnail.(type) {
+		case io.Reader:
+			values["thumbnail"] = value
+		case string:
+			values["thumbnail"] = value
+		default:
+			err = errors.New("invalid thumbnail field type")
+			return
+		}
+	}
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }
