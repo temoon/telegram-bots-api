@@ -1,9 +1,5 @@
 package telegram
 
-//go:generate go run generate/generate.go
-//go:generate gofmt -w types.go
-//go:generate gofmt -w requests
-
 import (
 	"bytes"
 	"context"
