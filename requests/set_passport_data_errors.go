@@ -9,8 +9,8 @@ import (
 )
 
 type SetPassportDataErrors struct {
-	UserId int64
 	Errors []interface{}
+	UserId int64
 }
 
 func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,14 +22,14 @@ func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (resp
 func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
 	var dataErrors []byte
 	if dataErrors, err = json.Marshal(r.Errors); err != nil {
 		return
 	}
 
 	values["errors"] = string(dataErrors)
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

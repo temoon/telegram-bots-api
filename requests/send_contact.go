@@ -10,16 +10,16 @@ import (
 )
 
 type SendContact struct {
-	DisableNotification *bool
-	ReplyMarkup         interface{}
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
 	FirstName           string
-	LastName            *string
 	PhoneNumber         string
-	Vcard               *string
+	DisableNotification *bool
+	LastName            *string
+	MessageThreadId     *int64
 	ProtectContent      *bool
+	ReplyMarkup         interface{}
 	ReplyParameters     *telegram.ReplyParameters
+	Vcard               *string
 }
 
 func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,11 +31,33 @@ func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response inter
 func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
+	values["first_name"] = r.FirstName
+
+	values["phone_number"] = r.PhoneNumber
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.LastName != nil {
+		values["last_name"] = *r.LastName
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
 		}
 	}
 
@@ -54,32 +76,6 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = r.ChatId.String()
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	values["first_name"] = r.FirstName
-
-	if r.LastName != nil {
-		values["last_name"] = *r.LastName
-	}
-
-	values["phone_number"] = r.PhoneNumber
-
-	if r.Vcard != nil {
-		values["vcard"] = *r.Vcard
-	}
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
-	}
-
 	if r.ReplyParameters != nil {
 		var dataReplyParameters []byte
 		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
@@ -87,6 +83,10 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.Vcard != nil {
+		values["vcard"] = *r.Vcard
 	}
 
 	return

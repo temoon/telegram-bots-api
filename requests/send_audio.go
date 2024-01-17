@@ -10,20 +10,20 @@ import (
 )
 
 type SendAudio struct {
-	Title               *string
+	Audio               telegram.InputFile
+	ChatId              telegram.ChatId
+	Caption             *string
+	CaptionEntities     []telegram.MessageEntity
+	DisableNotification *bool
+	Duration            *int64
+	MessageThreadId     *int64
+	ParseMode           *string
+	Performer           *string
+	ProtectContent      *bool
 	ReplyMarkup         interface{}
 	ReplyParameters     *telegram.ReplyParameters
-	ChatId              telegram.ChatId
-	MessageThreadId     *int64
-	CaptionEntities     []telegram.MessageEntity
-	Performer           *string
-	Audio               telegram.InputFile
-	ParseMode           *string
-	Duration            *int64
 	Thumbnail           *telegram.InputFile
-	Caption             *string
-	DisableNotification *bool
-	ProtectContent      *bool
+	Title               *string
 }
 
 func (r *SendAudio) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -35,8 +35,53 @@ func (r *SendAudio) Call(ctx context.Context, b *telegram.Bot) (response interfa
 func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Title != nil {
-		values["title"] = *r.Title
+	values["audio"] = r.Audio.GetValue()
+
+	values["chat_id"] = r.ChatId.String()
+
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
+	}
+
+	if r.CaptionEntities != nil {
+		var dataCaptionEntities []byte
+		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
+
+		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.Performer != nil {
+		values["performer"] = *r.Performer
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	if r.ReplyMarkup != nil {
@@ -63,57 +108,12 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	values["chat_id"] = r.ChatId.String()
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.CaptionEntities != nil {
-		var dataCaptionEntities []byte
-		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
-			return
-		}
-
-		values["caption_entities"] = string(dataCaptionEntities)
-	}
-
-	if r.Performer != nil {
-		values["performer"] = *r.Performer
-	}
-
-	values["audio"] = r.Audio.GetValue()
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
-	}
-
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
-	}
-
 	if r.Thumbnail != nil {
 		values["thumbnail"] = r.Thumbnail.GetValue()
 	}
 
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
+	if r.Title != nil {
+		values["title"] = *r.Title
 	}
 
 	return

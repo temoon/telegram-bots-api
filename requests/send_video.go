@@ -10,22 +10,22 @@ import (
 )
 
 type SendVideo struct {
-	Thumbnail           *telegram.InputFile
-	CaptionEntities     []telegram.MessageEntity
-	HasSpoiler          *bool
-	Width               *int64
-	Height              *int64
-	Duration            *int64
-	SupportsStreaming   *bool
-	ProtectContent      *bool
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
-	ReplyMarkup         interface{}
-	ParseMode           *string
-	DisableNotification *bool
-	ReplyParameters     *telegram.ReplyParameters
 	Video               telegram.InputFile
 	Caption             *string
+	CaptionEntities     []telegram.MessageEntity
+	DisableNotification *bool
+	Duration            *int64
+	HasSpoiler          *bool
+	Height              *int64
+	MessageThreadId     *int64
+	ParseMode           *string
+	ProtectContent      *bool
+	ReplyMarkup         interface{}
+	ReplyParameters     *telegram.ReplyParameters
+	SupportsStreaming   *bool
+	Thumbnail           *telegram.InputFile
+	Width               *int64
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -37,8 +37,12 @@ func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interfa
 func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+	values["chat_id"] = r.ChatId.String()
+
+	values["video"] = r.Video.GetValue()
+
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
 	}
 
 	if r.CaptionEntities != nil {
@@ -50,6 +54,18 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	}
+
 	if r.HasSpoiler != nil {
 		if *r.HasSpoiler {
 			values["has_spoiler"] = "1"
@@ -58,24 +74,16 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.Width != nil {
-		values["width"] = strconv.FormatInt(*r.Width, 10)
-	}
-
 	if r.Height != nil {
 		values["height"] = strconv.FormatInt(*r.Height, 10)
 	}
 
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
-	if r.SupportsStreaming != nil {
-		if *r.SupportsStreaming {
-			values["supports_streaming"] = "1"
-		} else {
-			values["supports_streaming"] = "0"
-		}
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ProtectContent != nil {
@@ -84,12 +92,6 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["protect_content"] = "0"
 		}
-	}
-
-	values["chat_id"] = r.ChatId.String()
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -107,18 +109,6 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
 	if r.ReplyParameters != nil {
 		var dataReplyParameters []byte
 		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
@@ -128,10 +118,20 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	values["video"] = r.Video.GetValue()
+	if r.SupportsStreaming != nil {
+		if *r.SupportsStreaming {
+			values["supports_streaming"] = "1"
+		} else {
+			values["supports_streaming"] = "0"
+		}
+	}
 
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
+	}
+
+	if r.Width != nil {
+		values["width"] = strconv.FormatInt(*r.Width, 10)
 	}
 
 	return

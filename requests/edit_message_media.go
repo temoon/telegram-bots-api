@@ -9,10 +9,10 @@ import (
 )
 
 type EditMessageMedia struct {
-	ChatId          *telegram.ChatId
-	MessageId       *int64
-	InlineMessageId *string
 	Media           interface{}
+	ChatId          *telegram.ChatId
+	InlineMessageId *string
+	MessageId       *int64
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -25,24 +25,24 @@ func (r *EditMessageMedia) Call(ctx context.Context, b *telegram.Bot) (response 
 func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ChatId != nil {
-		values["chat_id"] = r.ChatId.String()
-	}
-
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
-	}
-
-	if r.InlineMessageId != nil {
-		values["inline_message_id"] = *r.InlineMessageId
-	}
-
 	var dataMedia []byte
 	if dataMedia, err = json.Marshal(r.Media); err != nil {
 		return
 	}
 
 	values["media"] = string(dataMedia)
+
+	if r.ChatId != nil {
+		values["chat_id"] = r.ChatId.String()
+	}
+
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
 
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte
@@ -75,11 +75,11 @@ func (r *EditMessageMedia) GetFiles() (files map[string]io.Reader) {
 			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
 		}
 	case telegram.InputMediaAudio:
-		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
-			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
-		}
 		if value.Media.HasFile() {
 			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
 		}
 	case telegram.InputMediaPhoto:
 		if value.Media.HasFile() {

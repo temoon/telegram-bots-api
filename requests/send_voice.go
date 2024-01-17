@@ -10,17 +10,17 @@ import (
 )
 
 type SendVoice struct {
+	ChatId              telegram.ChatId
 	Voice               telegram.InputFile
 	Caption             *string
-	ParseMode           *string
 	CaptionEntities     []telegram.MessageEntity
-	ReplyMarkup         interface{}
-	MessageThreadId     *int64
-	Duration            *int64
 	DisableNotification *bool
+	Duration            *int64
+	MessageThreadId     *int64
+	ParseMode           *string
 	ProtectContent      *bool
+	ReplyMarkup         interface{}
 	ReplyParameters     *telegram.ReplyParameters
-	ChatId              telegram.ChatId
 }
 
 func (r *SendVoice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -32,14 +32,12 @@ func (r *SendVoice) Call(ctx context.Context, b *telegram.Bot) (response interfa
 func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
 	values["voice"] = r.Voice.GetValue()
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.CaptionEntities != nil {
@@ -49,6 +47,34 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
 	}
 
 	if r.ReplyMarkup != nil {
@@ -66,30 +92,6 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
-	}
-
 	if r.ReplyParameters != nil {
 		var dataReplyParameters []byte
 		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
@@ -98,8 +100,6 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
-
-	values["chat_id"] = r.ChatId.String()
 
 	return
 }

@@ -9,10 +9,10 @@ import (
 
 type CreateChatInviteLink struct {
 	ChatId             telegram.ChatId
-	Name               *string
+	CreatesJoinRequest *bool
 	ExpireDate         *int64
 	MemberLimit        *int64
-	CreatesJoinRequest *bool
+	Name               *string
 }
 
 func (r *CreateChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -26,8 +26,12 @@ func (r *CreateChatInviteLink) GetValues() (values map[string]interface{}, err e
 
 	values["chat_id"] = r.ChatId.String()
 
-	if r.Name != nil {
-		values["name"] = *r.Name
+	if r.CreatesJoinRequest != nil {
+		if *r.CreatesJoinRequest {
+			values["creates_join_request"] = "1"
+		} else {
+			values["creates_join_request"] = "0"
+		}
 	}
 
 	if r.ExpireDate != nil {
@@ -38,12 +42,8 @@ func (r *CreateChatInviteLink) GetValues() (values map[string]interface{}, err e
 		values["member_limit"] = strconv.FormatInt(*r.MemberLimit, 10)
 	}
 
-	if r.CreatesJoinRequest != nil {
-		if *r.CreatesJoinRequest {
-			values["creates_join_request"] = "1"
-		} else {
-			values["creates_join_request"] = "0"
-		}
+	if r.Name != nil {
+		values["name"] = *r.Name
 	}
 
 	return

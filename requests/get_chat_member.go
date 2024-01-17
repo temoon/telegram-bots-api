@@ -9,8 +9,8 @@ import (
 )
 
 type GetChatMember struct {
-	UserId int64
 	ChatId telegram.ChatId
+	UserId int64
 }
 
 func (r *GetChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -33,9 +33,9 @@ func (r *GetChatMember) CallWithResponse(ctx context.Context, b *telegram.Bot, r
 func (r *GetChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
 	values["chat_id"] = r.ChatId.String()
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

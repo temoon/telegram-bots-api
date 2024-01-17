@@ -8,12 +8,12 @@ import (
 )
 
 type EditChatInviteLink struct {
+	ChatId             telegram.ChatId
 	InviteLink         string
-	Name               *string
+	CreatesJoinRequest *bool
 	ExpireDate         *int64
 	MemberLimit        *int64
-	CreatesJoinRequest *bool
-	ChatId             telegram.ChatId
+	Name               *string
 }
 
 func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -25,10 +25,16 @@ func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (respons
 func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
 	values["invite_link"] = r.InviteLink
 
-	if r.Name != nil {
-		values["name"] = *r.Name
+	if r.CreatesJoinRequest != nil {
+		if *r.CreatesJoinRequest {
+			values["creates_join_request"] = "1"
+		} else {
+			values["creates_join_request"] = "0"
+		}
 	}
 
 	if r.ExpireDate != nil {
@@ -39,15 +45,9 @@ func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err err
 		values["member_limit"] = strconv.FormatInt(*r.MemberLimit, 10)
 	}
 
-	if r.CreatesJoinRequest != nil {
-		if *r.CreatesJoinRequest {
-			values["creates_join_request"] = "1"
-		} else {
-			values["creates_join_request"] = "0"
-		}
+	if r.Name != nil {
+		values["name"] = *r.Name
 	}
-
-	values["chat_id"] = r.ChatId.String()
 
 	return
 }

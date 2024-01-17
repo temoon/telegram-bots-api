@@ -10,16 +10,16 @@ import (
 )
 
 type SendVideoNote struct {
-	VideoNote           telegram.InputFile
-	Length              *int64
-	Thumbnail           *telegram.InputFile
-	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
-	Duration            *int64
+	VideoNote           telegram.InputFile
 	DisableNotification *bool
+	Duration            *int64
+	Length              *int64
+	MessageThreadId     *int64
+	ProtectContent      *bool
 	ReplyMarkup         interface{}
+	ReplyParameters     *telegram.ReplyParameters
+	Thumbnail           *telegram.InputFile
 }
 
 func (r *SendVideoNote) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,14 +31,28 @@ func (r *SendVideoNote) Call(ctx context.Context, b *telegram.Bot) (response int
 func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
 	values["video_note"] = r.VideoNote.GetValue()
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	}
 
 	if r.Length != nil {
 		values["length"] = strconv.FormatInt(*r.Length, 10)
 	}
 
-	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ProtectContent != nil {
@@ -46,33 +60,6 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
-		}
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
-	}
-
-	values["chat_id"] = r.ChatId.String()
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
 		}
 	}
 
@@ -89,6 +76,19 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 			err = errors.New("unsupported reply_markup field type")
 			return
 		}
+	}
+
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
+		}
+
+		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
 	}
 
 	return

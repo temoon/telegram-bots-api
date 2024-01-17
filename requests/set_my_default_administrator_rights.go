@@ -8,8 +8,8 @@ import (
 )
 
 type SetMyDefaultAdministratorRights struct {
-	Rights      *telegram.ChatAdministratorRights
 	ForChannels *bool
+	Rights      *telegram.ChatAdministratorRights
 }
 
 func (r *SetMyDefaultAdministratorRights) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -21,6 +21,14 @@ func (r *SetMyDefaultAdministratorRights) Call(ctx context.Context, b *telegram.
 func (r *SetMyDefaultAdministratorRights) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	if r.ForChannels != nil {
+		if *r.ForChannels {
+			values["for_channels"] = "1"
+		} else {
+			values["for_channels"] = "0"
+		}
+	}
+
 	if r.Rights != nil {
 		var dataRights []byte
 		if dataRights, err = json.Marshal(r.Rights); err != nil {
@@ -28,14 +36,6 @@ func (r *SetMyDefaultAdministratorRights) GetValues() (values map[string]interfa
 		}
 
 		values["rights"] = string(dataRights)
-	}
-
-	if r.ForChannels != nil {
-		if *r.ForChannels {
-			values["for_channels"] = "1"
-		} else {
-			values["for_channels"] = "0"
-		}
 	}
 
 	return

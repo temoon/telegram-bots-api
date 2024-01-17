@@ -10,8 +10,8 @@ import (
 
 type EditMessageReplyMarkup struct {
 	ChatId          *telegram.ChatId
-	MessageId       *int64
 	InlineMessageId *string
+	MessageId       *int64
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -28,12 +28,12 @@ func (r *EditMessageReplyMarkup) GetValues() (values map[string]interface{}, err
 		values["chat_id"] = r.ChatId.String()
 	}
 
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
-	}
-
 	if r.InlineMessageId != nil {
 		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
 	}
 
 	if r.ReplyMarkup != nil {

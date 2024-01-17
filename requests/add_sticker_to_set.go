@@ -9,9 +9,9 @@ import (
 )
 
 type AddStickerToSet struct {
-	UserId  int64
 	Name    string
 	Sticker telegram.InputSticker
+	UserId  int64
 }
 
 func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,8 +23,6 @@ func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response i
 func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
 	values["name"] = r.Name
 
 	var dataSticker []byte
@@ -33,6 +31,8 @@ func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error)
 	}
 
 	values["sticker"] = string(dataSticker)
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

@@ -10,8 +10,8 @@ import (
 type EditForumTopic struct {
 	ChatId            telegram.ChatId
 	MessageThreadId   int64
-	Name              *string
 	IconCustomEmojiId *string
+	Name              *string
 }
 
 func (r *EditForumTopic) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,12 +27,12 @@ func (r *EditForumTopic) GetValues() (values map[string]interface{}, err error) 
 
 	values["message_thread_id"] = strconv.FormatInt(r.MessageThreadId, 10)
 
-	if r.Name != nil {
-		values["name"] = *r.Name
-	}
-
 	if r.IconCustomEmojiId != nil {
 		values["icon_custom_emoji_id"] = *r.IconCustomEmojiId
+	}
+
+	if r.Name != nil {
+		values["name"] = *r.Name
 	}
 
 	return

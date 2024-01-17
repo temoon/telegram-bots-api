@@ -8,10 +8,10 @@ import (
 )
 
 type AnswerCallbackQuery struct {
-	CacheTime       *int64
 	CallbackQueryId string
-	Text            *string
+	CacheTime       *int64
 	ShowAlert       *bool
+	Text            *string
 	Url             *string
 }
 
@@ -24,14 +24,10 @@ func (r *AnswerCallbackQuery) Call(ctx context.Context, b *telegram.Bot) (respon
 func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.CacheTime != nil {
-		values["cache_time"] = strconv.FormatInt(*r.CacheTime, 10)
-	}
-
 	values["callback_query_id"] = r.CallbackQueryId
 
-	if r.Text != nil {
-		values["text"] = *r.Text
+	if r.CacheTime != nil {
+		values["cache_time"] = strconv.FormatInt(*r.CacheTime, 10)
 	}
 
 	if r.ShowAlert != nil {
@@ -40,6 +36,10 @@ func (r *AnswerCallbackQuery) GetValues() (values map[string]interface{}, err er
 		} else {
 			values["show_alert"] = "0"
 		}
+	}
+
+	if r.Text != nil {
+		values["text"] = *r.Text
 	}
 
 	if r.Url != nil {

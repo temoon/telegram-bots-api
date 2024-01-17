@@ -11,8 +11,8 @@ import (
 type SetMessageReaction struct {
 	ChatId    telegram.ChatId
 	MessageId int64
-	Reaction  []interface{}
 	IsBig     *bool
+	Reaction  []interface{}
 }
 
 func (r *SetMessageReaction) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -28,6 +28,14 @@ func (r *SetMessageReaction) GetValues() (values map[string]interface{}, err err
 
 	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
 
+	if r.IsBig != nil {
+		if *r.IsBig {
+			values["is_big"] = "1"
+		} else {
+			values["is_big"] = "0"
+		}
+	}
+
 	if r.Reaction != nil {
 		var dataReaction []byte
 		if dataReaction, err = json.Marshal(r.Reaction); err != nil {
@@ -35,14 +43,6 @@ func (r *SetMessageReaction) GetValues() (values map[string]interface{}, err err
 		}
 
 		values["reaction"] = string(dataReaction)
-	}
-
-	if r.IsBig != nil {
-		if *r.IsBig {
-			values["is_big"] = "1"
-		} else {
-			values["is_big"] = "0"
-		}
 	}
 
 	return

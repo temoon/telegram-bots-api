@@ -9,13 +9,13 @@ import (
 )
 
 type CreateNewStickerSet struct {
-	StickerFormat   string
-	StickerType     *string
-	NeedsRepainting *bool
-	UserId          int64
 	Name            string
-	Title           string
+	StickerFormat   string
 	Stickers        []telegram.InputSticker
+	Title           string
+	UserId          int64
+	NeedsRepainting *bool
+	StickerType     *string
 }
 
 func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,11 +27,20 @@ func (r *CreateNewStickerSet) Call(ctx context.Context, b *telegram.Bot) (respon
 func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["name"] = r.Name
+
 	values["sticker_format"] = r.StickerFormat
 
-	if r.StickerType != nil {
-		values["sticker_type"] = *r.StickerType
+	var dataStickers []byte
+	if dataStickers, err = json.Marshal(r.Stickers); err != nil {
+		return
 	}
+
+	values["stickers"] = string(dataStickers)
+
+	values["title"] = r.Title
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	if r.NeedsRepainting != nil {
 		if *r.NeedsRepainting {
@@ -41,18 +50,9 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 		}
 	}
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
-	values["name"] = r.Name
-
-	values["title"] = r.Title
-
-	var dataStickers []byte
-	if dataStickers, err = json.Marshal(r.Stickers); err != nil {
-		return
+	if r.StickerType != nil {
+		values["sticker_type"] = *r.StickerType
 	}
-
-	values["stickers"] = string(dataStickers)
 
 	return
 }

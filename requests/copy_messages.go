@@ -9,13 +9,13 @@ import (
 )
 
 type CopyMessages struct {
+	ChatId              telegram.ChatId
+	FromChatId          telegram.ChatId
 	MessageIds          []int64
 	DisableNotification *bool
+	MessageThreadId     *int64
 	ProtectContent      *bool
 	RemoveCaption       *bool
-	ChatId              telegram.ChatId
-	MessageThreadId     *int64
-	FromChatId          telegram.ChatId
 }
 
 func (r *CopyMessages) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -26,6 +26,10 @@ func (r *CopyMessages) Call(ctx context.Context, b *telegram.Bot) (response inte
 
 func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["chat_id"] = r.ChatId.String()
+
+	values["from_chat_id"] = r.FromChatId.String()
 
 	var dataMessageIds []byte
 	if dataMessageIds, err = json.Marshal(r.MessageIds); err != nil {
@@ -40,6 +44,10 @@ func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ProtectContent != nil {
@@ -57,14 +65,6 @@ func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 			values["remove_caption"] = "0"
 		}
 	}
-
-	values["chat_id"] = r.ChatId.String()
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	values["from_chat_id"] = r.FromChatId.String()
 
 	return
 }

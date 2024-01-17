@@ -9,14 +9,14 @@ import (
 )
 
 type EditMessageText struct {
-	InlineMessageId    *string
 	Text               string
-	ParseMode          *string
-	Entities           []telegram.MessageEntity
-	LinkPreviewOptions *telegram.LinkPreviewOptions
-	ReplyMarkup        *telegram.InlineKeyboardMarkup
 	ChatId             *telegram.ChatId
+	Entities           []telegram.MessageEntity
+	InlineMessageId    *string
+	LinkPreviewOptions *telegram.LinkPreviewOptions
 	MessageId          *int64
+	ParseMode          *string
+	ReplyMarkup        *telegram.InlineKeyboardMarkup
 }
 
 func (r *EditMessageText) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -28,14 +28,10 @@ func (r *EditMessageText) Call(ctx context.Context, b *telegram.Bot) (response i
 func (r *EditMessageText) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.InlineMessageId != nil {
-		values["inline_message_id"] = *r.InlineMessageId
-	}
-
 	values["text"] = r.Text
 
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
+	if r.ChatId != nil {
+		values["chat_id"] = r.ChatId.String()
 	}
 
 	if r.Entities != nil {
@@ -47,6 +43,10 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 		values["entities"] = string(dataEntities)
 	}
 
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
 	if r.LinkPreviewOptions != nil {
 		var dataLinkPreviewOptions []byte
 		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
@@ -56,6 +56,14 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 		values["link_preview_options"] = string(dataLinkPreviewOptions)
 	}
 
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte
 		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
@@ -63,14 +71,6 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 		}
 
 		values["reply_markup"] = string(dataReplyMarkup)
-	}
-
-	if r.ChatId != nil {
-		values["chat_id"] = r.ChatId.String()
-	}
-
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
 	}
 
 	return

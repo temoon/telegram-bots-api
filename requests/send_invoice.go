@@ -9,33 +9,33 @@ import (
 )
 
 type SendInvoice struct {
-	SuggestedTipAmounts       []int64
-	PhotoUrl                  *string
-	NeedShippingAddress       *bool
-	ReplyParameters           *telegram.ReplyParameters
-	Prices                    []telegram.LabeledPrice
-	PhotoSize                 *int64
-	NeedPhoneNumber           *bool
-	ProtectContent            *bool
-	ProviderData              *string
-	DisableNotification       *bool
-	ProviderToken             string
-	StartParameter            *string
-	PhotoHeight               *int64
-	SendPhoneNumberToProvider *bool
-	MessageThreadId           *int64
-	Description               string
-	PhotoWidth                *int64
-	NeedName                  *bool
-	NeedEmail                 *bool
-	IsFlexible                *bool
 	ChatId                    telegram.ChatId
 	Currency                  string
-	SendEmailToProvider       *bool
-	ReplyMarkup               *telegram.InlineKeyboardMarkup
-	Title                     string
+	Description               string
 	Payload                   string
+	Prices                    []telegram.LabeledPrice
+	ProviderToken             string
+	Title                     string
+	DisableNotification       *bool
+	IsFlexible                *bool
 	MaxTipAmount              *int64
+	MessageThreadId           *int64
+	NeedEmail                 *bool
+	NeedName                  *bool
+	NeedPhoneNumber           *bool
+	NeedShippingAddress       *bool
+	PhotoHeight               *int64
+	PhotoSize                 *int64
+	PhotoUrl                  *string
+	PhotoWidth                *int64
+	ProtectContent            *bool
+	ProviderData              *string
+	ReplyMarkup               *telegram.InlineKeyboardMarkup
+	ReplyParameters           *telegram.ReplyParameters
+	SendEmailToProvider       *bool
+	SendPhoneNumberToProvider *bool
+	StartParameter            *string
+	SuggestedTipAmounts       []int64
 }
 
 func (r *SendInvoice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -47,17 +47,71 @@ func (r *SendInvoice) Call(ctx context.Context, b *telegram.Bot) (response inter
 func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.SuggestedTipAmounts != nil {
-		var dataSuggestedTipAmounts []byte
-		if dataSuggestedTipAmounts, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
-			return
-		}
+	values["chat_id"] = r.ChatId.String()
 
-		values["suggested_tip_amounts"] = string(dataSuggestedTipAmounts)
+	values["currency"] = r.Currency
+
+	values["description"] = r.Description
+
+	values["payload"] = r.Payload
+
+	var dataPrices []byte
+	if dataPrices, err = json.Marshal(r.Prices); err != nil {
+		return
 	}
 
-	if r.PhotoUrl != nil {
-		values["photo_url"] = *r.PhotoUrl
+	values["prices"] = string(dataPrices)
+
+	values["provider_token"] = r.ProviderToken
+
+	values["title"] = r.Title
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.IsFlexible != nil {
+		if *r.IsFlexible {
+			values["is_flexible"] = "1"
+		} else {
+			values["is_flexible"] = "0"
+		}
+	}
+
+	if r.MaxTipAmount != nil {
+		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.NeedEmail != nil {
+		if *r.NeedEmail {
+			values["need_email"] = "1"
+		} else {
+			values["need_email"] = "0"
+		}
+	}
+
+	if r.NeedName != nil {
+		if *r.NeedName {
+			values["need_name"] = "1"
+		} else {
+			values["need_name"] = "0"
+		}
+	}
+
+	if r.NeedPhoneNumber != nil {
+		if *r.NeedPhoneNumber {
+			values["need_phone_number"] = "1"
+		} else {
+			values["need_phone_number"] = "0"
+		}
 	}
 
 	if r.NeedShippingAddress != nil {
@@ -68,32 +122,20 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
+	if r.PhotoHeight != nil {
+		values["photo_height"] = strconv.FormatInt(*r.PhotoHeight, 10)
 	}
-
-	var dataPrices []byte
-	if dataPrices, err = json.Marshal(r.Prices); err != nil {
-		return
-	}
-
-	values["prices"] = string(dataPrices)
 
 	if r.PhotoSize != nil {
 		values["photo_size"] = strconv.FormatInt(*r.PhotoSize, 10)
 	}
 
-	if r.NeedPhoneNumber != nil {
-		if *r.NeedPhoneNumber {
-			values["need_phone_number"] = "1"
-		} else {
-			values["need_phone_number"] = "0"
-		}
+	if r.PhotoUrl != nil {
+		values["photo_url"] = *r.PhotoUrl
+	}
+
+	if r.PhotoWidth != nil {
+		values["photo_width"] = strconv.FormatInt(*r.PhotoWidth, 10)
 	}
 
 	if r.ProtectContent != nil {
@@ -108,22 +150,30 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		values["provider_data"] = *r.ProviderData
 	}
 
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
+	if r.ReplyMarkup != nil {
+		var dataReplyMarkup []byte
+		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
+			return
 		}
+
+		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
-	values["provider_token"] = r.ProviderToken
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
+		}
 
-	if r.StartParameter != nil {
-		values["start_parameter"] = *r.StartParameter
+		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.PhotoHeight != nil {
-		values["photo_height"] = strconv.FormatInt(*r.PhotoHeight, 10)
+	if r.SendEmailToProvider != nil {
+		if *r.SendEmailToProvider {
+			values["send_email_to_provider"] = "1"
+		} else {
+			values["send_email_to_provider"] = "0"
+		}
 	}
 
 	if r.SendPhoneNumberToProvider != nil {
@@ -134,67 +184,17 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.StartParameter != nil {
+		values["start_parameter"] = *r.StartParameter
 	}
 
-	values["description"] = r.Description
-
-	if r.PhotoWidth != nil {
-		values["photo_width"] = strconv.FormatInt(*r.PhotoWidth, 10)
-	}
-
-	if r.NeedName != nil {
-		if *r.NeedName {
-			values["need_name"] = "1"
-		} else {
-			values["need_name"] = "0"
-		}
-	}
-
-	if r.NeedEmail != nil {
-		if *r.NeedEmail {
-			values["need_email"] = "1"
-		} else {
-			values["need_email"] = "0"
-		}
-	}
-
-	if r.IsFlexible != nil {
-		if *r.IsFlexible {
-			values["is_flexible"] = "1"
-		} else {
-			values["is_flexible"] = "0"
-		}
-	}
-
-	values["chat_id"] = r.ChatId.String()
-
-	values["currency"] = r.Currency
-
-	if r.SendEmailToProvider != nil {
-		if *r.SendEmailToProvider {
-			values["send_email_to_provider"] = "1"
-		} else {
-			values["send_email_to_provider"] = "0"
-		}
-	}
-
-	if r.ReplyMarkup != nil {
-		var dataReplyMarkup []byte
-		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
+	if r.SuggestedTipAmounts != nil {
+		var dataSuggestedTipAmounts []byte
+		if dataSuggestedTipAmounts, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
 			return
 		}
 
-		values["reply_markup"] = string(dataReplyMarkup)
-	}
-
-	values["title"] = r.Title
-
-	values["payload"] = r.Payload
-
-	if r.MaxTipAmount != nil {
-		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
+		values["suggested_tip_amounts"] = string(dataSuggestedTipAmounts)
 	}
 
 	return

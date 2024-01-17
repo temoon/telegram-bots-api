@@ -10,12 +10,12 @@ import (
 )
 
 type SendMediaGroup struct {
-	MessageThreadId     *int64
+	ChatId              telegram.ChatId
 	Media               interface{}
 	DisableNotification *bool
+	MessageThreadId     *int64
 	ProtectContent      *bool
 	ReplyParameters     *telegram.ReplyParameters
-	ChatId              telegram.ChatId
 }
 
 func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,9 +27,7 @@ func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response in
 func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	switch value := r.Media.(type) {
 	case []telegram.InputMediaAudio, []telegram.InputMediaDocument, []telegram.InputMediaPhoto, []telegram.InputMediaVideo:
@@ -52,6 +50,10 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 		}
 	}
 
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
@@ -69,8 +71,6 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	values["chat_id"] = r.ChatId.String()
-
 	return
 }
 
@@ -80,11 +80,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 	switch value := r.Media.(type) {
 	case []telegram.InputMediaAudio:
 		for _, item := range value {
-			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
-				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
-			}
 			if item.Media.HasFile() {
 				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
 			}
 		}
 	case []telegram.InputMediaDocument:
@@ -104,11 +104,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 		}
 	case []telegram.InputMediaVideo:
 		for _, item := range value {
-			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
-				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
-			}
 			if item.Media.HasFile() {
 				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
 			}
 		}
 	}

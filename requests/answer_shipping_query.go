@@ -8,10 +8,10 @@ import (
 )
 
 type AnswerShippingQuery struct {
-	ShippingQueryId string
 	Ok              bool
-	ShippingOptions []telegram.ShippingOption
+	ShippingQueryId string
 	ErrorMessage    *string
+	ShippingOptions []telegram.ShippingOption
 }
 
 func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,12 +23,16 @@ func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (respon
 func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["shipping_query_id"] = r.ShippingQueryId
-
 	if r.Ok {
 		values["ok"] = "1"
 	} else {
 		values["ok"] = "0"
+	}
+
+	values["shipping_query_id"] = r.ShippingQueryId
+
+	if r.ErrorMessage != nil {
+		values["error_message"] = *r.ErrorMessage
 	}
 
 	if r.ShippingOptions != nil {
@@ -38,10 +42,6 @@ func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err er
 		}
 
 		values["shipping_options"] = string(dataShippingOptions)
-	}
-
-	if r.ErrorMessage != nil {
-		values["error_message"] = *r.ErrorMessage
 	}
 
 	return

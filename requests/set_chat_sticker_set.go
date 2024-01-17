@@ -7,8 +7,8 @@ import (
 )
 
 type SetChatStickerSet struct {
-	StickerSetName string
 	ChatId         telegram.ChatId
+	StickerSetName string
 }
 
 func (r *SetChatStickerSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,9 +20,9 @@ func (r *SetChatStickerSet) Call(ctx context.Context, b *telegram.Bot) (response
 func (r *SetChatStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["sticker_set_name"] = r.StickerSetName
-
 	values["chat_id"] = r.ChatId.String()
+
+	values["sticker_set_name"] = r.StickerSetName
 
 	return
 }

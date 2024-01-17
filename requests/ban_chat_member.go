@@ -8,10 +8,10 @@ import (
 )
 
 type BanChatMember struct {
-	UntilDate      *int64
-	RevokeMessages *bool
 	ChatId         telegram.ChatId
 	UserId         int64
+	RevokeMessages *bool
+	UntilDate      *int64
 }
 
 func (r *BanChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,9 +23,9 @@ func (r *BanChatMember) Call(ctx context.Context, b *telegram.Bot) (response int
 func (r *BanChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.UntilDate != nil {
-		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
-	}
+	values["chat_id"] = r.ChatId.String()
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	if r.RevokeMessages != nil {
 		if *r.RevokeMessages {
@@ -35,9 +35,9 @@ func (r *BanChatMember) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = r.ChatId.String()
-
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	if r.UntilDate != nil {
+		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
+	}
 
 	return
 }

@@ -10,17 +10,17 @@ import (
 )
 
 type SendPhoto struct {
-	CaptionEntities     []telegram.MessageEntity
-	HasSpoiler          *bool
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
 	Photo               telegram.InputFile
-	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
-	ReplyMarkup         interface{}
 	Caption             *string
-	ParseMode           *string
+	CaptionEntities     []telegram.MessageEntity
 	DisableNotification *bool
+	HasSpoiler          *bool
+	MessageThreadId     *int64
+	ParseMode           *string
+	ProtectContent      *bool
+	ReplyMarkup         interface{}
+	ReplyParameters     *telegram.ReplyParameters
 }
 
 func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -32,6 +32,14 @@ func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interfa
 func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
+	values["photo"] = r.Photo.GetValue()
+
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
+	}
+
 	if r.CaptionEntities != nil {
 		var dataCaptionEntities []byte
 		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
@@ -39,6 +47,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	if r.HasSpoiler != nil {
@@ -49,13 +65,13 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = r.ChatId.String()
-
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
-	values["photo"] = r.Photo.GetValue()
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
 
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
@@ -63,15 +79,6 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["protect_content"] = "0"
 		}
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -89,20 +96,13 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
 		}
+
+		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	return

@@ -7,8 +7,8 @@ import (
 )
 
 type SetCustomEmojiStickerSetThumbnail struct {
-	CustomEmojiId *string
 	Name          string
+	CustomEmojiId *string
 }
 
 func (r *SetCustomEmojiStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,11 +20,11 @@ func (r *SetCustomEmojiStickerSetThumbnail) Call(ctx context.Context, b *telegra
 func (r *SetCustomEmojiStickerSetThumbnail) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["name"] = r.Name
+
 	if r.CustomEmojiId != nil {
 		values["custom_emoji_id"] = *r.CustomEmojiId
 	}
-
-	values["name"] = r.Name
 
 	return
 }

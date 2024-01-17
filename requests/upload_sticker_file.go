@@ -8,9 +8,9 @@ import (
 )
 
 type UploadStickerFile struct {
+	Sticker       telegram.InputFile
 	StickerFormat string
 	UserId        int64
-	Sticker       telegram.InputFile
 }
 
 func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,11 +22,11 @@ func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response
 func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["sticker"] = r.Sticker.GetValue()
+
 	values["sticker_format"] = r.StickerFormat
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
-	values["sticker"] = r.Sticker.GetValue()
 
 	return
 }

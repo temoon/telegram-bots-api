@@ -9,11 +9,11 @@ import (
 )
 
 type RestrictChatMember struct {
-	UserId                        int64
-	Permissions                   telegram.ChatPermissions
-	UseIndependentChatPermissions *bool
-	UntilDate                     *int64
 	ChatId                        telegram.ChatId
+	Permissions                   telegram.ChatPermissions
+	UserId                        int64
+	UntilDate                     *int64
+	UseIndependentChatPermissions *bool
 }
 
 func (r *RestrictChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -25,7 +25,7 @@ func (r *RestrictChatMember) Call(ctx context.Context, b *telegram.Bot) (respons
 func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	values["chat_id"] = r.ChatId.String()
 
 	var dataPermissions []byte
 	if dataPermissions, err = json.Marshal(r.Permissions); err != nil {
@@ -34,6 +34,12 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 
 	values["permissions"] = string(dataPermissions)
 
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+
+	if r.UntilDate != nil {
+		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
+	}
+
 	if r.UseIndependentChatPermissions != nil {
 		if *r.UseIndependentChatPermissions {
 			values["use_independent_chat_permissions"] = "1"
@@ -41,12 +47,6 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 			values["use_independent_chat_permissions"] = "0"
 		}
 	}
-
-	if r.UntilDate != nil {
-		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
-	}
-
-	values["chat_id"] = r.ChatId.String()
 
 	return
 }

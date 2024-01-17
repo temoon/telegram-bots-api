@@ -10,8 +10,8 @@ import (
 
 type GetUpdates struct {
 	AllowedUpdates []string
-	Offset         *int64
 	Limit          *int64
+	Offset         *int64
 	Timeout        *int64
 }
 
@@ -33,12 +33,12 @@ func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
 		values["allowed_updates"] = string(dataAllowedUpdates)
 	}
 
-	if r.Offset != nil {
-		values["offset"] = strconv.FormatInt(*r.Offset, 10)
-	}
-
 	if r.Limit != nil {
 		values["limit"] = strconv.FormatInt(*r.Limit, 10)
+	}
+
+	if r.Offset != nil {
+		values["offset"] = strconv.FormatInt(*r.Offset, 10)
 	}
 
 	if r.Timeout != nil {

@@ -10,21 +10,21 @@ import (
 )
 
 type SendAnimation struct {
-	MessageThreadId     *int64
-	Duration            *int64
-	Caption             *string
-	ParseMode           *string
-	CaptionEntities     []telegram.MessageEntity
-	Width               *int64
-	HasSpoiler          *bool
-	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
-	ReplyMarkup         interface{}
 	Animation           telegram.InputFile
-	Height              *int64
-	DisableNotification *bool
 	ChatId              telegram.ChatId
+	Caption             *string
+	CaptionEntities     []telegram.MessageEntity
+	DisableNotification *bool
+	Duration            *int64
+	HasSpoiler          *bool
+	Height              *int64
+	MessageThreadId     *int64
+	ParseMode           *string
+	ProtectContent      *bool
+	ReplyMarkup         interface{}
+	ReplyParameters     *telegram.ReplyParameters
 	Thumbnail           *telegram.InputFile
+	Width               *int64
 }
 
 func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,20 +36,12 @@ func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response int
 func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
+	values["animation"] = r.Animation.GetValue()
 
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.CaptionEntities != nil {
@@ -61,8 +53,16 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
-	if r.Width != nil {
-		values["width"] = strconv.FormatInt(*r.Width, 10)
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
 	}
 
 	if r.HasSpoiler != nil {
@@ -73,21 +73,24 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.Height != nil {
+		values["height"] = strconv.FormatInt(*r.Height, 10)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
 		}
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -105,24 +108,21 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["animation"] = r.Animation.GetValue()
-
-	if r.Height != nil {
-		values["height"] = strconv.FormatInt(*r.Height, 10)
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
 		}
-	}
 
-	values["chat_id"] = r.ChatId.String()
+		values["reply_parameters"] = string(dataReplyParameters)
+	}
 
 	if r.Thumbnail != nil {
 		values["thumbnail"] = r.Thumbnail.GetValue()
+	}
+
+	if r.Width != nil {
+		values["width"] = strconv.FormatInt(*r.Width, 10)
 	}
 
 	return

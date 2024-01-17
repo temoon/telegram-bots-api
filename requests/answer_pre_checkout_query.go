@@ -8,8 +8,8 @@ import (
 
 type AnswerPreCheckoutQuery struct {
 	Ok                 bool
-	ErrorMessage       *string
 	PreCheckoutQueryId string
+	ErrorMessage       *string
 }
 
 func (r *AnswerPreCheckoutQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,11 +27,11 @@ func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]interface{}, err
 		values["ok"] = "0"
 	}
 
+	values["pre_checkout_query_id"] = r.PreCheckoutQueryId
+
 	if r.ErrorMessage != nil {
 		values["error_message"] = *r.ErrorMessage
 	}
-
-	values["pre_checkout_query_id"] = r.PreCheckoutQueryId
 
 	return
 }

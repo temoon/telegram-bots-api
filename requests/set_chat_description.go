@@ -7,8 +7,8 @@ import (
 )
 
 type SetChatDescription struct {
-	Description *string
 	ChatId      telegram.ChatId
+	Description *string
 }
 
 func (r *SetChatDescription) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,11 +20,11 @@ func (r *SetChatDescription) Call(ctx context.Context, b *telegram.Bot) (respons
 func (r *SetChatDescription) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
 	if r.Description != nil {
 		values["description"] = *r.Description
 	}
-
-	values["chat_id"] = r.ChatId.String()
 
 	return
 }

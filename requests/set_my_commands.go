@@ -9,8 +9,8 @@ import (
 
 type SetMyCommands struct {
 	Commands     []telegram.BotCommand
-	Scope        interface{}
 	LanguageCode *string
+	Scope        interface{}
 }
 
 func (r *SetMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,6 +29,10 @@ func (r *SetMyCommands) GetValues() (values map[string]interface{}, err error) {
 
 	values["commands"] = string(dataCommands)
 
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
+
 	if r.Scope != nil {
 		var dataScope []byte
 		if dataScope, err = json.Marshal(r.Scope); err != nil {
@@ -36,10 +40,6 @@ func (r *SetMyCommands) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["scope"] = string(dataScope)
-	}
-
-	if r.LanguageCode != nil {
-		values["language_code"] = *r.LanguageCode
 	}
 
 	return

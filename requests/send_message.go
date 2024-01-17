@@ -10,16 +10,16 @@ import (
 )
 
 type SendMessage struct {
-	Text                string
-	LinkPreviewOptions  *telegram.LinkPreviewOptions
-	ReplyParameters     *telegram.ReplyParameters
 	ChatId              telegram.ChatId
-	ParseMode           *string
-	Entities            []telegram.MessageEntity
+	Text                string
 	DisableNotification *bool
+	Entities            []telegram.MessageEntity
+	LinkPreviewOptions  *telegram.LinkPreviewOptions
+	MessageThreadId     *int64
+	ParseMode           *string
 	ProtectContent      *bool
 	ReplyMarkup         interface{}
-	MessageThreadId     *int64
+	ReplyParameters     *telegram.ReplyParameters
 }
 
 func (r *SendMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,30 +31,16 @@ func (r *SendMessage) Call(ctx context.Context, b *telegram.Bot) (response inter
 func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["text"] = r.Text
-
-	if r.LinkPreviewOptions != nil {
-		var dataLinkPreviewOptions []byte
-		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
-			return
-		}
-
-		values["link_preview_options"] = string(dataLinkPreviewOptions)
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
-	}
-
 	values["chat_id"] = r.ChatId.String()
 
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
+	values["text"] = r.Text
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	if r.Entities != nil {
@@ -66,12 +52,21 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 		values["entities"] = string(dataEntities)
 	}
 
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
+	if r.LinkPreviewOptions != nil {
+		var dataLinkPreviewOptions []byte
+		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
+			return
 		}
+
+		values["link_preview_options"] = string(dataLinkPreviewOptions)
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ProtectContent != nil {
@@ -97,8 +92,13 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
+		}
+
+		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	return

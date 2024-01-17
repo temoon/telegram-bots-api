@@ -8,9 +8,9 @@ import (
 )
 
 type SetChatAdministratorCustomTitle struct {
-	UserId      int64
-	CustomTitle string
 	ChatId      telegram.ChatId
+	CustomTitle string
+	UserId      int64
 }
 
 func (r *SetChatAdministratorCustomTitle) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,11 +22,11 @@ func (r *SetChatAdministratorCustomTitle) Call(ctx context.Context, b *telegram.
 func (r *SetChatAdministratorCustomTitle) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	values["chat_id"] = r.ChatId.String()
 
 	values["custom_title"] = r.CustomTitle
 
-	values["chat_id"] = r.ChatId.String()
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	return
 }

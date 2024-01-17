@@ -9,13 +9,13 @@ import (
 )
 
 type SetWebhook struct {
+	Url                string
+	AllowedUpdates     []string
+	Certificate        *telegram.InputFile
+	DropPendingUpdates *bool
 	IpAddress          *string
 	MaxConnections     *int64
-	AllowedUpdates     []string
-	DropPendingUpdates *bool
 	SecretToken        *string
-	Url                string
-	Certificate        *telegram.InputFile
 }
 
 func (r *SetWebhook) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,13 +27,7 @@ func (r *SetWebhook) Call(ctx context.Context, b *telegram.Bot) (response interf
 func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.IpAddress != nil {
-		values["ip_address"] = *r.IpAddress
-	}
-
-	if r.MaxConnections != nil {
-		values["max_connections"] = strconv.FormatInt(*r.MaxConnections, 10)
-	}
+	values["url"] = r.Url
 
 	if r.AllowedUpdates != nil {
 		var dataAllowedUpdates []byte
@@ -44,6 +38,10 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 		values["allowed_updates"] = string(dataAllowedUpdates)
 	}
 
+	if r.Certificate != nil {
+		values["certificate"] = r.Certificate.GetValue()
+	}
+
 	if r.DropPendingUpdates != nil {
 		if *r.DropPendingUpdates {
 			values["drop_pending_updates"] = "1"
@@ -52,14 +50,16 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.SecretToken != nil {
-		values["secret_token"] = *r.SecretToken
+	if r.IpAddress != nil {
+		values["ip_address"] = *r.IpAddress
 	}
 
-	values["url"] = r.Url
+	if r.MaxConnections != nil {
+		values["max_connections"] = strconv.FormatInt(*r.MaxConnections, 10)
+	}
 
-	if r.Certificate != nil {
-		values["certificate"] = r.Certificate.GetValue()
+	if r.SecretToken != nil {
+		values["secret_token"] = *r.SecretToken
 	}
 
 	return

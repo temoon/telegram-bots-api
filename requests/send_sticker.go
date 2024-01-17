@@ -10,14 +10,14 @@ import (
 )
 
 type SendSticker struct {
-	DisableNotification *bool
-	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
-	ReplyMarkup         interface{}
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
 	Sticker             telegram.InputFile
+	DisableNotification *bool
 	Emoji               *string
+	MessageThreadId     *int64
+	ProtectContent      *bool
+	ReplyMarkup         interface{}
+	ReplyParameters     *telegram.ReplyParameters
 }
 
 func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,6 +29,10 @@ func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response inter
 func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
+	values["chat_id"] = r.ChatId.String()
+
+	values["sticker"] = r.Sticker.GetValue()
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
@@ -37,21 +41,20 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.Emoji != nil {
+		values["emoji"] = *r.Emoji
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
 		}
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -69,16 +72,13 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	values["chat_id"] = r.ChatId.String()
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
+		}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	values["sticker"] = r.Sticker.GetValue()
-
-	if r.Emoji != nil {
-		values["emoji"] = *r.Emoji
+		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	return

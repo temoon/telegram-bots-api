@@ -8,11 +8,11 @@ import (
 )
 
 type ForwardMessage struct {
-	MessageId           int64
 	ChatId              telegram.ChatId
-	MessageThreadId     *int64
 	FromChatId          telegram.ChatId
+	MessageId           int64
 	DisableNotification *bool
+	MessageThreadId     *int64
 	ProtectContent      *bool
 }
 
@@ -25,15 +25,11 @@ func (r *ForwardMessage) Call(ctx context.Context, b *telegram.Bot) (response in
 func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
-
 	values["chat_id"] = r.ChatId.String()
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
 	values["from_chat_id"] = r.FromChatId.String()
+
+	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
@@ -41,6 +37,10 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ProtectContent != nil {

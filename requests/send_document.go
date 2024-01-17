@@ -12,16 +12,16 @@ import (
 type SendDocument struct {
 	ChatId                      telegram.ChatId
 	Document                    telegram.InputFile
-	DisableNotification         *bool
-	ProtectContent              *bool
-	ReplyMarkup                 interface{}
-	MessageThreadId             *int64
-	Thumbnail                   *telegram.InputFile
 	Caption                     *string
-	ParseMode                   *string
 	CaptionEntities             []telegram.MessageEntity
 	DisableContentTypeDetection *bool
+	DisableNotification         *bool
+	MessageThreadId             *int64
+	ParseMode                   *string
+	ProtectContent              *bool
+	ReplyMarkup                 interface{}
 	ReplyParameters             *telegram.ReplyParameters
+	Thumbnail                   *telegram.InputFile
 }
 
 func (r *SendDocument) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -37,12 +37,41 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 
 	values["document"] = r.Document.GetValue()
 
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
+	}
+
+	if r.CaptionEntities != nil {
+		var dataCaptionEntities []byte
+		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
+
+		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DisableContentTypeDetection != nil {
+		if *r.DisableContentTypeDetection {
+			values["disable_content_type_detection"] = "1"
+		} else {
+			values["disable_content_type_detection"] = "0"
+		}
+	}
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ProtectContent != nil {
@@ -68,39 +97,6 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
-	}
-
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
-	}
-
-	if r.CaptionEntities != nil {
-		var dataCaptionEntities []byte
-		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
-			return
-		}
-
-		values["caption_entities"] = string(dataCaptionEntities)
-	}
-
-	if r.DisableContentTypeDetection != nil {
-		if *r.DisableContentTypeDetection {
-			values["disable_content_type_detection"] = "1"
-		} else {
-			values["disable_content_type_detection"] = "0"
-		}
-	}
-
 	if r.ReplyParameters != nil {
 		var dataReplyParameters []byte
 		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
@@ -108,6 +104,10 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
 	}
 
 	return

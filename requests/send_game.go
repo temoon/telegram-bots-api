@@ -10,12 +10,12 @@ import (
 
 type SendGame struct {
 	ChatId              int64
-	MessageThreadId     *int64
 	GameShortName       string
 	DisableNotification *bool
+	MessageThreadId     *int64
 	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
 	ReplyMarkup         *telegram.InlineKeyboardMarkup
+	ReplyParameters     *telegram.ReplyParameters
 }
 
 func (r *SendGame) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,10 +29,6 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
 	values["game_short_name"] = r.GameShortName
 
 	if r.DisableNotification != nil {
@@ -43,21 +39,16 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
 		}
-	}
-
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -67,6 +58,15 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_markup"] = string(dataReplyMarkup)
+	}
+
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
+		}
+
+		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
 	return

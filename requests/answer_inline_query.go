@@ -11,10 +11,10 @@ import (
 type AnswerInlineQuery struct {
 	InlineQueryId string
 	Results       []interface{}
+	Button        *telegram.InlineQueryResultsButton
 	CacheTime     *int64
 	IsPersonal    *bool
 	NextOffset    *string
-	Button        *telegram.InlineQueryResultsButton
 }
 
 func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -35,6 +35,15 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 
 	values["results"] = string(dataResults)
 
+	if r.Button != nil {
+		var dataButton []byte
+		if dataButton, err = json.Marshal(r.Button); err != nil {
+			return
+		}
+
+		values["button"] = string(dataButton)
+	}
+
 	if r.CacheTime != nil {
 		values["cache_time"] = strconv.FormatInt(*r.CacheTime, 10)
 	}
@@ -49,15 +58,6 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 
 	if r.NextOffset != nil {
 		values["next_offset"] = *r.NextOffset
-	}
-
-	if r.Button != nil {
-		var dataButton []byte
-		if dataButton, err = json.Marshal(r.Button); err != nil {
-			return
-		}
-
-		values["button"] = string(dataButton)
 	}
 
 	return
