@@ -5,16 +5,17 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SendMediaGroup struct {
-	ChatId              interface{}
-	DisableNotification *bool
-	Media               interface{}
 	MessageThreadId     *int64
+	Media               interface{}
+	DisableNotification *bool
 	ProtectContent      *bool
 	ReplyParameters     *telegram.ReplyParameters
+	ChatId              telegram.ChatId
 }
 
 func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,29 +24,11 @@ func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *SendMediaGroup) IsMultipart() bool {
-	return false
-}
-
 func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	switch value := r.Media.(type) {
@@ -57,12 +40,16 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 
 		values["media"] = string(data)
 	default:
-		err = errors.New("invalid media field type")
+		err = errors.New("unsupported media field type")
 		return
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	if r.ProtectContent != nil {
@@ -82,5 +69,48 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
+	values["chat_id"] = r.ChatId.String()
+
+	return
+}
+
+func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	switch value := r.Media.(type) {
+	case []telegram.InputMediaAudio:
+		for _, item := range value {
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+		}
+	case []telegram.InputMediaDocument:
+		for _, item := range value {
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+		}
+	case []telegram.InputMediaPhoto:
+		for _, item := range value {
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+		}
+	case []telegram.InputMediaVideo:
+		for _, item := range value {
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+		}
+	}
 	return
 }

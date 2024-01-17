@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type SetStickerMaskPosition struct {
-	MaskPosition *telegram.MaskPosition
 	Sticker      string
+	MaskPosition *telegram.MaskPosition
 }
 
 func (r *SetStickerMaskPosition) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,12 +18,10 @@ func (r *SetStickerMaskPosition) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *SetStickerMaskPosition) IsMultipart() bool {
-	return false
-}
-
 func (r *SetStickerMaskPosition) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["sticker"] = r.Sticker
 
 	if r.MaskPosition != nil {
 		var dataMaskPosition []byte
@@ -33,7 +32,9 @@ func (r *SetStickerMaskPosition) GetValues() (values map[string]interface{}, err
 		values["mask_position"] = string(dataMaskPosition)
 	}
 
-	values["sticker"] = r.Sticker
+	return
+}
 
+func (r *SetStickerMaskPosition) GetFiles() (files map[string]io.Reader) {
 	return
 }

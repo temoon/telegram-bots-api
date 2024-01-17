@@ -3,16 +3,16 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type StopMessageLiveLocation struct {
-	ChatId          interface{}
-	InlineMessageId *string
-	MessageId       *int64
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
+	ChatId          *telegram.ChatId
+	MessageId       *int64
+	InlineMessageId *string
 }
 
 func (r *StopMessageLiveLocation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -21,32 +21,8 @@ func (r *StopMessageLiveLocation) Call(ctx context.Context, b *telegram.Bot) (re
 	return
 }
 
-func (r *StopMessageLiveLocation) IsMultipart() bool {
-	return false
-}
-
 func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	if r.ChatId != nil {
-		switch value := r.ChatId.(type) {
-		case int64:
-			values["chat_id"] = strconv.FormatInt(value, 10)
-		case string:
-			values["chat_id"] = value
-		default:
-			err = errors.New("invalid chat_id field type")
-			return
-		}
-	}
-
-	if r.InlineMessageId != nil {
-		values["inline_message_id"] = *r.InlineMessageId
-	}
-
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
-	}
 
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte
@@ -57,5 +33,21 @@ func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, er
 		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
+	if r.ChatId != nil {
+		values["chat_id"] = r.ChatId.String()
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
+
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	return
+}
+
+func (r *StopMessageLiveLocation) GetFiles() (files map[string]io.Reader) {
 	return
 }

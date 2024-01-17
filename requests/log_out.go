@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type LogOut struct {
@@ -14,11 +15,11 @@ func (r *LogOut) Call(ctx context.Context, b *telegram.Bot) (response interface{
 	return
 }
 
-func (r *LogOut) IsMultipart() bool {
-	return false
-}
-
 func (r *LogOut) GetValues() (values map[string]interface{}, err error) {
 
+	return
+}
+
+func (r *LogOut) GetFiles() (files map[string]io.Reader) {
 	return
 }

@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type SetStickerEmojiList struct {
-	EmojiList []string
 	Sticker   string
+	EmojiList []string
 }
 
 func (r *SetStickerEmojiList) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,12 +18,10 @@ func (r *SetStickerEmojiList) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *SetStickerEmojiList) IsMultipart() bool {
-	return false
-}
-
 func (r *SetStickerEmojiList) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["sticker"] = r.Sticker
 
 	var dataEmojiList []byte
 	if dataEmojiList, err = json.Marshal(r.EmojiList); err != nil {
@@ -31,7 +30,9 @@ func (r *SetStickerEmojiList) GetValues() (values map[string]interface{}, err er
 
 	values["emoji_list"] = string(dataEmojiList)
 
-	values["sticker"] = r.Sticker
+	return
+}
 
+func (r *SetStickerEmojiList) GetFiles() (files map[string]io.Reader) {
 	return
 }

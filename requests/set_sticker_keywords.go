@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type SetStickerKeywords struct {
-	Keywords []string
 	Sticker  string
+	Keywords []string
 }
 
 func (r *SetStickerKeywords) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,12 +18,10 @@ func (r *SetStickerKeywords) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
-func (r *SetStickerKeywords) IsMultipart() bool {
-	return false
-}
-
 func (r *SetStickerKeywords) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["sticker"] = r.Sticker
 
 	if r.Keywords != nil {
 		var dataKeywords []byte
@@ -33,7 +32,9 @@ func (r *SetStickerKeywords) GetValues() (values map[string]interface{}, err err
 		values["keywords"] = string(dataKeywords)
 	}
 
-	values["sticker"] = r.Sticker
+	return
+}
 
+func (r *SetStickerKeywords) GetFiles() (files map[string]io.Reader) {
 	return
 }

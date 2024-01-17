@@ -5,20 +5,21 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SendContact struct {
-	ChatId              interface{}
 	DisableNotification *bool
+	ReplyMarkup         interface{}
+	ChatId              telegram.ChatId
+	MessageThreadId     *int64
 	FirstName           string
 	LastName            *string
-	MessageThreadId     *int64
 	PhoneNumber         string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
 	Vcard               *string
+	ProtectContent      *bool
+	ReplyParameters     *telegram.ReplyParameters
 }
 
 func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,48 +28,14 @@ func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response inter
 	return
 }
 
-func (r *SendContact) IsMultipart() bool {
-	return false
-}
-
 func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
-		}
-	}
-
-	values["first_name"] = r.FirstName
-
-	if r.LastName != nil {
-		values["last_name"] = *r.LastName
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	values["phone_number"] = r.PhoneNumber
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
 		}
 	}
 
@@ -82,8 +49,34 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
+		}
+	}
+
+	values["chat_id"] = r.ChatId.String()
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	values["first_name"] = r.FirstName
+
+	if r.LastName != nil {
+		values["last_name"] = *r.LastName
+	}
+
+	values["phone_number"] = r.PhoneNumber
+
+	if r.Vcard != nil {
+		values["vcard"] = *r.Vcard
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
 		}
 	}
 
@@ -96,9 +89,9 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.Vcard != nil {
-		values["vcard"] = *r.Vcard
-	}
+	return
+}
 
+func (r *SendContact) GetFiles() (files map[string]io.Reader) {
 	return
 }

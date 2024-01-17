@@ -5,28 +5,29 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SendPoll struct {
-	AllowsMultipleAnswers *bool
-	ChatId                interface{}
-	CloseDate             *int64
-	CorrectOptionId       *int64
-	DisableNotification   *bool
-	Explanation           *string
-	ExplanationEntities   []telegram.MessageEntity
-	ExplanationParseMode  *string
-	IsAnonymous           *bool
-	IsClosed              *bool
-	MessageThreadId       *int64
-	OpenPeriod            *int64
 	Options               []string
-	ProtectContent        *bool
+	OpenPeriod            *int64
+	AllowsMultipleAnswers *bool
+	CorrectOptionId       *int64
+	ExplanationEntities   []telegram.MessageEntity
+	MessageThreadId       *int64
 	Question              string
+	Explanation           *string
+	ExplanationParseMode  *string
+	CloseDate             *int64
 	ReplyMarkup           interface{}
-	ReplyParameters       *telegram.ReplyParameters
+	IsAnonymous           *bool
 	Type                  *string
+	DisableNotification   *bool
+	ProtectContent        *bool
+	ReplyParameters       *telegram.ReplyParameters
+	ChatId                telegram.ChatId
+	IsClosed              *bool
 }
 
 func (r *SendPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -35,12 +36,19 @@ func (r *SendPoll) Call(ctx context.Context, b *telegram.Bot) (response interfac
 	return
 }
 
-func (r *SendPoll) IsMultipart() bool {
-	return false
-}
-
 func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	var dataOptions []byte
+	if dataOptions, err = json.Marshal(r.Options); err != nil {
+		return
+	}
+
+	values["options"] = string(dataOptions)
+
+	if r.OpenPeriod != nil {
+		values["open_period"] = strconv.FormatInt(*r.OpenPeriod, 10)
+	}
 
 	if r.AllowsMultipleAnswers != nil {
 		if *r.AllowsMultipleAnswers {
@@ -50,34 +58,8 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.CloseDate != nil {
-		values["close_date"] = strconv.FormatInt(*r.CloseDate, 10)
-	}
-
 	if r.CorrectOptionId != nil {
 		values["correct_option_id"] = strconv.FormatInt(*r.CorrectOptionId, 10)
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	if r.Explanation != nil {
-		values["explanation"] = *r.Explanation
 	}
 
 	if r.ExplanationEntities != nil {
@@ -89,50 +71,23 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		values["explanation_entities"] = string(dataExplanationEntities)
 	}
 
-	if r.ExplanationParseMode != nil {
-		values["explanation_parse_mode"] = *r.ExplanationParseMode
-	}
-
-	if r.IsAnonymous != nil {
-		if *r.IsAnonymous {
-			values["is_anonymous"] = "1"
-		} else {
-			values["is_anonymous"] = "0"
-		}
-	}
-
-	if r.IsClosed != nil {
-		if *r.IsClosed {
-			values["is_closed"] = "1"
-		} else {
-			values["is_closed"] = "0"
-		}
-	}
-
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
-	if r.OpenPeriod != nil {
-		values["open_period"] = strconv.FormatInt(*r.OpenPeriod, 10)
-	}
-
-	var dataOptions []byte
-	if dataOptions, err = json.Marshal(r.Options); err != nil {
-		return
-	}
-
-	values["options"] = string(dataOptions)
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
-	}
-
 	values["question"] = r.Question
+
+	if r.Explanation != nil {
+		values["explanation"] = *r.Explanation
+	}
+
+	if r.ExplanationParseMode != nil {
+		values["explanation_parse_mode"] = *r.ExplanationParseMode
+	}
+
+	if r.CloseDate != nil {
+		values["close_date"] = strconv.FormatInt(*r.CloseDate, 10)
+	}
 
 	if r.ReplyMarkup != nil {
 		switch value := r.ReplyMarkup.(type) {
@@ -144,8 +99,36 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
+		}
+	}
+
+	if r.IsAnonymous != nil {
+		if *r.IsAnonymous {
+			values["is_anonymous"] = "1"
+		} else {
+			values["is_anonymous"] = "0"
+		}
+	}
+
+	if r.Type != nil {
+		values["type"] = *r.Type
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
 		}
 	}
 
@@ -158,9 +141,19 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.Type != nil {
-		values["type"] = *r.Type
+	values["chat_id"] = r.ChatId.String()
+
+	if r.IsClosed != nil {
+		if *r.IsClosed {
+			values["is_closed"] = "1"
+		} else {
+			values["is_closed"] = "0"
+		}
 	}
 
+	return
+}
+
+func (r *SendPoll) GetFiles() (files map[string]io.Reader) {
 	return
 }

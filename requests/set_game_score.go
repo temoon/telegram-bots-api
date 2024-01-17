@@ -3,17 +3,18 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SetGameScore struct {
 	ChatId             *int64
-	DisableEditMessage *bool
-	Force              *bool
-	InlineMessageId    *string
 	MessageId          *int64
-	Score              int64
+	InlineMessageId    *string
 	UserId             int64
+	Score              int64
+	Force              *bool
+	DisableEditMessage *bool
 }
 
 func (r *SetGameScore) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,15 +23,31 @@ func (r *SetGameScore) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *SetGameScore) IsMultipart() bool {
-	return false
-}
-
 func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	if r.ChatId != nil {
 		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
+	}
+
+	if r.InlineMessageId != nil {
+		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+
+	values["score"] = strconv.FormatInt(r.Score, 10)
+
+	if r.Force != nil {
+		if *r.Force {
+			values["force"] = "1"
+		} else {
+			values["force"] = "0"
+		}
 	}
 
 	if r.DisableEditMessage != nil {
@@ -41,25 +58,9 @@ func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.Force != nil {
-		if *r.Force {
-			values["force"] = "1"
-		} else {
-			values["force"] = "0"
-		}
-	}
+	return
+}
 
-	if r.InlineMessageId != nil {
-		values["inline_message_id"] = *r.InlineMessageId
-	}
-
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
-	}
-
-	values["score"] = strconv.FormatInt(r.Score, 10)
-
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
-
+func (r *SetGameScore) GetFiles() (files map[string]io.Reader) {
 	return
 }

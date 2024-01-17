@@ -2,18 +2,18 @@ package requests
 
 import (
 	"context"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type EditChatInviteLink struct {
-	ChatId             interface{}
-	CreatesJoinRequest *bool
-	ExpireDate         *int64
 	InviteLink         string
-	MemberLimit        *int64
 	Name               *string
+	ExpireDate         *int64
+	MemberLimit        *int64
+	CreatesJoinRequest *bool
+	ChatId             telegram.ChatId
 }
 
 func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,21 +22,21 @@ func (r *EditChatInviteLink) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
-func (r *EditChatInviteLink) IsMultipart() bool {
-	return false
-}
-
 func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
+	values["invite_link"] = r.InviteLink
+
+	if r.Name != nil {
+		values["name"] = *r.Name
+	}
+
+	if r.ExpireDate != nil {
+		values["expire_date"] = strconv.FormatInt(*r.ExpireDate, 10)
+	}
+
+	if r.MemberLimit != nil {
+		values["member_limit"] = strconv.FormatInt(*r.MemberLimit, 10)
 	}
 
 	if r.CreatesJoinRequest != nil {
@@ -47,19 +47,11 @@ func (r *EditChatInviteLink) GetValues() (values map[string]interface{}, err err
 		}
 	}
 
-	if r.ExpireDate != nil {
-		values["expire_date"] = strconv.FormatInt(*r.ExpireDate, 10)
-	}
+	values["chat_id"] = r.ChatId.String()
 
-	values["invite_link"] = r.InviteLink
+	return
+}
 
-	if r.MemberLimit != nil {
-		values["member_limit"] = strconv.FormatInt(*r.MemberLimit, 10)
-	}
-
-	if r.Name != nil {
-		values["name"] = *r.Name
-	}
-
+func (r *EditChatInviteLink) GetFiles() (files map[string]io.Reader) {
 	return
 }

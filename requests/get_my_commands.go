@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type GetMyCommands struct {
-	LanguageCode *string
 	Scope        interface{}
+	LanguageCode *string
 }
 
 func (r *GetMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,16 +18,8 @@ func (r *GetMyCommands) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
-func (r *GetMyCommands) IsMultipart() bool {
-	return false
-}
-
 func (r *GetMyCommands) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	if r.LanguageCode != nil {
-		values["language_code"] = *r.LanguageCode
-	}
 
 	if r.Scope != nil {
 		var dataScope []byte
@@ -37,5 +30,13 @@ func (r *GetMyCommands) GetValues() (values map[string]interface{}, err error) {
 		values["scope"] = string(dataScope)
 	}
 
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
+
+	return
+}
+
+func (r *GetMyCommands) GetFiles() (files map[string]io.Reader) {
 	return
 }

@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type GetWebhookInfo struct {
@@ -14,11 +15,11 @@ func (r *GetWebhookInfo) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *GetWebhookInfo) IsMultipart() bool {
-	return false
-}
-
 func (r *GetWebhookInfo) GetValues() (values map[string]interface{}, err error) {
 
+	return
+}
+
+func (r *GetWebhookInfo) GetFiles() (files map[string]io.Reader) {
 	return
 }

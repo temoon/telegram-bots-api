@@ -5,24 +5,25 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SendVenue struct {
-	Address             string
-	ChatId              interface{}
-	DisableNotification *bool
 	FoursquareId        *string
-	FoursquareType      *string
-	GooglePlaceId       *string
 	GooglePlaceType     *string
-	Latitude            float64
-	Longitude           float64
-	MessageThreadId     *int64
-	ProtectContent      *bool
+	ChatId              telegram.ChatId
 	ReplyMarkup         interface{}
+	Latitude            float64
+	GooglePlaceId       *string
 	ReplyParameters     *telegram.ReplyParameters
 	Title               string
+	Longitude           float64
+	Address             string
+	FoursquareType      *string
+	DisableNotification *bool
+	ProtectContent      *bool
+	MessageThreadId     *int64
 }
 
 func (r *SendVenue) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,64 +32,18 @@ func (r *SendVenue) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendVenue) IsMultipart() bool {
-	return false
-}
-
 func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["address"] = r.Address
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
 	if r.FoursquareId != nil {
 		values["foursquare_id"] = *r.FoursquareId
-	}
-
-	if r.FoursquareType != nil {
-		values["foursquare_type"] = *r.FoursquareType
-	}
-
-	if r.GooglePlaceId != nil {
-		values["google_place_id"] = *r.GooglePlaceId
 	}
 
 	if r.GooglePlaceType != nil {
 		values["google_place_type"] = *r.GooglePlaceType
 	}
 
-	values["latitude"] = strconv.FormatFloat(r.Latitude, 'f', -1, 64)
-
-	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.ProtectContent != nil {
-		if *r.ProtectContent {
-			values["protect_content"] = "1"
-		} else {
-			values["protect_content"] = "0"
-		}
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	if r.ReplyMarkup != nil {
 		switch value := r.ReplyMarkup.(type) {
@@ -100,9 +55,15 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
 		}
+	}
+
+	values["latitude"] = strconv.FormatFloat(r.Latitude, 'f', -1, 64)
+
+	if r.GooglePlaceId != nil {
+		values["google_place_id"] = *r.GooglePlaceId
 	}
 
 	if r.ReplyParameters != nil {
@@ -116,5 +77,37 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 	values["title"] = r.Title
 
+	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
+
+	values["address"] = r.Address
+
+	if r.FoursquareType != nil {
+		values["foursquare_type"] = *r.FoursquareType
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	if r.ProtectContent != nil {
+		if *r.ProtectContent {
+			values["protect_content"] = "1"
+		} else {
+			values["protect_content"] = "0"
+		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	return
+}
+
+func (r *SendVenue) GetFiles() (files map[string]io.Reader) {
 	return
 }

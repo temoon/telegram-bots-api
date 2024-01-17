@@ -4,12 +4,13 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SetPassportDataErrors struct {
-	Errors []interface{}
 	UserId int64
+	Errors []interface{}
 }
 
 func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -18,12 +19,10 @@ func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (resp
 	return
 }
 
-func (r *SetPassportDataErrors) IsMultipart() bool {
-	return false
-}
-
 func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	var dataErrors []byte
 	if dataErrors, err = json.Marshal(r.Errors); err != nil {
@@ -32,7 +31,9 @@ func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err 
 
 	values["errors"] = string(dataErrors)
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	return
+}
 
+func (r *SetPassportDataErrors) GetFiles() (files map[string]io.Reader) {
 	return
 }

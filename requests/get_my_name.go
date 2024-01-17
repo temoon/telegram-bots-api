@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type GetMyName struct {
@@ -15,10 +16,6 @@ func (r *GetMyName) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *GetMyName) IsMultipart() bool {
-	return false
-}
-
 func (r *GetMyName) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
@@ -26,5 +23,9 @@ func (r *GetMyName) GetValues() (values map[string]interface{}, err error) {
 		values["language_code"] = *r.LanguageCode
 	}
 
+	return
+}
+
+func (r *GetMyName) GetFiles() (files map[string]io.Reader) {
 	return
 }

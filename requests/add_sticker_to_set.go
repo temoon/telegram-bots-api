@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type AddStickerToSet struct {
+	UserId  int64
 	Name    string
 	Sticker telegram.InputSticker
-	UserId  int64
 }
 
 func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,12 +20,10 @@ func (r *AddStickerToSet) Call(ctx context.Context, b *telegram.Bot) (response i
 	return
 }
 
-func (r *AddStickerToSet) IsMultipart() bool {
-	return false
-}
-
 func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	values["name"] = r.Name
 
@@ -35,7 +34,15 @@ func (r *AddStickerToSet) GetValues() (values map[string]interface{}, err error)
 
 	values["sticker"] = string(dataSticker)
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	return
+}
+
+func (r *AddStickerToSet) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Sticker.Sticker.HasFile() {
+		files[r.Sticker.Sticker.GetFormFieldName()] = r.Sticker.Sticker.GetFile()
+	}
 
 	return
 }

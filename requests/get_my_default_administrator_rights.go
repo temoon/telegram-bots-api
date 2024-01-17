@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type GetMyDefaultAdministratorRights struct {
@@ -13,10 +14,6 @@ func (r *GetMyDefaultAdministratorRights) Call(ctx context.Context, b *telegram.
 	response = new(telegram.ChatAdministratorRights)
 	err = b.CallMethod(ctx, "getMyDefaultAdministratorRights", r, response)
 	return
-}
-
-func (r *GetMyDefaultAdministratorRights) IsMultipart() bool {
-	return false
 }
 
 func (r *GetMyDefaultAdministratorRights) GetValues() (values map[string]interface{}, err error) {
@@ -30,5 +27,9 @@ func (r *GetMyDefaultAdministratorRights) GetValues() (values map[string]interfa
 		}
 	}
 
+	return
+}
+
+func (r *GetMyDefaultAdministratorRights) GetFiles() (files map[string]io.Reader) {
 	return
 }

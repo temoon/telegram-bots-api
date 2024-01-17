@@ -4,16 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type AnswerInlineQuery struct {
-	Button        *telegram.InlineQueryResultsButton
-	CacheTime     *int64
 	InlineQueryId string
+	Results       []interface{}
+	CacheTime     *int64
 	IsPersonal    *bool
 	NextOffset    *string
-	Results       []interface{}
+	Button        *telegram.InlineQueryResultsButton
 }
 
 func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,27 +23,21 @@ func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *AnswerInlineQuery) IsMultipart() bool {
-	return false
-}
-
 func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Button != nil {
-		var dataButton []byte
-		if dataButton, err = json.Marshal(r.Button); err != nil {
-			return
-		}
+	values["inline_query_id"] = r.InlineQueryId
 
-		values["button"] = string(dataButton)
+	var dataResults []byte
+	if dataResults, err = json.Marshal(r.Results); err != nil {
+		return
 	}
+
+	values["results"] = string(dataResults)
 
 	if r.CacheTime != nil {
 		values["cache_time"] = strconv.FormatInt(*r.CacheTime, 10)
 	}
-
-	values["inline_query_id"] = r.InlineQueryId
 
 	if r.IsPersonal != nil {
 		if *r.IsPersonal {
@@ -56,12 +51,18 @@ func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err erro
 		values["next_offset"] = *r.NextOffset
 	}
 
-	var dataResults []byte
-	if dataResults, err = json.Marshal(r.Results); err != nil {
-		return
+	if r.Button != nil {
+		var dataButton []byte
+		if dataButton, err = json.Marshal(r.Button); err != nil {
+			return
+		}
+
+		values["button"] = string(dataButton)
 	}
 
-	values["results"] = string(dataResults)
+	return
+}
 
+func (r *AnswerInlineQuery) GetFiles() (files map[string]io.Reader) {
 	return
 }

@@ -3,19 +3,19 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type CopyMessages struct {
-	ChatId              interface{}
-	DisableNotification *bool
-	FromChatId          interface{}
 	MessageIds          []int64
-	MessageThreadId     *int64
+	DisableNotification *bool
 	ProtectContent      *bool
 	RemoveCaption       *bool
+	ChatId              telegram.ChatId
+	MessageThreadId     *int64
+	FromChatId          telegram.ChatId
 }
 
 func (r *CopyMessages) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -24,40 +24,8 @@ func (r *CopyMessages) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *CopyMessages) IsMultipart() bool {
-	return false
-}
-
 func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	switch value := r.FromChatId.(type) {
-	case int64:
-		values["from_chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["from_chat_id"] = value
-	default:
-		err = errors.New("invalid from_chat_id field type")
-		return
-	}
 
 	var dataMessageIds []byte
 	if dataMessageIds, err = json.Marshal(r.MessageIds); err != nil {
@@ -66,8 +34,12 @@ func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 
 	values["message_ids"] = string(dataMessageIds)
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	if r.ProtectContent != nil {
@@ -86,5 +58,17 @@ func (r *CopyMessages) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	values["chat_id"] = r.ChatId.String()
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	values["from_chat_id"] = r.FromChatId.String()
+
+	return
+}
+
+func (r *CopyMessages) GetFiles() (files map[string]io.Reader) {
 	return
 }

@@ -5,20 +5,21 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type SendMessage struct {
-	ChatId              interface{}
-	DisableNotification *bool
-	Entities            []telegram.MessageEntity
+	Text                string
 	LinkPreviewOptions  *telegram.LinkPreviewOptions
-	MessageThreadId     *int64
+	ReplyParameters     *telegram.ReplyParameters
+	ChatId              telegram.ChatId
 	ParseMode           *string
+	Entities            []telegram.MessageEntity
+	DisableNotification *bool
 	ProtectContent      *bool
 	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	Text                string
+	MessageThreadId     *int64
 }
 
 func (r *SendMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -27,29 +28,33 @@ func (r *SendMessage) Call(ctx context.Context, b *telegram.Bot) (response inter
 	return
 }
 
-func (r *SendMessage) IsMultipart() bool {
-	return false
-}
-
 func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
+	values["text"] = r.Text
+
+	if r.LinkPreviewOptions != nil {
+		var dataLinkPreviewOptions []byte
+		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
+			return
+		}
+
+		values["link_preview_options"] = string(dataLinkPreviewOptions)
 	}
 
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
+	if r.ReplyParameters != nil {
+		var dataReplyParameters []byte
+		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
+			return
 		}
+
+		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	values["chat_id"] = r.ChatId.String()
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.Entities != nil {
@@ -61,21 +66,12 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 		values["entities"] = string(dataEntities)
 	}
 
-	if r.LinkPreviewOptions != nil {
-		var dataLinkPreviewOptions []byte
-		if dataLinkPreviewOptions, err = json.Marshal(r.LinkPreviewOptions); err != nil {
-			return
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
 		}
-
-		values["link_preview_options"] = string(dataLinkPreviewOptions)
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ProtectContent != nil {
@@ -96,21 +92,18 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
 		}
 	}
 
-	if r.ReplyParameters != nil {
-		var dataReplyParameters []byte
-		if dataReplyParameters, err = json.Marshal(r.ReplyParameters); err != nil {
-			return
-		}
-
-		values["reply_parameters"] = string(dataReplyParameters)
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
-	values["text"] = r.Text
+	return
+}
 
+func (r *SendMessage) GetFiles() (files map[string]io.Reader) {
 	return
 }

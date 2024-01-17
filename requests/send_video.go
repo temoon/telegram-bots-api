@@ -10,22 +10,22 @@ import (
 )
 
 type SendVideo struct {
-	Caption             *string
+	Thumbnail           *telegram.InputFile
 	CaptionEntities     []telegram.MessageEntity
-	ChatId              interface{}
-	DisableNotification *bool
-	Duration            *int64
 	HasSpoiler          *bool
-	Height              *int64
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	SupportsStreaming   *bool
-	Thumbnail           interface{}
-	Video               interface{}
 	Width               *int64
+	Height              *int64
+	Duration            *int64
+	SupportsStreaming   *bool
+	ProtectContent      *bool
+	ChatId              telegram.ChatId
+	MessageThreadId     *int64
+	ReplyMarkup         interface{}
+	ParseMode           *string
+	DisableNotification *bool
+	ReplyParameters     *telegram.ReplyParameters
+	Video               telegram.InputFile
+	Caption             *string
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -34,15 +34,11 @@ func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendVideo) IsMultipart() bool {
-	return true
-}
-
 func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
 	}
 
 	if r.CaptionEntities != nil {
@@ -54,28 +50,6 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
-	}
-
 	if r.HasSpoiler != nil {
 		if *r.HasSpoiler {
 			values["has_spoiler"] = "1"
@@ -84,16 +58,24 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.Width != nil {
+		values["width"] = strconv.FormatInt(*r.Width, 10)
+	}
+
 	if r.Height != nil {
 		values["height"] = strconv.FormatInt(*r.Height, 10)
 	}
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
 	}
 
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
+	if r.SupportsStreaming != nil {
+		if *r.SupportsStreaming {
+			values["supports_streaming"] = "1"
+		} else {
+			values["supports_streaming"] = "0"
+		}
 	}
 
 	if r.ProtectContent != nil {
@@ -102,6 +84,12 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["protect_content"] = "0"
 		}
+	}
+
+	values["chat_id"] = r.ChatId.String()
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ReplyMarkup != nil {
@@ -114,8 +102,20 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
+		}
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
 		}
 	}
 
@@ -128,39 +128,15 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.SupportsStreaming != nil {
-		if *r.SupportsStreaming {
-			values["supports_streaming"] = "1"
-		} else {
-			values["supports_streaming"] = "0"
-		}
+	values["video"] = r.Video.GetValue()
+
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
 	}
 
-	if r.Thumbnail != nil {
-		switch value := r.Thumbnail.(type) {
-		case io.Reader:
-			values["thumbnail"] = value
-		case string:
-			values["thumbnail"] = value
-		default:
-			err = errors.New("invalid thumbnail field type")
-			return
-		}
-	}
+	return
+}
 
-	switch value := r.Video.(type) {
-	case io.Reader:
-		values["video"] = value
-	case string:
-		values["video"] = value
-	default:
-		err = errors.New("invalid video field type")
-		return
-	}
-
-	if r.Width != nil {
-		values["width"] = strconv.FormatInt(*r.Width, 10)
-	}
-
+func (r *SendVideo) GetFiles() (files map[string]io.Reader) {
 	return
 }

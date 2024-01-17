@@ -2,16 +2,16 @@ package requests
 
 import (
 	"context"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type EditForumTopic struct {
-	ChatId            interface{}
-	IconCustomEmojiId *string
+	ChatId            telegram.ChatId
 	MessageThreadId   int64
 	Name              *string
+	IconCustomEmojiId *string
 }
 
 func (r *EditForumTopic) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -20,26 +20,10 @@ func (r *EditForumTopic) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *EditForumTopic) IsMultipart() bool {
-	return false
-}
-
 func (r *EditForumTopic) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.IconCustomEmojiId != nil {
-		values["icon_custom_emoji_id"] = *r.IconCustomEmojiId
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	values["message_thread_id"] = strconv.FormatInt(r.MessageThreadId, 10)
 
@@ -47,5 +31,13 @@ func (r *EditForumTopic) GetValues() (values map[string]interface{}, err error) 
 		values["name"] = *r.Name
 	}
 
+	if r.IconCustomEmojiId != nil {
+		values["icon_custom_emoji_id"] = *r.IconCustomEmojiId
+	}
+
+	return
+}
+
+func (r *EditForumTopic) GetFiles() (files map[string]io.Reader) {
 	return
 }

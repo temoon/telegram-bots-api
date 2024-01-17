@@ -10,18 +10,18 @@ import (
 )
 
 type SendDocument struct {
-	Caption                     *string
-	CaptionEntities             []telegram.MessageEntity
-	ChatId                      interface{}
-	DisableContentTypeDetection *bool
+	ChatId                      telegram.ChatId
+	Document                    telegram.InputFile
 	DisableNotification         *bool
-	Document                    interface{}
-	MessageThreadId             *int64
-	ParseMode                   *string
 	ProtectContent              *bool
 	ReplyMarkup                 interface{}
+	MessageThreadId             *int64
+	Thumbnail                   *telegram.InputFile
+	Caption                     *string
+	ParseMode                   *string
+	CaptionEntities             []telegram.MessageEntity
+	DisableContentTypeDetection *bool
 	ReplyParameters             *telegram.ReplyParameters
-	Thumbnail                   interface{}
 }
 
 func (r *SendDocument) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -30,43 +30,12 @@ func (r *SendDocument) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *SendDocument) IsMultipart() bool {
-	return true
-}
-
 func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.Caption != nil {
-		values["caption"] = *r.Caption
-	}
+	values["chat_id"] = r.ChatId.String()
 
-	if r.CaptionEntities != nil {
-		var dataCaptionEntities []byte
-		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
-			return
-		}
-
-		values["caption_entities"] = string(dataCaptionEntities)
-	}
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableContentTypeDetection != nil {
-		if *r.DisableContentTypeDetection {
-			values["disable_content_type_detection"] = "1"
-		} else {
-			values["disable_content_type_detection"] = "0"
-		}
-	}
+	values["document"] = r.Document.GetValue()
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
@@ -74,24 +43,6 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
-	}
-
-	switch value := r.Document.(type) {
-	case io.Reader:
-		values["document"] = value
-	case string:
-		values["document"] = value
-	default:
-		err = errors.New("invalid document field type")
-		return
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.ProtectContent != nil {
@@ -112,8 +63,41 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 
 			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid reply_markup field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
+		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
+	}
+
+	if r.Caption != nil {
+		values["caption"] = *r.Caption
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.CaptionEntities != nil {
+		var dataCaptionEntities []byte
+		if dataCaptionEntities, err = json.Marshal(r.CaptionEntities); err != nil {
+			return
+		}
+
+		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DisableContentTypeDetection != nil {
+		if *r.DisableContentTypeDetection {
+			values["disable_content_type_detection"] = "1"
+		} else {
+			values["disable_content_type_detection"] = "0"
 		}
 	}
 
@@ -126,17 +110,9 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.Thumbnail != nil {
-		switch value := r.Thumbnail.(type) {
-		case io.Reader:
-			values["thumbnail"] = value
-		case string:
-			values["thumbnail"] = value
-		default:
-			err = errors.New("invalid thumbnail field type")
-			return
-		}
-	}
+	return
+}
 
+func (r *SendDocument) GetFiles() (files map[string]io.Reader) {
 	return
 }

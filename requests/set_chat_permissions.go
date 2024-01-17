@@ -3,13 +3,12 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
+	"io"
 )
 
 type SetChatPermissions struct {
-	ChatId                        interface{}
+	ChatId                        telegram.ChatId
 	Permissions                   telegram.ChatPermissions
 	UseIndependentChatPermissions *bool
 }
@@ -20,22 +19,10 @@ func (r *SetChatPermissions) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
-func (r *SetChatPermissions) IsMultipart() bool {
-	return false
-}
-
 func (r *SetChatPermissions) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	var dataPermissions []byte
 	if dataPermissions, err = json.Marshal(r.Permissions); err != nil {
@@ -52,5 +39,9 @@ func (r *SetChatPermissions) GetValues() (values map[string]interface{}, err err
 		}
 	}
 
+	return
+}
+
+func (r *SetChatPermissions) GetFiles() (files map[string]io.Reader) {
 	return
 }

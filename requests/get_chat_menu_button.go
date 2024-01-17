@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
@@ -22,14 +23,10 @@ func (r *GetChatMenuButton) CallWithResponse(ctx context.Context, b *telegram.Bo
 	case *telegram.MenuButtonCommands, *telegram.MenuButtonWebApp, *telegram.MenuButtonDefault:
 		err = b.CallMethod(ctx, "getChatMenuButton", r, response)
 	default:
-		err = errors.New("unexpected response type")
+		err = errors.New("unsupported response type")
 	}
 
 	return
-}
-
-func (r *GetChatMenuButton) IsMultipart() bool {
-	return false
 }
 
 func (r *GetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
@@ -39,5 +36,9 @@ func (r *GetChatMenuButton) GetValues() (values map[string]interface{}, err erro
 		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)
 	}
 
+	return
+}
+
+func (r *GetChatMenuButton) GetFiles() (files map[string]io.Reader) {
 	return
 }

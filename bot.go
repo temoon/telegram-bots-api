@@ -29,8 +29,8 @@ type BotOpts struct {
 
 type Request interface {
 	Call(context.Context, *Bot) (interface{}, error)
-	IsMultipart() bool
 	GetValues() (map[string]interface{}, error)
+	GetFiles() map[string]io.Reader
 }
 
 type RequestWithResponse interface {
@@ -60,11 +60,15 @@ func NewBot(opts *BotOpts) *Bot {
 }
 
 func (b *Bot) CallMethod(ctx context.Context, method string, request Request, response interface{}) (err error) {
+	if request == nil {
+		return
+	}
+
 	var contentType string
 	var query *bytes.Buffer
 
-	if request != nil && request.IsMultipart() {
-		contentType, query, err = b.getFormMultipart(request)
+	if files := request.GetFiles(); files != nil && len(files) > 0 {
+		contentType, query, err = b.getFormMultipart(request, files)
 	} else {
 		contentType, query, err = b.getForm(request)
 	}
@@ -117,7 +121,6 @@ func (b *Bot) getForm(request Request) (contentType string, query *bytes.Buffer,
 	}
 
 	var values map[string]interface{}
-
 	if values, err = request.GetValues(); err != nil {
 		return
 	}
@@ -134,11 +137,14 @@ func (b *Bot) getForm(request Request) (contentType string, query *bytes.Buffer,
 	return
 }
 
-func (b *Bot) getFormMultipart(request Request) (contentType string, query *bytes.Buffer, err error) {
+func (b *Bot) getFormMultipart(request Request, files map[string]io.Reader) (contentType string, query *bytes.Buffer, err error) {
 	var values map[string]interface{}
-
 	if values, err = request.GetValues(); err != nil {
 		return
+	}
+
+	for name, file := range files {
+		values[name] = file
 	}
 
 	query = new(bytes.Buffer)

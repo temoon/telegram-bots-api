@@ -3,16 +3,16 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type EditMessageMedia struct {
-	ChatId          interface{}
+	ChatId          *telegram.ChatId
+	MessageId       *int64
 	InlineMessageId *string
 	Media           interface{}
-	MessageId       *int64
 	ReplyMarkup     *telegram.InlineKeyboardMarkup
 }
 
@@ -22,23 +22,15 @@ func (r *EditMessageMedia) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-func (r *EditMessageMedia) IsMultipart() bool {
-	return false
-}
-
 func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	if r.ChatId != nil {
-		switch value := r.ChatId.(type) {
-		case int64:
-			values["chat_id"] = strconv.FormatInt(value, 10)
-		case string:
-			values["chat_id"] = value
-		default:
-			err = errors.New("invalid chat_id field type")
-			return
-		}
+		values["chat_id"] = r.ChatId.String()
+	}
+
+	if r.MessageId != nil {
+		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
 	}
 
 	if r.InlineMessageId != nil {
@@ -52,10 +44,6 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 
 	values["media"] = string(dataMedia)
 
-	if r.MessageId != nil {
-		values["message_id"] = strconv.FormatInt(*r.MessageId, 10)
-	}
-
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte
 		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
@@ -63,6 +51,47 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 		}
 
 		values["reply_markup"] = string(dataReplyMarkup)
+	}
+
+	return
+}
+
+func (r *EditMessageMedia) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	switch value := r.Media.(type) {
+	case telegram.InputMediaAnimation:
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
+	case telegram.InputMediaDocument:
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
+	case telegram.InputMediaAudio:
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+	case telegram.InputMediaPhoto:
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+	case telegram.InputMediaVideo:
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
+		}
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
 	}
 
 	return

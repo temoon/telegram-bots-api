@@ -10,14 +10,14 @@ import (
 )
 
 type SendSticker struct {
-	ChatId              interface{}
 	DisableNotification *bool
-	Emoji               *string
-	MessageThreadId     *int64
 	ProtectContent      *bool
-	ReplyMarkup         interface{}
 	ReplyParameters     *telegram.ReplyParameters
-	Sticker             interface{}
+	ReplyMarkup         interface{}
+	ChatId              telegram.ChatId
+	MessageThreadId     *int64
+	Sticker             telegram.InputFile
+	Emoji               *string
 }
 
 func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -26,22 +26,8 @@ func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response inter
 	return
 }
 
-func (r *SendSticker) IsMultipart() bool {
-	return true
-}
-
 func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
@@ -51,34 +37,11 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.Emoji != nil {
-		values["emoji"] = *r.Emoji
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
-		}
-	}
-
-	if r.ReplyMarkup != nil {
-		switch value := r.ReplyMarkup.(type) {
-		case telegram.InlineKeyboardMarkup, telegram.ReplyKeyboardMarkup, telegram.ReplyKeyboardRemove, telegram.ForceReply:
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["reply_markup"] = string(data)
-		default:
-			err = errors.New("invalid reply_markup field type")
-			return
 		}
 	}
 
@@ -91,15 +54,36 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	switch value := r.Sticker.(type) {
-	case io.Reader:
-		values["sticker"] = value
-	case string:
-		values["sticker"] = value
-	default:
-		err = errors.New("invalid sticker field type")
-		return
+	if r.ReplyMarkup != nil {
+		switch value := r.ReplyMarkup.(type) {
+		case telegram.InlineKeyboardMarkup, telegram.ReplyKeyboardMarkup, telegram.ReplyKeyboardRemove, telegram.ForceReply:
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
+		default:
+			err = errors.New("unsupported reply_markup field type")
+			return
+		}
 	}
 
+	values["chat_id"] = r.ChatId.String()
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	values["sticker"] = r.Sticker.GetValue()
+
+	if r.Emoji != nil {
+		values["emoji"] = *r.Emoji
+	}
+
+	return
+}
+
+func (r *SendSticker) GetFiles() (files map[string]io.Reader) {
 	return
 }

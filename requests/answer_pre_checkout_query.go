@@ -3,11 +3,12 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type AnswerPreCheckoutQuery struct {
-	ErrorMessage       *string
 	Ok                 bool
+	ErrorMessage       *string
 	PreCheckoutQueryId string
 }
 
@@ -17,16 +18,8 @@ func (r *AnswerPreCheckoutQuery) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *AnswerPreCheckoutQuery) IsMultipart() bool {
-	return false
-}
-
 func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	if r.ErrorMessage != nil {
-		values["error_message"] = *r.ErrorMessage
-	}
 
 	if r.Ok {
 		values["ok"] = "1"
@@ -34,7 +27,15 @@ func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]interface{}, err
 		values["ok"] = "0"
 	}
 
+	if r.ErrorMessage != nil {
+		values["error_message"] = *r.ErrorMessage
+	}
+
 	values["pre_checkout_query_id"] = r.PreCheckoutQueryId
 
+	return
+}
+
+func (r *AnswerPreCheckoutQuery) GetFiles() (files map[string]io.Reader) {
 	return
 }

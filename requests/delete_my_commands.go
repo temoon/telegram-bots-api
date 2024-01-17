@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type DeleteMyCommands struct {
-	LanguageCode *string
 	Scope        interface{}
+	LanguageCode *string
 }
 
 func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -17,16 +18,8 @@ func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-func (r *DeleteMyCommands) IsMultipart() bool {
-	return false
-}
-
 func (r *DeleteMyCommands) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
-
-	if r.LanguageCode != nil {
-		values["language_code"] = *r.LanguageCode
-	}
 
 	if r.Scope != nil {
 		var dataScope []byte
@@ -37,5 +30,13 @@ func (r *DeleteMyCommands) GetValues() (values map[string]interface{}, err error
 		values["scope"] = string(dataScope)
 	}
 
+	if r.LanguageCode != nil {
+		values["language_code"] = *r.LanguageCode
+	}
+
+	return
+}
+
+func (r *DeleteMyCommands) GetFiles() (files map[string]io.Reader) {
 	return
 }

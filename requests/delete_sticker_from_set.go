@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type DeleteStickerFromSet struct {
@@ -15,14 +16,14 @@ func (r *DeleteStickerFromSet) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
-func (r *DeleteStickerFromSet) IsMultipart() bool {
-	return false
-}
-
 func (r *DeleteStickerFromSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	values["sticker"] = r.Sticker
 
+	return
+}
+
+func (r *DeleteStickerFromSet) GetFiles() (files map[string]io.Reader) {
 	return
 }

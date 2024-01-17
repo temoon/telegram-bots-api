@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type GetStickerSet struct {
@@ -15,14 +16,14 @@ func (r *GetStickerSet) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
-func (r *GetStickerSet) IsMultipart() bool {
-	return false
-}
-
 func (r *GetStickerSet) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	values["name"] = r.Name
 
+	return
+}
+
+func (r *GetStickerSet) GetFiles() (files map[string]io.Reader) {
 	return
 }

@@ -3,6 +3,7 @@ package requests
 import (
 	"context"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type DeleteWebhook struct {
@@ -13,10 +14,6 @@ func (r *DeleteWebhook) Call(ctx context.Context, b *telegram.Bot) (response int
 	response = new(bool)
 	err = b.CallMethod(ctx, "deleteWebhook", r, response)
 	return
-}
-
-func (r *DeleteWebhook) IsMultipart() bool {
-	return false
 }
 
 func (r *DeleteWebhook) GetValues() (values map[string]interface{}, err error) {
@@ -30,5 +27,9 @@ func (r *DeleteWebhook) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	return
+}
+
+func (r *DeleteWebhook) GetFiles() (files map[string]io.Reader) {
 	return
 }

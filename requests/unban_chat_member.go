@@ -2,15 +2,15 @@ package requests
 
 import (
 	"context"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type UnbanChatMember struct {
-	ChatId       interface{}
-	OnlyIfBanned *bool
+	ChatId       telegram.ChatId
 	UserId       int64
+	OnlyIfBanned *bool
 }
 
 func (r *UnbanChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,22 +19,12 @@ func (r *UnbanChatMember) Call(ctx context.Context, b *telegram.Bot) (response i
 	return
 }
 
-func (r *UnbanChatMember) IsMultipart() bool {
-	return false
-}
-
 func (r *UnbanChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
+	values["chat_id"] = r.ChatId.String()
+
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	if r.OnlyIfBanned != nil {
 		if *r.OnlyIfBanned {
@@ -44,7 +34,9 @@ func (r *UnbanChatMember) GetValues() (values map[string]interface{}, err error)
 		}
 	}
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	return
+}
 
+func (r *UnbanChatMember) GetFiles() (files map[string]io.Reader) {
 	return
 }

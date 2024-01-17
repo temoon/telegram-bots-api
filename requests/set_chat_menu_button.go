@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
@@ -16,10 +17,6 @@ func (r *SetChatMenuButton) Call(ctx context.Context, b *telegram.Bot) (response
 	response = new(bool)
 	err = b.CallMethod(ctx, "setChatMenuButton", r, response)
 	return
-}
-
-func (r *SetChatMenuButton) IsMultipart() bool {
-	return false
 }
 
 func (r *SetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
@@ -38,5 +35,9 @@ func (r *SetChatMenuButton) GetValues() (values map[string]interface{}, err erro
 		values["menu_button"] = string(dataMenuButton)
 	}
 
+	return
+}
+
+func (r *SetChatMenuButton) GetFiles() (files map[string]io.Reader) {
 	return
 }

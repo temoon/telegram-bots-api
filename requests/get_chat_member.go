@@ -4,12 +4,13 @@ import (
 	"context"
 	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type GetChatMember struct {
-	ChatId interface{}
 	UserId int64
+	ChatId telegram.ChatId
 }
 
 func (r *GetChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,30 +24,22 @@ func (r *GetChatMember) CallWithResponse(ctx context.Context, b *telegram.Bot, r
 	case *telegram.ChatMemberOwner, *telegram.ChatMemberAdministrator, *telegram.ChatMemberMember, *telegram.ChatMemberRestricted, *telegram.ChatMemberLeft, *telegram.ChatMemberBanned:
 		err = b.CallMethod(ctx, "getChatMember", r, response)
 	default:
-		err = errors.New("unexpected response type")
+		err = errors.New("unsupported response type")
 	}
 
 	return
 }
 
-func (r *GetChatMember) IsMultipart() bool {
-	return false
-}
-
 func (r *GetChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
+	values["chat_id"] = r.ChatId.String()
+
+	return
+}
+
+func (r *GetChatMember) GetFiles() (files map[string]io.Reader) {
 	return
 }

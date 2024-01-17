@@ -4,30 +4,31 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type CreateInvoiceLink struct {
-	Currency                  string
 	Description               string
-	IsFlexible                *bool
-	MaxTipAmount              *int64
-	NeedEmail                 *bool
-	NeedName                  *bool
-	NeedPhoneNumber           *bool
-	NeedShippingAddress       *bool
-	Payload                   string
+	Currency                  string
 	PhotoHeight               *int64
-	PhotoSize                 *int64
-	PhotoUrl                  *string
-	PhotoWidth                *int64
-	Prices                    []telegram.LabeledPrice
-	ProviderData              *string
-	ProviderToken             string
-	SendEmailToProvider       *bool
+	NeedPhoneNumber           *bool
 	SendPhoneNumberToProvider *bool
-	SuggestedTipAmounts       []int64
+	SendEmailToProvider       *bool
 	Title                     string
+	Payload                   string
+	ProviderData              *string
+	NeedName                  *bool
+	ProviderToken             string
+	PhotoSize                 *int64
+	PhotoWidth                *int64
+	IsFlexible                *bool
+	Prices                    []telegram.LabeledPrice
+	MaxTipAmount              *int64
+	SuggestedTipAmounts       []int64
+	PhotoUrl                  *string
+	NeedEmail                 *bool
+	NeedShippingAddress       *bool
 }
 
 func (r *CreateInvoiceLink) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,43 +37,15 @@ func (r *CreateInvoiceLink) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *CreateInvoiceLink) IsMultipart() bool {
-	return false
-}
-
 func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	values["currency"] = r.Currency
-
 	values["description"] = r.Description
 
-	if r.IsFlexible != nil {
-		if *r.IsFlexible {
-			values["is_flexible"] = "1"
-		} else {
-			values["is_flexible"] = "0"
-		}
-	}
+	values["currency"] = r.Currency
 
-	if r.MaxTipAmount != nil {
-		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
-	}
-
-	if r.NeedEmail != nil {
-		if *r.NeedEmail {
-			values["need_email"] = "1"
-		} else {
-			values["need_email"] = "0"
-		}
-	}
-
-	if r.NeedName != nil {
-		if *r.NeedName {
-			values["need_name"] = "1"
-		} else {
-			values["need_name"] = "0"
-		}
+	if r.PhotoHeight != nil {
+		values["photo_height"] = strconv.FormatInt(*r.PhotoHeight, 10)
 	}
 
 	if r.NeedPhoneNumber != nil {
@@ -80,53 +53,6 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 			values["need_phone_number"] = "1"
 		} else {
 			values["need_phone_number"] = "0"
-		}
-	}
-
-	if r.NeedShippingAddress != nil {
-		if *r.NeedShippingAddress {
-			values["need_shipping_address"] = "1"
-		} else {
-			values["need_shipping_address"] = "0"
-		}
-	}
-
-	values["payload"] = r.Payload
-
-	if r.PhotoHeight != nil {
-		values["photo_height"] = strconv.FormatInt(*r.PhotoHeight, 10)
-	}
-
-	if r.PhotoSize != nil {
-		values["photo_size"] = strconv.FormatInt(*r.PhotoSize, 10)
-	}
-
-	if r.PhotoUrl != nil {
-		values["photo_url"] = *r.PhotoUrl
-	}
-
-	if r.PhotoWidth != nil {
-		values["photo_width"] = strconv.FormatInt(*r.PhotoWidth, 10)
-	}
-
-	var dataPrices []byte
-	if dataPrices, err = json.Marshal(r.Prices); err != nil {
-		return
-	}
-
-	values["prices"] = string(dataPrices)
-
-	if r.ProviderData != nil {
-		values["provider_data"] = *r.ProviderData
-	}
-
-	values["provider_token"] = r.ProviderToken
-
-	if r.SendEmailToProvider != nil {
-		if *r.SendEmailToProvider {
-			values["send_email_to_provider"] = "1"
-		} else {
-			values["send_email_to_provider"] = "0"
 		}
 	}
 
@@ -138,6 +64,59 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 		}
 	}
 
+	if r.SendEmailToProvider != nil {
+		if *r.SendEmailToProvider {
+			values["send_email_to_provider"] = "1"
+		} else {
+			values["send_email_to_provider"] = "0"
+		}
+	}
+
+	values["title"] = r.Title
+
+	values["payload"] = r.Payload
+
+	if r.ProviderData != nil {
+		values["provider_data"] = *r.ProviderData
+	}
+
+	if r.NeedName != nil {
+		if *r.NeedName {
+			values["need_name"] = "1"
+		} else {
+			values["need_name"] = "0"
+		}
+	}
+
+	values["provider_token"] = r.ProviderToken
+
+	if r.PhotoSize != nil {
+		values["photo_size"] = strconv.FormatInt(*r.PhotoSize, 10)
+	}
+
+	if r.PhotoWidth != nil {
+		values["photo_width"] = strconv.FormatInt(*r.PhotoWidth, 10)
+	}
+
+	if r.IsFlexible != nil {
+		if *r.IsFlexible {
+			values["is_flexible"] = "1"
+		} else {
+			values["is_flexible"] = "0"
+		}
+	}
+
+	var dataPrices []byte
+	if dataPrices, err = json.Marshal(r.Prices); err != nil {
+		return
+	}
+
+	values["prices"] = string(dataPrices)
+
+	if r.MaxTipAmount != nil {
+		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
+	}
+
 	if r.SuggestedTipAmounts != nil {
 		var dataSuggestedTipAmounts []byte
 		if dataSuggestedTipAmounts, err = json.Marshal(r.SuggestedTipAmounts); err != nil {
@@ -147,7 +126,29 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 		values["suggested_tip_amounts"] = string(dataSuggestedTipAmounts)
 	}
 
-	values["title"] = r.Title
+	if r.PhotoUrl != nil {
+		values["photo_url"] = *r.PhotoUrl
+	}
 
+	if r.NeedEmail != nil {
+		if *r.NeedEmail {
+			values["need_email"] = "1"
+		} else {
+			values["need_email"] = "0"
+		}
+	}
+
+	if r.NeedShippingAddress != nil {
+		if *r.NeedShippingAddress {
+			values["need_shipping_address"] = "1"
+		} else {
+			values["need_shipping_address"] = "0"
+		}
+	}
+
+	return
+}
+
+func (r *CreateInvoiceLink) GetFiles() (files map[string]io.Reader) {
 	return
 }

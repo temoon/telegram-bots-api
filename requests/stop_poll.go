@@ -3,13 +3,13 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type StopPoll struct {
-	ChatId      interface{}
+	ChatId      telegram.ChatId
 	MessageId   int64
 	ReplyMarkup *telegram.InlineKeyboardMarkup
 }
@@ -20,22 +20,10 @@ func (r *StopPoll) Call(ctx context.Context, b *telegram.Bot) (response interfac
 	return
 }
 
-func (r *StopPoll) IsMultipart() bool {
-	return false
-}
-
 func (r *StopPoll) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
+	values["chat_id"] = r.ChatId.String()
 
 	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
 
@@ -48,5 +36,9 @@ func (r *StopPoll) GetValues() (values map[string]interface{}, err error) {
 		values["reply_markup"] = string(dataReplyMarkup)
 	}
 
+	return
+}
+
+func (r *StopPoll) GetFiles() (files map[string]io.Reader) {
 	return
 }

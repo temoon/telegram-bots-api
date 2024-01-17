@@ -10,21 +10,21 @@ import (
 )
 
 type SendAnimation struct {
-	Animation           interface{}
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	ChatId              interface{}
-	DisableNotification *bool
-	Duration            *int64
-	HasSpoiler          *bool
-	Height              *int64
 	MessageThreadId     *int64
+	Duration            *int64
+	Caption             *string
 	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	Thumbnail           interface{}
+	CaptionEntities     []telegram.MessageEntity
 	Width               *int64
+	HasSpoiler          *bool
+	ProtectContent      *bool
+	ReplyParameters     *telegram.ReplyParameters
+	ReplyMarkup         interface{}
+	Animation           telegram.InputFile
+	Height              *int64
+	DisableNotification *bool
+	ChatId              telegram.ChatId
+	Thumbnail           *telegram.InputFile
 }
 
 func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -33,25 +33,23 @@ func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
-func (r *SendAnimation) IsMultipart() bool {
-	return true
-}
-
 func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.Animation.(type) {
-	case io.Reader:
-		values["animation"] = value
-	case string:
-		values["animation"] = value
-	default:
-		err = errors.New("invalid animation field type")
-		return
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	}
+
+	if r.Duration != nil {
+		values["duration"] = strconv.FormatInt(*r.Duration, 10)
 	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
+	}
+
+	if r.ParseMode != nil {
+		values["parse_mode"] = *r.ParseMode
 	}
 
 	if r.CaptionEntities != nil {
@@ -63,26 +61,8 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
-
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	if r.Duration != nil {
-		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	if r.Width != nil {
+		values["width"] = strconv.FormatInt(*r.Width, 10)
 	}
 
 	if r.HasSpoiler != nil {
@@ -93,38 +73,11 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.Height != nil {
-		values["height"] = strconv.FormatInt(*r.Height, 10)
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
-	if r.ParseMode != nil {
-		values["parse_mode"] = *r.ParseMode
-	}
-
 	if r.ProtectContent != nil {
 		if *r.ProtectContent {
 			values["protect_content"] = "1"
 		} else {
 			values["protect_content"] = "0"
-		}
-	}
-
-	if r.ReplyMarkup != nil {
-		switch value := r.ReplyMarkup.(type) {
-		case telegram.InlineKeyboardMarkup, telegram.ReplyKeyboardMarkup, telegram.ReplyKeyboardRemove, telegram.ForceReply:
-			var data []byte
-			if data, err = json.Marshal(value); err != nil {
-				return
-			}
-
-			values["reply_markup"] = string(data)
-		default:
-			err = errors.New("invalid reply_markup field type")
-			return
 		}
 	}
 
@@ -137,21 +90,44 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.Thumbnail != nil {
-		switch value := r.Thumbnail.(type) {
-		case io.Reader:
-			values["thumbnail"] = value
-		case string:
-			values["thumbnail"] = value
+	if r.ReplyMarkup != nil {
+		switch value := r.ReplyMarkup.(type) {
+		case telegram.InlineKeyboardMarkup, telegram.ReplyKeyboardMarkup, telegram.ReplyKeyboardRemove, telegram.ForceReply:
+			var data []byte
+			if data, err = json.Marshal(value); err != nil {
+				return
+			}
+
+			values["reply_markup"] = string(data)
 		default:
-			err = errors.New("invalid thumbnail field type")
+			err = errors.New("unsupported reply_markup field type")
 			return
 		}
 	}
 
-	if r.Width != nil {
-		values["width"] = strconv.FormatInt(*r.Width, 10)
+	values["animation"] = r.Animation.GetValue()
+
+	if r.Height != nil {
+		values["height"] = strconv.FormatInt(*r.Height, 10)
 	}
 
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
+	}
+
+	values["chat_id"] = r.ChatId.String()
+
+	if r.Thumbnail != nil {
+		values["thumbnail"] = r.Thumbnail.GetValue()
+	}
+
+	return
+}
+
+func (r *SendAnimation) GetFiles() (files map[string]io.Reader) {
 	return
 }

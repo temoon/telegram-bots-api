@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 )
 
 type AnswerShippingQuery struct {
-	ErrorMessage    *string
+	ShippingQueryId string
 	Ok              bool
 	ShippingOptions []telegram.ShippingOption
-	ShippingQueryId string
+	ErrorMessage    *string
 }
 
 func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -19,16 +20,10 @@ func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *AnswerShippingQuery) IsMultipart() bool {
-	return false
-}
-
 func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	if r.ErrorMessage != nil {
-		values["error_message"] = *r.ErrorMessage
-	}
+	values["shipping_query_id"] = r.ShippingQueryId
 
 	if r.Ok {
 		values["ok"] = "1"
@@ -45,7 +40,13 @@ func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err er
 		values["shipping_options"] = string(dataShippingOptions)
 	}
 
-	values["shipping_query_id"] = r.ShippingQueryId
+	if r.ErrorMessage != nil {
+		values["error_message"] = *r.ErrorMessage
+	}
 
+	return
+}
+
+func (r *AnswerShippingQuery) GetFiles() (files map[string]io.Reader) {
 	return
 }

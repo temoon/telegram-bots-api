@@ -3,17 +3,17 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type RestrictChatMember struct {
-	ChatId                        interface{}
-	Permissions                   telegram.ChatPermissions
-	UntilDate                     *int64
-	UseIndependentChatPermissions *bool
 	UserId                        int64
+	Permissions                   telegram.ChatPermissions
+	UseIndependentChatPermissions *bool
+	UntilDate                     *int64
+	ChatId                        telegram.ChatId
 }
 
 func (r *RestrictChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -22,22 +22,10 @@ func (r *RestrictChatMember) Call(ctx context.Context, b *telegram.Bot) (respons
 	return
 }
 
-func (r *RestrictChatMember) IsMultipart() bool {
-	return false
-}
-
 func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
+	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	var dataPermissions []byte
 	if dataPermissions, err = json.Marshal(r.Permissions); err != nil {
@@ -45,10 +33,6 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 	}
 
 	values["permissions"] = string(dataPermissions)
-
-	if r.UntilDate != nil {
-		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
-	}
 
 	if r.UseIndependentChatPermissions != nil {
 		if *r.UseIndependentChatPermissions {
@@ -58,7 +42,15 @@ func (r *RestrictChatMember) GetValues() (values map[string]interface{}, err err
 		}
 	}
 
-	values["user_id"] = strconv.FormatInt(r.UserId, 10)
+	if r.UntilDate != nil {
+		values["until_date"] = strconv.FormatInt(*r.UntilDate, 10)
+	}
 
+	values["chat_id"] = r.ChatId.String()
+
+	return
+}
+
+func (r *RestrictChatMember) GetFiles() (files map[string]io.Reader) {
 	return
 }

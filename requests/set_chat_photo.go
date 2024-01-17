@@ -2,14 +2,13 @@ package requests
 
 import (
 	"context"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
-	"strconv"
+	"io"
 )
 
 type SetChatPhoto struct {
-	ChatId interface{}
-	Photo  interface{}
+	ChatId telegram.ChatId
+	Photo  telegram.InputFile
 }
 
 func (r *SetChatPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -18,24 +17,16 @@ func (r *SetChatPhoto) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *SetChatPhoto) IsMultipart() bool {
-	return false
-}
-
 func (r *SetChatPhoto) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
-	}
+	values["chat_id"] = r.ChatId.String()
 
-	values["photo"] = r.Photo
+	values["photo"] = r.Photo.GetValue()
 
+	return
+}
+
+func (r *SetChatPhoto) GetFiles() (files map[string]io.Reader) {
 	return
 }

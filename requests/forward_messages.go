@@ -3,17 +3,17 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"github.com/temoon/telegram-bots-api"
+	"io"
 	"strconv"
 )
 
 type ForwardMessages struct {
-	ChatId              interface{}
-	DisableNotification *bool
-	FromChatId          interface{}
-	MessageIds          []int64
+	ChatId              telegram.ChatId
 	MessageThreadId     *int64
+	FromChatId          telegram.ChatId
+	MessageIds          []int64
+	DisableNotification *bool
 	ProtectContent      *bool
 }
 
@@ -23,40 +23,16 @@ func (r *ForwardMessages) Call(ctx context.Context, b *telegram.Bot) (response i
 	return
 }
 
-func (r *ForwardMessages) IsMultipart() bool {
-	return false
-}
-
 func (r *ForwardMessages) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
-	switch value := r.ChatId.(type) {
-	case int64:
-		values["chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["chat_id"] = value
-	default:
-		err = errors.New("invalid chat_id field type")
-		return
+	values["chat_id"] = r.ChatId.String()
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
-	if r.DisableNotification != nil {
-		if *r.DisableNotification {
-			values["disable_notification"] = "1"
-		} else {
-			values["disable_notification"] = "0"
-		}
-	}
-
-	switch value := r.FromChatId.(type) {
-	case int64:
-		values["from_chat_id"] = strconv.FormatInt(value, 10)
-	case string:
-		values["from_chat_id"] = value
-	default:
-		err = errors.New("invalid from_chat_id field type")
-		return
-	}
+	values["from_chat_id"] = r.FromChatId.String()
 
 	var dataMessageIds []byte
 	if dataMessageIds, err = json.Marshal(r.MessageIds); err != nil {
@@ -65,8 +41,12 @@ func (r *ForwardMessages) GetValues() (values map[string]interface{}, err error)
 
 	values["message_ids"] = string(dataMessageIds)
 
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
+	if r.DisableNotification != nil {
+		if *r.DisableNotification {
+			values["disable_notification"] = "1"
+		} else {
+			values["disable_notification"] = "0"
+		}
 	}
 
 	if r.ProtectContent != nil {
@@ -77,5 +57,9 @@ func (r *ForwardMessages) GetValues() (values map[string]interface{}, err error)
 		}
 	}
 
+	return
+}
+
+func (r *ForwardMessages) GetFiles() (files map[string]io.Reader) {
 	return
 }
