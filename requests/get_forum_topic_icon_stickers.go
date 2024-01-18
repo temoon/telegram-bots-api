@@ -11,12 +11,11 @@ type GetForumTopicIconStickers struct {
 
 func (r *GetForumTopicIconStickers) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
 	response = new([]telegram.Sticker)
-	err = b.CallMethod(ctx, "getForumTopicIconStickers", nil, response)
+	err = b.CallMethod(ctx, "getForumTopicIconStickers", r, response)
 	return
 }
 
 func (r *GetForumTopicIconStickers) GetValues() (values map[string]interface{}, err error) {
-
 	return
 }
 

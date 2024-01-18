@@ -11,12 +11,11 @@ type GetWebhookInfo struct {
 
 func (r *GetWebhookInfo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
 	response = new(telegram.WebhookInfo)
-	err = b.CallMethod(ctx, "getWebhookInfo", nil, response)
+	err = b.CallMethod(ctx, "getWebhookInfo", r, response)
 	return
 }
 
 func (r *GetWebhookInfo) GetValues() (values map[string]interface{}, err error) {
-
 	return
 }
 
