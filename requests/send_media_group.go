@@ -80,11 +80,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 	switch value := r.Media.(type) {
 	case []telegram.InputMediaAudio:
 		for _, item := range value {
-			if item.Media.HasFile() {
-				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
-			}
 			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
 				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
 			}
 		}
 	case []telegram.InputMediaDocument:

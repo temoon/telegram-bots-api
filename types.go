@@ -96,6 +96,7 @@ type Chat struct {
 	BackgroundCustomEmojiId            *string          `json:"background_custom_emoji_id,omitempty"`
 	Bio                                *string          `json:"bio,omitempty"`
 	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
+	CustomEmojiStickerSetName          *string          `json:"custom_emoji_sticker_set_name,omitempty"`
 	Description                        *string          `json:"description,omitempty"`
 	EmojiStatusCustomEmojiId           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
 	EmojiStatusExpirationDate          *int64           `json:"emoji_status_expiration_date,omitempty"`
@@ -122,25 +123,26 @@ type Chat struct {
 	SlowModeDelay                      *int64           `json:"slow_mode_delay,omitempty"`
 	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
 	Title                              *string          `json:"title,omitempty"`
+	UnrestrictBoostCount               *int64           `json:"unrestrict_boost_count,omitempty"`
 	Username                           *string          `json:"username,omitempty"`
 }
 
 type ChatAdministratorRights struct {
 	CanChangeInfo       bool  `json:"can_change_info"`
 	CanDeleteMessages   bool  `json:"can_delete_messages"`
+	CanDeleteStories    bool  `json:"can_delete_stories"`
+	CanEditStories      bool  `json:"can_edit_stories"`
 	CanInviteUsers      bool  `json:"can_invite_users"`
 	CanManageChat       bool  `json:"can_manage_chat"`
 	CanManageVideoChats bool  `json:"can_manage_video_chats"`
+	CanPostStories      bool  `json:"can_post_stories"`
 	CanPromoteMembers   bool  `json:"can_promote_members"`
 	CanRestrictMembers  bool  `json:"can_restrict_members"`
 	IsAnonymous         bool  `json:"is_anonymous"`
-	CanDeleteStories    *bool `json:"can_delete_stories,omitempty"`
 	CanEditMessages     *bool `json:"can_edit_messages,omitempty"`
-	CanEditStories      *bool `json:"can_edit_stories,omitempty"`
 	CanManageTopics     *bool `json:"can_manage_topics,omitempty"`
 	CanPinMessages      *bool `json:"can_pin_messages,omitempty"`
 	CanPostMessages     *bool `json:"can_post_messages,omitempty"`
-	CanPostStories      *bool `json:"can_post_stories,omitempty"`
 }
 
 type ChatBoost struct {
@@ -148,6 +150,10 @@ type ChatBoost struct {
 	BoostId        string      `json:"boost_id"`
 	ExpirationDate int64       `json:"expiration_date"`
 	Source         interface{} `json:"source"`
+}
+
+type ChatBoostAdded struct {
+	BoostCount int64 `json:"boost_count"`
 }
 
 type ChatBoostRemoved struct {
@@ -209,21 +215,21 @@ type ChatMemberAdministrator struct {
 	CanBeEdited         bool    `json:"can_be_edited"`
 	CanChangeInfo       bool    `json:"can_change_info"`
 	CanDeleteMessages   bool    `json:"can_delete_messages"`
+	CanDeleteStories    bool    `json:"can_delete_stories"`
+	CanEditStories      bool    `json:"can_edit_stories"`
 	CanInviteUsers      bool    `json:"can_invite_users"`
 	CanManageChat       bool    `json:"can_manage_chat"`
 	CanManageVideoChats bool    `json:"can_manage_video_chats"`
+	CanPostStories      bool    `json:"can_post_stories"`
 	CanPromoteMembers   bool    `json:"can_promote_members"`
 	CanRestrictMembers  bool    `json:"can_restrict_members"`
 	IsAnonymous         bool    `json:"is_anonymous"`
 	Status              string  `json:"status"`
 	User                User    `json:"user"`
-	CanDeleteStories    *bool   `json:"can_delete_stories,omitempty"`
 	CanEditMessages     *bool   `json:"can_edit_messages,omitempty"`
-	CanEditStories      *bool   `json:"can_edit_stories,omitempty"`
 	CanManageTopics     *bool   `json:"can_manage_topics,omitempty"`
 	CanPinMessages      *bool   `json:"can_pin_messages,omitempty"`
 	CanPostMessages     *bool   `json:"can_post_messages,omitempty"`
-	CanPostStories      *bool   `json:"can_post_stories,omitempty"`
 	CustomTitle         *string `json:"custom_title,omitempty"`
 }
 
@@ -1015,6 +1021,7 @@ type Message struct {
 	Animation                     *Animation                     `json:"animation,omitempty"`
 	Audio                         *Audio                         `json:"audio,omitempty"`
 	AuthorSignature               *string                        `json:"author_signature,omitempty"`
+	BoostAdded                    *ChatBoostAdded                `json:"boost_added,omitempty"`
 	Caption                       *string                        `json:"caption,omitempty"`
 	CaptionEntities               []MessageEntity                `json:"caption_entities,omitempty"`
 	ChannelChatCreated            *bool                          `json:"channel_chat_created,omitempty"`
@@ -1065,6 +1072,8 @@ type Message struct {
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
 	ReplyMarkup                   *InlineKeyboardMarkup          `json:"reply_markup,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
+	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
+	SenderBoostCount              *int64                         `json:"sender_boost_count,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
 	Story                         *Story                         `json:"story,omitempty"`
@@ -1381,7 +1390,8 @@ type StickerSet struct {
 }
 
 type Story struct {
-	// No fields
+	Chat Chat  `json:"chat"`
+	Id   int64 `json:"id"`
 }
 
 type SuccessfulPayment struct {
