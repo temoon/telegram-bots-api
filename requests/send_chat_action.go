@@ -8,9 +8,10 @@ import (
 )
 
 type SendChatAction struct {
-	Action          string
-	ChatId          telegram.ChatId
-	MessageThreadId *int64
+	Action               string
+	ChatId               telegram.ChatId
+	BusinessConnectionId *string
+	MessageThreadId      *int64
 }
 
 func (r *SendChatAction) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -25,6 +26,10 @@ func (r *SendChatAction) GetValues() (values map[string]interface{}, err error) 
 	values["action"] = r.Action
 
 	values["chat_id"] = r.ChatId.String()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)

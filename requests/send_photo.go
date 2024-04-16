@@ -10,17 +10,18 @@ import (
 )
 
 type SendPhoto struct {
-	ChatId              telegram.ChatId
-	Photo               telegram.InputFile
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	HasSpoiler          *bool
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	Photo                telegram.InputFile
+	BusinessConnectionId *string
+	Caption              *string
+	CaptionEntities      []telegram.MessageEntity
+	DisableNotification  *bool
+	HasSpoiler           *bool
+	MessageThreadId      *int64
+	ParseMode            *string
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -35,6 +36,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["photo"] = r.Photo.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption

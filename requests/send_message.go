@@ -10,16 +10,17 @@ import (
 )
 
 type SendMessage struct {
-	ChatId              telegram.ChatId
-	Text                string
-	DisableNotification *bool
-	Entities            []telegram.MessageEntity
-	LinkPreviewOptions  *telegram.LinkPreviewOptions
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	Text                 string
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	Entities             []telegram.MessageEntity
+	LinkPreviewOptions   *telegram.LinkPreviewOptions
+	MessageThreadId      *int64
+	ParseMode            *string
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -34,6 +35,10 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["text"] = r.Text
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

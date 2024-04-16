@@ -10,16 +10,17 @@ import (
 )
 
 type SendVideoNote struct {
-	ChatId              telegram.ChatId
-	VideoNote           telegram.InputFile
-	DisableNotification *bool
-	Duration            *int64
-	Length              *int64
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	Thumbnail           *telegram.InputFile
+	ChatId               telegram.ChatId
+	VideoNote            telegram.InputFile
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	Duration             *int64
+	Length               *int64
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
+	Thumbnail            *telegram.InputFile
 }
 
 func (r *SendVideoNote) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -34,6 +35,10 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["video_note"] = r.VideoNote.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

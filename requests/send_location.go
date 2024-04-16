@@ -13,6 +13,7 @@ type SendLocation struct {
 	ChatId               telegram.ChatId
 	Latitude             float64
 	Longitude            float64
+	BusinessConnectionId *string
 	DisableNotification  *bool
 	Heading              *int64
 	HorizontalAccuracy   *float64
@@ -38,6 +39,10 @@ func (r *SendLocation) GetValues() (values map[string]interface{}, err error) {
 	values["latitude"] = strconv.FormatFloat(r.Latitude, 'f', -1, 64)
 
 	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

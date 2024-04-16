@@ -10,16 +10,17 @@ import (
 )
 
 type SendContact struct {
-	ChatId              telegram.ChatId
-	FirstName           string
-	PhoneNumber         string
-	DisableNotification *bool
-	LastName            *string
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	Vcard               *string
+	ChatId               telegram.ChatId
+	FirstName            string
+	PhoneNumber          string
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	LastName             *string
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
+	Vcard                *string
 }
 
 func (r *SendContact) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,6 +37,10 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	values["first_name"] = r.FirstName
 
 	values["phone_number"] = r.PhoneNumber
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

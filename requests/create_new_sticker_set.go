@@ -10,7 +10,6 @@ import (
 
 type CreateNewStickerSet struct {
 	Name            string
-	StickerFormat   string
 	Stickers        []telegram.InputSticker
 	Title           string
 	UserId          int64
@@ -28,8 +27,6 @@ func (r *CreateNewStickerSet) GetValues() (values map[string]interface{}, err er
 	values = make(map[string]interface{})
 
 	values["name"] = r.Name
-
-	values["sticker_format"] = r.StickerFormat
 
 	var dataStickers []byte
 	if dataStickers, err = json.Marshal(r.Stickers); err != nil {

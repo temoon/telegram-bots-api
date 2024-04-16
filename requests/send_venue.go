@@ -10,20 +10,21 @@ import (
 )
 
 type SendVenue struct {
-	Address             string
-	ChatId              telegram.ChatId
-	Latitude            float64
-	Longitude           float64
-	Title               string
-	DisableNotification *bool
-	FoursquareId        *string
-	FoursquareType      *string
-	GooglePlaceId       *string
-	GooglePlaceType     *string
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	Address              string
+	ChatId               telegram.ChatId
+	Latitude             float64
+	Longitude            float64
+	Title                string
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	FoursquareId         *string
+	FoursquareType       *string
+	GooglePlaceId        *string
+	GooglePlaceType      *string
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendVenue) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -44,6 +45,10 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
 
 	values["title"] = r.Title
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

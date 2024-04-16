@@ -9,13 +9,14 @@ import (
 )
 
 type SendGame struct {
-	ChatId              int64
-	GameShortName       string
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         *telegram.InlineKeyboardMarkup
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               int64
+	GameShortName        string
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendGame) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -30,6 +31,10 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 
 	values["game_short_name"] = r.GameShortName
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

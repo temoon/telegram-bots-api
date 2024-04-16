@@ -14,6 +14,7 @@ type SendPoll struct {
 	Options               []string
 	Question              string
 	AllowsMultipleAnswers *bool
+	BusinessConnectionId  *string
 	CloseDate             *int64
 	CorrectOptionId       *int64
 	DisableNotification   *bool
@@ -56,6 +57,10 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["allows_multiple_answers"] = "0"
 		}
+	}
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
 	}
 
 	if r.CloseDate != nil {

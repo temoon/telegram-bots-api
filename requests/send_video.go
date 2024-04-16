@@ -10,22 +10,23 @@ import (
 )
 
 type SendVideo struct {
-	ChatId              telegram.ChatId
-	Video               telegram.InputFile
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	Duration            *int64
-	HasSpoiler          *bool
-	Height              *int64
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	SupportsStreaming   *bool
-	Thumbnail           *telegram.InputFile
-	Width               *int64
+	ChatId               telegram.ChatId
+	Video                telegram.InputFile
+	BusinessConnectionId *string
+	Caption              *string
+	CaptionEntities      []telegram.MessageEntity
+	DisableNotification  *bool
+	Duration             *int64
+	HasSpoiler           *bool
+	Height               *int64
+	MessageThreadId      *int64
+	ParseMode            *string
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
+	SupportsStreaming    *bool
+	Thumbnail            *telegram.InputFile
+	Width                *int64
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -40,6 +41,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["video"] = r.Video.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption

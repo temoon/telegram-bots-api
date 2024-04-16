@@ -10,21 +10,22 @@ import (
 )
 
 type SendAnimation struct {
-	Animation           telegram.InputFile
-	ChatId              telegram.ChatId
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	Duration            *int64
-	HasSpoiler          *bool
-	Height              *int64
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
-	Thumbnail           *telegram.InputFile
-	Width               *int64
+	Animation            telegram.InputFile
+	ChatId               telegram.ChatId
+	BusinessConnectionId *string
+	Caption              *string
+	CaptionEntities      []telegram.MessageEntity
+	DisableNotification  *bool
+	Duration             *int64
+	HasSpoiler           *bool
+	Height               *int64
+	MessageThreadId      *int64
+	ParseMode            *string
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
+	Thumbnail            *telegram.InputFile
+	Width                *int64
 }
 
 func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -39,6 +40,10 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 	values["animation"] = r.Animation.GetValue()
 
 	values["chat_id"] = r.ChatId.String()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption

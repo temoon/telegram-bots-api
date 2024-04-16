@@ -10,12 +10,13 @@ import (
 )
 
 type SendMediaGroup struct {
-	ChatId              telegram.ChatId
-	Media               interface{}
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	Media                interface{}
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -40,6 +41,10 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 	default:
 		err = errors.New("unsupported media field type")
 		return
+	}
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
 	}
 
 	if r.DisableNotification != nil {
@@ -80,11 +85,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 	switch value := r.Media.(type) {
 	case []telegram.InputMediaAudio:
 		for _, item := range value {
-			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
-				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
-			}
 			if item.Media.HasFile() {
 				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
 			}
 		}
 	case []telegram.InputMediaDocument:

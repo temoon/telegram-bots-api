@@ -10,14 +10,15 @@ import (
 )
 
 type SendSticker struct {
-	ChatId              telegram.ChatId
-	Sticker             telegram.InputFile
-	DisableNotification *bool
-	Emoji               *string
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	Sticker              telegram.InputFile
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	Emoji                *string
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -32,6 +33,10 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["sticker"] = r.Sticker.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

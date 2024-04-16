@@ -24,6 +24,12 @@ type Audio struct {
 	Title        *string    `json:"title,omitempty"`
 }
 
+type Birthdate struct {
+	Day   int64  `json:"day"`
+	Month int64  `json:"month"`
+	Year  *int64 `json:"year,omitempty"`
+}
+
 type BotCommand struct {
 	Command     string `json:"command"`
 	Description string `json:"description"`
@@ -73,6 +79,42 @@ type BotShortDescription struct {
 	ShortDescription string `json:"short_description"`
 }
 
+type BusinessConnection struct {
+	CanReply   bool   `json:"can_reply"`
+	Date       int64  `json:"date"`
+	Id         string `json:"id"`
+	IsEnabled  bool   `json:"is_enabled"`
+	User       User   `json:"user"`
+	UserChatId int64  `json:"user_chat_id"`
+}
+
+type BusinessIntro struct {
+	Message *string  `json:"message,omitempty"`
+	Sticker *Sticker `json:"sticker,omitempty"`
+	Title   *string  `json:"title,omitempty"`
+}
+
+type BusinessLocation struct {
+	Address  string    `json:"address"`
+	Location *Location `json:"location,omitempty"`
+}
+
+type BusinessMessagesDeleted struct {
+	BusinessConnectionId string  `json:"business_connection_id"`
+	Chat                 Chat    `json:"chat"`
+	MessageIds           []int64 `json:"message_ids"`
+}
+
+type BusinessOpeningHours struct {
+	OpeningHours []BusinessOpeningHoursInterval `json:"opening_hours"`
+	TimeZoneName string                         `json:"time_zone_name"`
+}
+
+type BusinessOpeningHoursInterval struct {
+	ClosingMinute int64 `json:"closing_minute"`
+	OpeningMinute int64 `json:"opening_minute"`
+}
+
 type CallbackGame struct {
 	// No fields
 }
@@ -88,43 +130,48 @@ type CallbackQuery struct {
 }
 
 type Chat struct {
-	Id                                 int64            `json:"id"`
-	Type                               string           `json:"type"`
-	AccentColorId                      *int64           `json:"accent_color_id,omitempty"`
-	ActiveUsernames                    []string         `json:"active_usernames,omitempty"`
-	AvailableReactions                 []interface{}    `json:"available_reactions,omitempty"`
-	BackgroundCustomEmojiId            *string          `json:"background_custom_emoji_id,omitempty"`
-	Bio                                *string          `json:"bio,omitempty"`
-	CanSetStickerSet                   *bool            `json:"can_set_sticker_set,omitempty"`
-	CustomEmojiStickerSetName          *string          `json:"custom_emoji_sticker_set_name,omitempty"`
-	Description                        *string          `json:"description,omitempty"`
-	EmojiStatusCustomEmojiId           *string          `json:"emoji_status_custom_emoji_id,omitempty"`
-	EmojiStatusExpirationDate          *int64           `json:"emoji_status_expiration_date,omitempty"`
-	FirstName                          *string          `json:"first_name,omitempty"`
-	HasAggressiveAntiSpamEnabled       *bool            `json:"has_aggressive_anti_spam_enabled,omitempty"`
-	HasHiddenMembers                   *bool            `json:"has_hidden_members,omitempty"`
-	HasPrivateForwards                 *bool            `json:"has_private_forwards,omitempty"`
-	HasProtectedContent                *bool            `json:"has_protected_content,omitempty"`
-	HasRestrictedVoiceAndVideoMessages *bool            `json:"has_restricted_voice_and_video_messages,omitempty"`
-	HasVisibleHistory                  *bool            `json:"has_visible_history,omitempty"`
-	InviteLink                         *string          `json:"invite_link,omitempty"`
-	IsForum                            *bool            `json:"is_forum,omitempty"`
-	JoinByRequest                      *bool            `json:"join_by_request,omitempty"`
-	JoinToSendMessages                 *bool            `json:"join_to_send_messages,omitempty"`
-	LastName                           *string          `json:"last_name,omitempty"`
-	LinkedChatId                       *int64           `json:"linked_chat_id,omitempty"`
-	Location                           *ChatLocation    `json:"location,omitempty"`
-	MessageAutoDeleteTime              *int64           `json:"message_auto_delete_time,omitempty"`
-	Permissions                        *ChatPermissions `json:"permissions,omitempty"`
-	Photo                              *ChatPhoto       `json:"photo,omitempty"`
-	PinnedMessage                      *Message         `json:"pinned_message,omitempty"`
-	ProfileAccentColorId               *int64           `json:"profile_accent_color_id,omitempty"`
-	ProfileBackgroundCustomEmojiId     *string          `json:"profile_background_custom_emoji_id,omitempty"`
-	SlowModeDelay                      *int64           `json:"slow_mode_delay,omitempty"`
-	StickerSetName                     *string          `json:"sticker_set_name,omitempty"`
-	Title                              *string          `json:"title,omitempty"`
-	UnrestrictBoostCount               *int64           `json:"unrestrict_boost_count,omitempty"`
-	Username                           *string          `json:"username,omitempty"`
+	Id                                 int64                 `json:"id"`
+	Type                               string                `json:"type"`
+	AccentColorId                      *int64                `json:"accent_color_id,omitempty"`
+	ActiveUsernames                    []string              `json:"active_usernames,omitempty"`
+	AvailableReactions                 []interface{}         `json:"available_reactions,omitempty"`
+	BackgroundCustomEmojiId            *string               `json:"background_custom_emoji_id,omitempty"`
+	Bio                                *string               `json:"bio,omitempty"`
+	Birthdate                          *Birthdate            `json:"birthdate,omitempty"`
+	BusinessIntro                      *BusinessIntro        `json:"business_intro,omitempty"`
+	BusinessLocation                   *BusinessLocation     `json:"business_location,omitempty"`
+	BusinessOpeningHours               *BusinessOpeningHours `json:"business_opening_hours,omitempty"`
+	CanSetStickerSet                   *bool                 `json:"can_set_sticker_set,omitempty"`
+	CustomEmojiStickerSetName          *string               `json:"custom_emoji_sticker_set_name,omitempty"`
+	Description                        *string               `json:"description,omitempty"`
+	EmojiStatusCustomEmojiId           *string               `json:"emoji_status_custom_emoji_id,omitempty"`
+	EmojiStatusExpirationDate          *int64                `json:"emoji_status_expiration_date,omitempty"`
+	FirstName                          *string               `json:"first_name,omitempty"`
+	HasAggressiveAntiSpamEnabled       *bool                 `json:"has_aggressive_anti_spam_enabled,omitempty"`
+	HasHiddenMembers                   *bool                 `json:"has_hidden_members,omitempty"`
+	HasPrivateForwards                 *bool                 `json:"has_private_forwards,omitempty"`
+	HasProtectedContent                *bool                 `json:"has_protected_content,omitempty"`
+	HasRestrictedVoiceAndVideoMessages *bool                 `json:"has_restricted_voice_and_video_messages,omitempty"`
+	HasVisibleHistory                  *bool                 `json:"has_visible_history,omitempty"`
+	InviteLink                         *string               `json:"invite_link,omitempty"`
+	IsForum                            *bool                 `json:"is_forum,omitempty"`
+	JoinByRequest                      *bool                 `json:"join_by_request,omitempty"`
+	JoinToSendMessages                 *bool                 `json:"join_to_send_messages,omitempty"`
+	LastName                           *string               `json:"last_name,omitempty"`
+	LinkedChatId                       *int64                `json:"linked_chat_id,omitempty"`
+	Location                           *ChatLocation         `json:"location,omitempty"`
+	MessageAutoDeleteTime              *int64                `json:"message_auto_delete_time,omitempty"`
+	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`
+	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`
+	Photo                              *ChatPhoto            `json:"photo,omitempty"`
+	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`
+	ProfileAccentColorId               *int64                `json:"profile_accent_color_id,omitempty"`
+	ProfileBackgroundCustomEmojiId     *string               `json:"profile_background_custom_emoji_id,omitempty"`
+	SlowModeDelay                      *int64                `json:"slow_mode_delay,omitempty"`
+	StickerSetName                     *string               `json:"sticker_set_name,omitempty"`
+	Title                              *string               `json:"title,omitempty"`
+	UnrestrictBoostCount               *int64                `json:"unrestrict_boost_count,omitempty"`
+	Username                           *string               `json:"username,omitempty"`
 }
 
 type ChatAdministratorRights struct {
@@ -312,8 +359,11 @@ type ChatPhoto struct {
 }
 
 type ChatShared struct {
-	ChatId    int64 `json:"chat_id"`
-	RequestId int64 `json:"request_id"`
+	ChatId    int64       `json:"chat_id"`
+	RequestId int64       `json:"request_id"`
+	Photo     []PhotoSize `json:"photo,omitempty"`
+	Title     *string     `json:"title,omitempty"`
+	Username  *string     `json:"username,omitempty"`
 }
 
 type ChosenInlineResult struct {
@@ -901,6 +951,7 @@ type InputMediaVideo struct {
 
 type InputSticker struct {
 	EmojiList    []string      `json:"emoji_list"`
+	Format       string        `json:"format"`
 	Sticker      InputFile     `json:"sticker"`
 	Keywords     []string      `json:"keywords,omitempty"`
 	MaskPosition *MaskPosition `json:"mask_position,omitempty"`
@@ -954,14 +1005,20 @@ type KeyboardButtonRequestChat struct {
 	ChatHasUsername         *bool                    `json:"chat_has_username,omitempty"`
 	ChatIsCreated           *bool                    `json:"chat_is_created,omitempty"`
 	ChatIsForum             *bool                    `json:"chat_is_forum,omitempty"`
+	RequestPhoto            *bool                    `json:"request_photo,omitempty"`
+	RequestTitle            *bool                    `json:"request_title,omitempty"`
+	RequestUsername         *bool                    `json:"request_username,omitempty"`
 	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
 }
 
 type KeyboardButtonRequestUsers struct {
-	RequestId     int64  `json:"request_id"`
-	MaxQuantity   *int64 `json:"max_quantity,omitempty"`
-	UserIsBot     *bool  `json:"user_is_bot,omitempty"`
-	UserIsPremium *bool  `json:"user_is_premium,omitempty"`
+	RequestId       int64  `json:"request_id"`
+	MaxQuantity     *int64 `json:"max_quantity,omitempty"`
+	RequestName     *bool  `json:"request_name,omitempty"`
+	RequestPhoto    *bool  `json:"request_photo,omitempty"`
+	RequestUsername *bool  `json:"request_username,omitempty"`
+	UserIsBot       *bool  `json:"user_is_bot,omitempty"`
+	UserIsPremium   *bool  `json:"user_is_premium,omitempty"`
 }
 
 type LabeledPrice struct {
@@ -1022,6 +1079,7 @@ type Message struct {
 	Audio                         *Audio                         `json:"audio,omitempty"`
 	AuthorSignature               *string                        `json:"author_signature,omitempty"`
 	BoostAdded                    *ChatBoostAdded                `json:"boost_added,omitempty"`
+	BusinessConnectionId          *string                        `json:"business_connection_id,omitempty"`
 	Caption                       *string                        `json:"caption,omitempty"`
 	CaptionEntities               []MessageEntity                `json:"caption_entities,omitempty"`
 	ChannelChatCreated            *bool                          `json:"channel_chat_created,omitempty"`
@@ -1052,6 +1110,7 @@ type Message struct {
 	HasProtectedContent           *bool                          `json:"has_protected_content,omitempty"`
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
+	IsFromOffline                 *bool                          `json:"is_from_offline,omitempty"`
 	IsTopicMessage                *bool                          `json:"is_topic_message,omitempty"`
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`
@@ -1074,6 +1133,7 @@ type Message struct {
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
 	SenderBoostCount              *int64                         `json:"sender_boost_count,omitempty"`
+	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
 	Story                         *Story                         `json:"story,omitempty"`
@@ -1339,6 +1399,14 @@ type SentWebAppMessage struct {
 	InlineMessageId *string `json:"inline_message_id,omitempty"`
 }
 
+type SharedUser struct {
+	UserId    int64       `json:"user_id"`
+	FirstName *string     `json:"first_name,omitempty"`
+	LastName  *string     `json:"last_name,omitempty"`
+	Photo     []PhotoSize `json:"photo,omitempty"`
+	Username  *string     `json:"username,omitempty"`
+}
+
 type ShippingAddress struct {
 	City        string `json:"city"`
 	CountryCode string `json:"country_code"`
@@ -1380,8 +1448,6 @@ type Sticker struct {
 }
 
 type StickerSet struct {
-	IsAnimated  bool       `json:"is_animated"`
-	IsVideo     bool       `json:"is_video"`
 	Name        string     `json:"name"`
 	StickerType string     `json:"sticker_type"`
 	Stickers    []Sticker  `json:"stickers"`
@@ -1420,25 +1486,29 @@ type TextQuote struct {
 }
 
 type Update struct {
-	UpdateId             int64                        `json:"update_id"`
-	CallbackQuery        *CallbackQuery               `json:"callback_query,omitempty"`
-	ChannelPost          *Message                     `json:"channel_post,omitempty"`
-	ChatBoost            *ChatBoostUpdated            `json:"chat_boost,omitempty"`
-	ChatJoinRequest      *ChatJoinRequest             `json:"chat_join_request,omitempty"`
-	ChatMember           *ChatMemberUpdated           `json:"chat_member,omitempty"`
-	ChosenInlineResult   *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`
-	EditedChannelPost    *Message                     `json:"edited_channel_post,omitempty"`
-	EditedMessage        *Message                     `json:"edited_message,omitempty"`
-	InlineQuery          *InlineQuery                 `json:"inline_query,omitempty"`
-	Message              *Message                     `json:"message,omitempty"`
-	MessageReaction      *MessageReactionUpdated      `json:"message_reaction,omitempty"`
-	MessageReactionCount *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
-	MyChatMember         *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
-	Poll                 *Poll                        `json:"poll,omitempty"`
-	PollAnswer           *PollAnswer                  `json:"poll_answer,omitempty"`
-	PreCheckoutQuery     *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
-	RemovedChatBoost     *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
-	ShippingQuery        *ShippingQuery               `json:"shipping_query,omitempty"`
+	UpdateId                int64                        `json:"update_id"`
+	BusinessConnection      *BusinessConnection          `json:"business_connection,omitempty"`
+	BusinessMessage         *Message                     `json:"business_message,omitempty"`
+	CallbackQuery           *CallbackQuery               `json:"callback_query,omitempty"`
+	ChannelPost             *Message                     `json:"channel_post,omitempty"`
+	ChatBoost               *ChatBoostUpdated            `json:"chat_boost,omitempty"`
+	ChatJoinRequest         *ChatJoinRequest             `json:"chat_join_request,omitempty"`
+	ChatMember              *ChatMemberUpdated           `json:"chat_member,omitempty"`
+	ChosenInlineResult      *ChosenInlineResult          `json:"chosen_inline_result,omitempty"`
+	DeletedBusinessMessages *BusinessMessagesDeleted     `json:"deleted_business_messages,omitempty"`
+	EditedBusinessMessage   *Message                     `json:"edited_business_message,omitempty"`
+	EditedChannelPost       *Message                     `json:"edited_channel_post,omitempty"`
+	EditedMessage           *Message                     `json:"edited_message,omitempty"`
+	InlineQuery             *InlineQuery                 `json:"inline_query,omitempty"`
+	Message                 *Message                     `json:"message,omitempty"`
+	MessageReaction         *MessageReactionUpdated      `json:"message_reaction,omitempty"`
+	MessageReactionCount    *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
+	MyChatMember            *ChatMemberUpdated           `json:"my_chat_member,omitempty"`
+	Poll                    *Poll                        `json:"poll,omitempty"`
+	PollAnswer              *PollAnswer                  `json:"poll_answer,omitempty"`
+	PreCheckoutQuery        *PreCheckoutQuery            `json:"pre_checkout_query,omitempty"`
+	RemovedChatBoost        *ChatBoostRemoved            `json:"removed_chat_boost,omitempty"`
+	ShippingQuery           *ShippingQuery               `json:"shipping_query,omitempty"`
 }
 
 type User struct {
@@ -1446,6 +1516,7 @@ type User struct {
 	Id                      int64   `json:"id"`
 	IsBot                   bool    `json:"is_bot"`
 	AddedToAttachmentMenu   *bool   `json:"added_to_attachment_menu,omitempty"`
+	CanConnectToBusiness    *bool   `json:"can_connect_to_business,omitempty"`
 	CanJoinGroups           *bool   `json:"can_join_groups,omitempty"`
 	CanReadAllGroupMessages *bool   `json:"can_read_all_group_messages,omitempty"`
 	IsPremium               *bool   `json:"is_premium,omitempty"`
@@ -1465,8 +1536,8 @@ type UserProfilePhotos struct {
 }
 
 type UsersShared struct {
-	RequestId int64   `json:"request_id"`
-	UserIds   []int64 `json:"user_ids"`
+	RequestId int64        `json:"request_id"`
+	Users     []SharedUser `json:"users"`
 }
 
 type Venue struct {

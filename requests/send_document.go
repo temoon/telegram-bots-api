@@ -12,6 +12,7 @@ import (
 type SendDocument struct {
 	ChatId                      telegram.ChatId
 	Document                    telegram.InputFile
+	BusinessConnectionId        *string
 	Caption                     *string
 	CaptionEntities             []telegram.MessageEntity
 	DisableContentTypeDetection *bool
@@ -36,6 +37,10 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["document"] = r.Document.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption

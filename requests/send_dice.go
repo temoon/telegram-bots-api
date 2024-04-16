@@ -10,13 +10,14 @@ import (
 )
 
 type SendDice struct {
-	ChatId              telegram.ChatId
-	DisableNotification *bool
-	Emoji               *string
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	BusinessConnectionId *string
+	DisableNotification  *bool
+	Emoji                *string
+	MessageThreadId      *int64
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendDice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,6 +30,10 @@ func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	values["chat_id"] = r.ChatId.String()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

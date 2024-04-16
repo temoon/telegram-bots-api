@@ -8,6 +8,7 @@ import (
 )
 
 type SetStickerSetThumbnail struct {
+	Format    string
 	Name      string
 	UserId    int64
 	Thumbnail *telegram.InputFile
@@ -21,6 +22,8 @@ func (r *SetStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (res
 
 func (r *SetStickerSetThumbnail) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	values["format"] = r.Format
 
 	values["name"] = r.Name
 

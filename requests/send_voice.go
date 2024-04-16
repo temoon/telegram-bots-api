@@ -10,17 +10,18 @@ import (
 )
 
 type SendVoice struct {
-	ChatId              telegram.ChatId
-	Voice               telegram.InputFile
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	Duration            *int64
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId               telegram.ChatId
+	Voice                telegram.InputFile
+	BusinessConnectionId *string
+	Caption              *string
+	CaptionEntities      []telegram.MessageEntity
+	DisableNotification  *bool
+	Duration             *int64
+	MessageThreadId      *int64
+	ParseMode            *string
+	ProtectContent       *bool
+	ReplyMarkup          interface{}
+	ReplyParameters      *telegram.ReplyParameters
 }
 
 func (r *SendVoice) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -35,6 +36,10 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["voice"] = r.Voice.GetValue()
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
