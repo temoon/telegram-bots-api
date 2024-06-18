@@ -21,6 +21,7 @@ type SendVenue struct {
 	FoursquareType       *string
 	GooglePlaceId        *string
 	GooglePlaceType      *string
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          interface{}
@@ -72,6 +73,10 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 
 	if r.GooglePlaceType != nil {
 		values["google_place_type"] = *r.GooglePlaceType
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

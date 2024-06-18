@@ -17,6 +17,7 @@ type SendAudio struct {
 	CaptionEntities      []telegram.MessageEntity
 	DisableNotification  *bool
 	Duration             *int64
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ParseMode            *string
 	Performer            *string
@@ -67,6 +68,10 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Duration != nil {
 		values["duration"] = strconv.FormatInt(*r.Duration, 10)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

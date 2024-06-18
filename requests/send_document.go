@@ -17,6 +17,7 @@ type SendDocument struct {
 	CaptionEntities             []telegram.MessageEntity
 	DisableContentTypeDetection *bool
 	DisableNotification         *bool
+	MessageEffectId             *string
 	MessageThreadId             *int64
 	ParseMode                   *string
 	ProtectContent              *bool
@@ -69,6 +70,10 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

@@ -10,17 +10,18 @@ import (
 )
 
 type CopyMessage struct {
-	ChatId              telegram.ChatId
-	FromChatId          telegram.ChatId
-	MessageId           int64
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId                telegram.ChatId
+	FromChatId            telegram.ChatId
+	MessageId             int64
+	Caption               *string
+	CaptionEntities       []telegram.MessageEntity
+	DisableNotification   *bool
+	MessageThreadId       *int64
+	ParseMode             *string
+	ProtectContent        *bool
+	ReplyMarkup           interface{}
+	ReplyParameters       *telegram.ReplyParameters
+	ShowCaptionAboveMedia *bool
 }
 
 func (r *CopyMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -97,6 +98,14 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
 	}
 
 	return

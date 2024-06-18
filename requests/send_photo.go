@@ -10,18 +10,20 @@ import (
 )
 
 type SendPhoto struct {
-	ChatId               telegram.ChatId
-	Photo                telegram.InputFile
-	BusinessConnectionId *string
-	Caption              *string
-	CaptionEntities      []telegram.MessageEntity
-	DisableNotification  *bool
-	HasSpoiler           *bool
-	MessageThreadId      *int64
-	ParseMode            *string
-	ProtectContent       *bool
-	ReplyMarkup          interface{}
-	ReplyParameters      *telegram.ReplyParameters
+	ChatId                telegram.ChatId
+	Photo                 telegram.InputFile
+	BusinessConnectionId  *string
+	Caption               *string
+	CaptionEntities       []telegram.MessageEntity
+	DisableNotification   *bool
+	HasSpoiler            *bool
+	MessageEffectId       *string
+	MessageThreadId       *int64
+	ParseMode             *string
+	ProtectContent        *bool
+	ReplyMarkup           interface{}
+	ReplyParameters       *telegram.ReplyParameters
+	ShowCaptionAboveMedia *bool
 }
 
 func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -70,6 +72,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
+	}
+
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
@@ -108,6 +114,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
 	}
 
 	return

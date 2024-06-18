@@ -14,6 +14,7 @@ type SendDice struct {
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	Emoji                *string
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          interface{}
@@ -45,6 +46,10 @@ func (r *SendDice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Emoji != nil {
 		values["emoji"] = *r.Emoji
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

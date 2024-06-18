@@ -11,10 +11,12 @@ import (
 type EditMessageLiveLocation struct {
 	Latitude             float64
 	Longitude            float64
+	BusinessConnectionId *string
 	ChatId               *telegram.ChatId
 	Heading              *int64
 	HorizontalAccuracy   *float64
 	InlineMessageId      *string
+	LivePeriod           *int64
 	MessageId            *int64
 	ProximityAlertRadius *int64
 	ReplyMarkup          *telegram.InlineKeyboardMarkup
@@ -33,6 +35,10 @@ func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, er
 
 	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
 
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
+
 	if r.ChatId != nil {
 		values["chat_id"] = r.ChatId.String()
 	}
@@ -47,6 +53,10 @@ func (r *EditMessageLiveLocation) GetValues() (values map[string]interface{}, er
 
 	if r.InlineMessageId != nil {
 		values["inline_message_id"] = *r.InlineMessageId
+	}
+
+	if r.LivePeriod != nil {
+		values["live_period"] = strconv.FormatInt(*r.LivePeriod, 10)
 	}
 
 	if r.MessageId != nil {

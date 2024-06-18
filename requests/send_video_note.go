@@ -16,6 +16,7 @@ type SendVideoNote struct {
 	DisableNotification  *bool
 	Duration             *int64
 	Length               *int64
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          interface{}
@@ -54,6 +55,10 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Length != nil {
 		values["length"] = strconv.FormatInt(*r.Length, 10)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

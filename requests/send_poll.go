@@ -11,7 +11,7 @@ import (
 
 type SendPoll struct {
 	ChatId                telegram.ChatId
-	Options               []string
+	Options               []telegram.InputPollOption
 	Question              string
 	AllowsMultipleAnswers *bool
 	BusinessConnectionId  *string
@@ -23,9 +23,12 @@ type SendPoll struct {
 	ExplanationParseMode  *string
 	IsAnonymous           *bool
 	IsClosed              *bool
+	MessageEffectId       *string
 	MessageThreadId       *int64
 	OpenPeriod            *int64
 	ProtectContent        *bool
+	QuestionEntities      []telegram.MessageEntity
+	QuestionParseMode     *string
 	ReplyMarkup           interface{}
 	ReplyParameters       *telegram.ReplyParameters
 	Type                  *string
@@ -112,6 +115,10 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
+	}
+
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
@@ -126,6 +133,19 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["protect_content"] = "0"
 		}
+	}
+
+	if r.QuestionEntities != nil {
+		var dataQuestionEntities []byte
+		if dataQuestionEntities, err = json.Marshal(r.QuestionEntities); err != nil {
+			return
+		}
+
+		values["question_entities"] = string(dataQuestionEntities)
+	}
+
+	if r.QuestionParseMode != nil {
+		values["question_parse_mode"] = *r.QuestionParseMode
 	}
 
 	if r.ReplyMarkup != nil {

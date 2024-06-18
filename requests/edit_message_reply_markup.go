@@ -9,10 +9,11 @@ import (
 )
 
 type EditMessageReplyMarkup struct {
-	ChatId          *telegram.ChatId
-	InlineMessageId *string
-	MessageId       *int64
-	ReplyMarkup     *telegram.InlineKeyboardMarkup
+	BusinessConnectionId *string
+	ChatId               *telegram.ChatId
+	InlineMessageId      *string
+	MessageId            *int64
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
 func (r *EditMessageReplyMarkup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,6 +24,10 @@ func (r *EditMessageReplyMarkup) Call(ctx context.Context, b *telegram.Bot) (res
 
 func (r *EditMessageReplyMarkup) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.ChatId != nil {
 		values["chat_id"] = r.ChatId.String()

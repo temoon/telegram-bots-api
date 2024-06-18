@@ -16,6 +16,7 @@ type SendMessage struct {
 	DisableNotification  *bool
 	Entities             []telegram.MessageEntity
 	LinkPreviewOptions   *telegram.LinkPreviewOptions
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ParseMode            *string
 	ProtectContent       *bool
@@ -64,6 +65,10 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["link_preview_options"] = string(dataLinkPreviewOptions)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

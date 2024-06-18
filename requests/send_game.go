@@ -13,6 +13,7 @@ type SendGame struct {
 	GameShortName        string
 	BusinessConnectionId *string
 	DisableNotification  *bool
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          *telegram.InlineKeyboardMarkup
@@ -42,6 +43,10 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

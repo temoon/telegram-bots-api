@@ -13,7 +13,6 @@ type CreateInvoiceLink struct {
 	Description               string
 	Payload                   string
 	Prices                    []telegram.LabeledPrice
-	ProviderToken             string
 	Title                     string
 	IsFlexible                *bool
 	MaxTipAmount              *int64
@@ -26,6 +25,7 @@ type CreateInvoiceLink struct {
 	PhotoUrl                  *string
 	PhotoWidth                *int64
 	ProviderData              *string
+	ProviderToken             *string
 	SendEmailToProvider       *bool
 	SendPhoneNumberToProvider *bool
 	SuggestedTipAmounts       []int64
@@ -52,8 +52,6 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 	}
 
 	values["prices"] = string(dataPrices)
-
-	values["provider_token"] = r.ProviderToken
 
 	values["title"] = r.Title
 
@@ -119,6 +117,10 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 
 	if r.ProviderData != nil {
 		values["provider_data"] = *r.ProviderData
+	}
+
+	if r.ProviderToken != nil {
+		values["provider_token"] = *r.ProviderToken
 	}
 
 	if r.SendEmailToProvider != nil {

@@ -14,11 +14,11 @@ type SendInvoice struct {
 	Description               string
 	Payload                   string
 	Prices                    []telegram.LabeledPrice
-	ProviderToken             string
 	Title                     string
 	DisableNotification       *bool
 	IsFlexible                *bool
 	MaxTipAmount              *int64
+	MessageEffectId           *string
 	MessageThreadId           *int64
 	NeedEmail                 *bool
 	NeedName                  *bool
@@ -30,6 +30,7 @@ type SendInvoice struct {
 	PhotoWidth                *int64
 	ProtectContent            *bool
 	ProviderData              *string
+	ProviderToken             *string
 	ReplyMarkup               *telegram.InlineKeyboardMarkup
 	ReplyParameters           *telegram.ReplyParameters
 	SendEmailToProvider       *bool
@@ -62,8 +63,6 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	values["prices"] = string(dataPrices)
 
-	values["provider_token"] = r.ProviderToken
-
 	values["title"] = r.Title
 
 	if r.DisableNotification != nil {
@@ -84,6 +83,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.MaxTipAmount != nil {
 		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -148,6 +151,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.ProviderData != nil {
 		values["provider_data"] = *r.ProviderData
+	}
+
+	if r.ProviderToken != nil {
+		values["provider_token"] = *r.ProviderToken
 	}
 
 	if r.ReplyMarkup != nil {

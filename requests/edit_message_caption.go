@@ -9,13 +9,15 @@ import (
 )
 
 type EditMessageCaption struct {
-	Caption         *string
-	CaptionEntities []telegram.MessageEntity
-	ChatId          *telegram.ChatId
-	InlineMessageId *string
-	MessageId       *int64
-	ParseMode       *string
-	ReplyMarkup     *telegram.InlineKeyboardMarkup
+	BusinessConnectionId  *string
+	Caption               *string
+	CaptionEntities       []telegram.MessageEntity
+	ChatId                *telegram.ChatId
+	InlineMessageId       *string
+	MessageId             *int64
+	ParseMode             *string
+	ReplyMarkup           *telegram.InlineKeyboardMarkup
+	ShowCaptionAboveMedia *bool
 }
 
 func (r *EditMessageCaption) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -26,6 +28,10 @@ func (r *EditMessageCaption) Call(ctx context.Context, b *telegram.Bot) (respons
 
 func (r *EditMessageCaption) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
@@ -63,6 +69,14 @@ func (r *EditMessageCaption) GetValues() (values map[string]interface{}, err err
 		}
 
 		values["reply_markup"] = string(dataReplyMarkup)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
 	}
 
 	return

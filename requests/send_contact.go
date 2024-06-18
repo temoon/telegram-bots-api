@@ -16,6 +16,7 @@ type SendContact struct {
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	LastName             *string
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          interface{}
@@ -52,6 +53,10 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 
 	if r.LastName != nil {
 		values["last_name"] = *r.LastName
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

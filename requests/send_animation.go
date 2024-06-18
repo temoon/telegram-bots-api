@@ -10,22 +10,24 @@ import (
 )
 
 type SendAnimation struct {
-	Animation            telegram.InputFile
-	ChatId               telegram.ChatId
-	BusinessConnectionId *string
-	Caption              *string
-	CaptionEntities      []telegram.MessageEntity
-	DisableNotification  *bool
-	Duration             *int64
-	HasSpoiler           *bool
-	Height               *int64
-	MessageThreadId      *int64
-	ParseMode            *string
-	ProtectContent       *bool
-	ReplyMarkup          interface{}
-	ReplyParameters      *telegram.ReplyParameters
-	Thumbnail            *telegram.InputFile
-	Width                *int64
+	Animation             telegram.InputFile
+	ChatId                telegram.ChatId
+	BusinessConnectionId  *string
+	Caption               *string
+	CaptionEntities       []telegram.MessageEntity
+	DisableNotification   *bool
+	Duration              *int64
+	HasSpoiler            *bool
+	Height                *int64
+	MessageEffectId       *string
+	MessageThreadId       *int64
+	ParseMode             *string
+	ProtectContent        *bool
+	ReplyMarkup           interface{}
+	ReplyParameters       *telegram.ReplyParameters
+	ShowCaptionAboveMedia *bool
+	Thumbnail             *telegram.InputFile
+	Width                 *int64
 }
 
 func (r *SendAnimation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -82,6 +84,10 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		values["height"] = strconv.FormatInt(*r.Height, 10)
 	}
 
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
+	}
+
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
@@ -120,6 +126,14 @@ func (r *SendAnimation) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
 	}
 
 	if r.Thumbnail != nil {
