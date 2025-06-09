@@ -12,6 +12,7 @@ import (
 type SendSticker struct {
 	ChatId               telegram.ChatId
 	Sticker              telegram.InputFile
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	Emoji                *string
@@ -34,6 +35,14 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["sticker"] = r.Sticker.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

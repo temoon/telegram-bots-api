@@ -12,6 +12,7 @@ import (
 type SendMessage struct {
 	ChatId               telegram.ChatId
 	Text                 string
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	Entities             []telegram.MessageEntity
@@ -36,6 +37,14 @@ func (r *SendMessage) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["text"] = r.Text
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

@@ -12,9 +12,11 @@ import (
 type SendVideo struct {
 	ChatId                telegram.ChatId
 	Video                 telegram.InputFile
+	AllowPaidBroadcast    *bool
 	BusinessConnectionId  *string
 	Caption               *string
 	CaptionEntities       []telegram.MessageEntity
+	Cover                 *telegram.InputFile
 	DisableNotification   *bool
 	Duration              *int64
 	HasSpoiler            *bool
@@ -26,6 +28,7 @@ type SendVideo struct {
 	ReplyMarkup           interface{}
 	ReplyParameters       *telegram.ReplyParameters
 	ShowCaptionAboveMedia *bool
+	StartTimestamp        *int64
 	SupportsStreaming     *bool
 	Thumbnail             *telegram.InputFile
 	Width                 *int64
@@ -44,6 +47,14 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	values["video"] = r.Video.GetValue()
 
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
+
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
 	}
@@ -59,6 +70,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.Cover != nil {
+		values["cover"] = r.Cover.GetValue()
 	}
 
 	if r.DisableNotification != nil {
@@ -135,6 +150,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["show_caption_above_media"] = "0"
 		}
+	}
+
+	if r.StartTimestamp != nil {
+		values["start_timestamp"] = strconv.FormatInt(*r.StartTimestamp, 10)
 	}
 
 	if r.SupportsStreaming != nil {

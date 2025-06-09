@@ -13,6 +13,7 @@ type SendContact struct {
 	ChatId               telegram.ChatId
 	FirstName            string
 	PhoneNumber          string
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	LastName             *string
@@ -38,6 +39,14 @@ func (r *SendContact) GetValues() (values map[string]interface{}, err error) {
 	values["first_name"] = r.FirstName
 
 	values["phone_number"] = r.PhoneNumber
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

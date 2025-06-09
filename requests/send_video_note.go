@@ -12,6 +12,7 @@ import (
 type SendVideoNote struct {
 	ChatId               telegram.ChatId
 	VideoNote            telegram.InputFile
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	Duration             *int64
@@ -36,6 +37,14 @@ func (r *SendVideoNote) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["video_note"] = r.VideoNote.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

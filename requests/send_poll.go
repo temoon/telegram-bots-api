@@ -13,6 +13,7 @@ type SendPoll struct {
 	ChatId                telegram.ChatId
 	Options               []telegram.InputPollOption
 	Question              string
+	AllowPaidBroadcast    *bool
 	AllowsMultipleAnswers *bool
 	BusinessConnectionId  *string
 	CloseDate             *int64
@@ -53,6 +54,14 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	values["options"] = string(dataOptions)
 
 	values["question"] = r.Question
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.AllowsMultipleAnswers != nil {
 		if *r.AllowsMultipleAnswers {

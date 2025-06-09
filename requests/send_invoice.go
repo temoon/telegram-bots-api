@@ -15,6 +15,7 @@ type SendInvoice struct {
 	Payload                   string
 	Prices                    []telegram.LabeledPrice
 	Title                     string
+	AllowPaidBroadcast        *bool
 	DisableNotification       *bool
 	IsFlexible                *bool
 	MaxTipAmount              *int64
@@ -64,6 +65,14 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 	values["prices"] = string(dataPrices)
 
 	values["title"] = r.Title
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

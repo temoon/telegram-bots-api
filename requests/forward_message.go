@@ -14,6 +14,7 @@ type ForwardMessage struct {
 	DisableNotification *bool
 	MessageThreadId     *int64
 	ProtectContent      *bool
+	VideoStartTimestamp *int64
 }
 
 func (r *ForwardMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -49,6 +50,10 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 		} else {
 			values["protect_content"] = "0"
 		}
+	}
+
+	if r.VideoStartTimestamp != nil {
+		values["video_start_timestamp"] = strconv.FormatInt(*r.VideoStartTimestamp, 10)
 	}
 
 	return

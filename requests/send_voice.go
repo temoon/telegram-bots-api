@@ -12,6 +12,7 @@ import (
 type SendVoice struct {
 	ChatId               telegram.ChatId
 	Voice                telegram.InputFile
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	Caption              *string
 	CaptionEntities      []telegram.MessageEntity
@@ -37,6 +38,14 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["voice"] = r.Voice.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

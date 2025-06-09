@@ -9,36 +9,42 @@ import (
 	"strconv"
 )
 
-type SendDocument struct {
-	ChatId                      telegram.ChatId
-	Document                    telegram.InputFile
-	AllowPaidBroadcast          *bool
-	BusinessConnectionId        *string
-	Caption                     *string
-	CaptionEntities             []telegram.MessageEntity
-	DisableContentTypeDetection *bool
-	DisableNotification         *bool
-	MessageEffectId             *string
-	MessageThreadId             *int64
-	ParseMode                   *string
-	ProtectContent              *bool
-	ReplyMarkup                 interface{}
-	ReplyParameters             *telegram.ReplyParameters
-	Thumbnail                   *telegram.InputFile
+type SendPaidMedia struct {
+	ChatId                telegram.ChatId
+	Media                 []interface{}
+	StarCount             int64
+	AllowPaidBroadcast    *bool
+	BusinessConnectionId  *string
+	Caption               *string
+	CaptionEntities       []telegram.MessageEntity
+	DisableNotification   *bool
+	ParseMode             *string
+	Payload               *string
+	ProtectContent        *bool
+	ReplyMarkup           interface{}
+	ReplyParameters       *telegram.ReplyParameters
+	ShowCaptionAboveMedia *bool
 }
 
-func (r *SendDocument) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
+func (r *SendPaidMedia) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
 	response = new(telegram.Message)
-	err = b.CallMethod(ctx, "sendDocument", r, response)
+	err = b.CallMethod(ctx, "sendPaidMedia", r, response)
 	return
 }
 
-func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
+func (r *SendPaidMedia) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["document"] = r.Document.GetValue()
+	var dataMedia []byte
+	if dataMedia, err = json.Marshal(r.Media); err != nil {
+		return
+	}
+
+	values["media"] = string(dataMedia)
+
+	values["star_count"] = strconv.FormatInt(r.StarCount, 10)
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -65,14 +71,6 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
-	if r.DisableContentTypeDetection != nil {
-		if *r.DisableContentTypeDetection {
-			values["disable_content_type_detection"] = "1"
-		} else {
-			values["disable_content_type_detection"] = "0"
-		}
-	}
-
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
@@ -81,16 +79,12 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
-	if r.MessageEffectId != nil {
-		values["message_effect_id"] = *r.MessageEffectId
-	}
-
-	if r.MessageThreadId != nil {
-		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
-	}
-
 	if r.ParseMode != nil {
 		values["parse_mode"] = *r.ParseMode
+	}
+
+	if r.Payload != nil {
+		values["payload"] = *r.Payload
 	}
 
 	if r.ProtectContent != nil {
@@ -125,13 +119,17 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		values["reply_parameters"] = string(dataReplyParameters)
 	}
 
-	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
 	}
 
 	return
 }
 
-func (r *SendDocument) GetFiles() (files map[string]io.Reader) {
+func (r *SendPaidMedia) GetFiles() (files map[string]io.Reader) {
 	return
 }

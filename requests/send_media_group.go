@@ -12,6 +12,7 @@ import (
 type SendMediaGroup struct {
 	ChatId               telegram.ChatId
 	Media                interface{}
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	MessageEffectId      *string
@@ -42,6 +43,14 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 	default:
 		err = errors.New("unsupported media field type")
 		return
+	}
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
 	}
 
 	if r.BusinessConnectionId != nil {
@@ -99,11 +108,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 		}
 	case []telegram.InputMediaDocument:
 		for _, item := range value {
-			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
-				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
-			}
 			if item.Media.HasFile() {
 				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
+			}
+			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
+				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
 			}
 		}
 	case []telegram.InputMediaPhoto:
@@ -119,6 +128,9 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 			}
 			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
 				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Cover != nil && item.Cover.HasFile() {
+				files[item.Cover.GetFormFieldName()] = item.Cover.GetFile()
 			}
 		}
 	}

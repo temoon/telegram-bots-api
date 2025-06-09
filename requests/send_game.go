@@ -11,6 +11,7 @@ import (
 type SendGame struct {
 	ChatId               int64
 	GameShortName        string
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	MessageEffectId      *string
@@ -32,6 +33,14 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 
 	values["game_short_name"] = r.GameShortName
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

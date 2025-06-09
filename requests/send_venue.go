@@ -15,6 +15,7 @@ type SendVenue struct {
 	Latitude             float64
 	Longitude            float64
 	Title                string
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
 	FoursquareId         *string
@@ -46,6 +47,14 @@ func (r *SendVenue) GetValues() (values map[string]interface{}, err error) {
 	values["longitude"] = strconv.FormatFloat(r.Longitude, 'f', -1, 64)
 
 	values["title"] = r.Title
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId

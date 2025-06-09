@@ -12,6 +12,7 @@ import (
 type SendPhoto struct {
 	ChatId                telegram.ChatId
 	Photo                 telegram.InputFile
+	AllowPaidBroadcast    *bool
 	BusinessConnectionId  *string
 	Caption               *string
 	CaptionEntities       []telegram.MessageEntity
@@ -38,6 +39,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["photo"] = r.Photo.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
