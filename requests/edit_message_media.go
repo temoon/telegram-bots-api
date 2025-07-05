@@ -73,18 +73,18 @@ func (r *EditMessageMedia) GetFiles() (files map[string]io.Reader) {
 			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
 		}
 	case telegram.InputMediaDocument:
-		if value.Media.HasFile() {
-			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
-		}
 		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
 			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
 		}
 	case telegram.InputMediaAudio:
-		if value.Media.HasFile() {
-			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
-		}
 		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
 			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
+		}
+		if value.Media.HasFile() {
+			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
 		}
 	case telegram.InputMediaPhoto:
 		if value.Media.HasFile() {
@@ -94,11 +94,11 @@ func (r *EditMessageMedia) GetFiles() (files map[string]io.Reader) {
 		if value.Media.HasFile() {
 			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
 		}
-		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
-			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
-		}
 		if value.Cover != nil && value.Cover.HasFile() {
 			files[value.Cover.GetFormFieldName()] = value.Cover.GetFile()
+		}
+		if value.Thumbnail != nil && value.Thumbnail.HasFile() {
+			files[value.Thumbnail.GetFormFieldName()] = value.Thumbnail.GetFile()
 		}
 	}
 

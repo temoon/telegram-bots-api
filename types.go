@@ -465,6 +465,33 @@ type ChatShared struct {
 	Username  *string     `json:"username,omitempty"`
 }
 
+type Checklist struct {
+	Tasks                    []ChecklistTask `json:"tasks"`
+	Title                    string          `json:"title"`
+	OthersCanAddTasks        *bool           `json:"others_can_add_tasks,omitempty"`
+	OthersCanMarkTasksAsDone *bool           `json:"others_can_mark_tasks_as_done,omitempty"`
+	TitleEntities            []MessageEntity `json:"title_entities,omitempty"`
+}
+
+type ChecklistTask struct {
+	Id              int64           `json:"id"`
+	Text            string          `json:"text"`
+	CompletedByUser *User           `json:"completed_by_user,omitempty"`
+	CompletionDate  *int64          `json:"completion_date,omitempty"`
+	TextEntities    []MessageEntity `json:"text_entities,omitempty"`
+}
+
+type ChecklistTasksAdded struct {
+	Tasks            []ChecklistTask `json:"tasks"`
+	ChecklistMessage *Message        `json:"checklist_message,omitempty"`
+}
+
+type ChecklistTasksDone struct {
+	ChecklistMessage       *Message `json:"checklist_message,omitempty"`
+	MarkedAsDoneTaskIds    []int64  `json:"marked_as_done_task_ids,omitempty"`
+	MarkedAsNotDoneTaskIds []int64  `json:"marked_as_not_done_task_ids,omitempty"`
+}
+
 type ChosenInlineResult struct {
 	From            User      `json:"from"`
 	Query           string    `json:"query"`
@@ -488,6 +515,11 @@ type CopyTextButton struct {
 type Dice struct {
 	Emoji string `json:"emoji"`
 	Value int64  `json:"value"`
+}
+
+type DirectMessagePriceChanged struct {
+	AreDirectMessagesEnabled bool   `json:"are_direct_messages_enabled"`
+	DirectMessageStarCount   *int64 `json:"direct_message_star_count,omitempty"`
 }
 
 type Document struct {
@@ -523,6 +555,7 @@ type ExternalReplyInfo struct {
 	Animation          *Animation          `json:"animation,omitempty"`
 	Audio              *Audio              `json:"audio,omitempty"`
 	Chat               *Chat               `json:"chat,omitempty"`
+	Checklist          *Checklist          `json:"checklist,omitempty"`
 	Contact            *Contact            `json:"contact,omitempty"`
 	Dice               *Dice               `json:"dice,omitempty"`
 	Document           *Document           `json:"document,omitempty"`
@@ -991,6 +1024,22 @@ type InlineQueryResultsButton struct {
 	WebApp         *WebAppInfo `json:"web_app,omitempty"`
 }
 
+type InputChecklist struct {
+	Tasks                    []InputChecklistTask `json:"tasks"`
+	Title                    string               `json:"title"`
+	OthersCanAddTasks        *bool                `json:"others_can_add_tasks,omitempty"`
+	OthersCanMarkTasksAsDone *bool                `json:"others_can_mark_tasks_as_done,omitempty"`
+	ParseMode                *string              `json:"parse_mode,omitempty"`
+	TitleEntities            []MessageEntity      `json:"title_entities,omitempty"`
+}
+
+type InputChecklistTask struct {
+	Id           int64           `json:"id"`
+	Text         string          `json:"text"`
+	ParseMode    *string         `json:"parse_mode,omitempty"`
+	TextEntities []MessageEntity `json:"text_entities,omitempty"`
+}
+
 type InputContactMessageContent struct {
 	FirstName   string  `json:"first_name"`
 	PhoneNumber string  `json:"phone_number"`
@@ -1283,10 +1332,14 @@ type Message struct {
 	ChannelChatCreated            *bool                          `json:"channel_chat_created,omitempty"`
 	ChatBackgroundSet             *ChatBackground                `json:"chat_background_set,omitempty"`
 	ChatShared                    *ChatShared                    `json:"chat_shared,omitempty"`
+	Checklist                     *Checklist                     `json:"checklist,omitempty"`
+	ChecklistTasksAdded           *ChecklistTasksAdded           `json:"checklist_tasks_added,omitempty"`
+	ChecklistTasksDone            *ChecklistTasksDone            `json:"checklist_tasks_done,omitempty"`
 	ConnectedWebsite              *string                        `json:"connected_website,omitempty"`
 	Contact                       *Contact                       `json:"contact,omitempty"`
 	DeleteChatPhoto               *bool                          `json:"delete_chat_photo,omitempty"`
 	Dice                          *Dice                          `json:"dice,omitempty"`
+	DirectMessagePriceChanged     *DirectMessagePriceChanged     `json:"direct_message_price_changed,omitempty"`
 	Document                      *Document                      `json:"document,omitempty"`
 	EditDate                      *int64                         `json:"edit_date,omitempty"`
 	EffectId                      *string                        `json:"effect_id,omitempty"`
@@ -1452,6 +1505,7 @@ type OwnedGiftUnique struct {
 	Type              string     `json:"type"`
 	CanBeTransferred  *bool      `json:"can_be_transferred,omitempty"`
 	IsSaved           *bool      `json:"is_saved,omitempty"`
+	NextTransferDate  *int64     `json:"next_transfer_date,omitempty"`
 	OwnedGiftId       *string    `json:"owned_gift_id,omitempty"`
 	SenderUser        *User      `json:"sender_user,omitempty"`
 	TransferStarCount *int64     `json:"transfer_star_count,omitempty"`
@@ -1921,10 +1975,12 @@ type UniqueGiftBackdropColors struct {
 }
 
 type UniqueGiftInfo struct {
-	Gift              UniqueGift `json:"gift"`
-	Origin            string     `json:"origin"`
-	OwnedGiftId       *string    `json:"owned_gift_id,omitempty"`
-	TransferStarCount *int64     `json:"transfer_star_count,omitempty"`
+	Gift                UniqueGift `json:"gift"`
+	Origin              string     `json:"origin"`
+	LastResaleStarCount *int64     `json:"last_resale_star_count,omitempty"`
+	NextTransferDate    *int64     `json:"next_transfer_date,omitempty"`
+	OwnedGiftId         *string    `json:"owned_gift_id,omitempty"`
+	TransferStarCount   *int64     `json:"transfer_star_count,omitempty"`
 }
 
 type UniqueGiftModel struct {
