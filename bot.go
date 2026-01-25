@@ -13,11 +13,13 @@ import (
 )
 
 //goland:noinspection GoUnusedConst
-const EnvProduction = "prod"
-const EnvTest = "test"
+const (
+	EnvProduction = "prod"
+	EnvTest       = "test"
+)
 
 type Bot struct {
-	opts *BotOpts
+	opts BotOpts
 }
 
 type BotOpts struct {
@@ -47,7 +49,7 @@ type Response struct {
 }
 
 //goland:noinspection GoUnusedExportedFunction
-func NewBot(opts *BotOpts) *Bot {
+func NewBot(opts BotOpts) *Bot {
 	if opts.Client == nil {
 		opts.Client = &http.Client{
 			Timeout: opts.Timeout,
@@ -92,12 +94,14 @@ func (b *Bot) CallMethod(ctx context.Context, method string, request Request, re
 	if httpResponse, err = b.opts.Client.Do(httpRequest); err != nil {
 		return
 	}
-	//goland:noinspection GoUnhandledErrorResult
-	defer httpResponse.Body.Close()
-
 	var data []byte
-	if data, err = io.ReadAll(httpResponse.Body); err != nil {
-		return
+	if httpResponse != nil && httpResponse.Body != nil {
+		//goland:noinspection GoUnhandledErrorResult
+		defer httpResponse.Body.Close()
+
+		if data, err = io.ReadAll(httpResponse.Body); err != nil {
+			return
+		}
 	}
 
 	var telegramResponse Response
@@ -130,7 +134,8 @@ func (b *Bot) getForm(request Request) (contentType string, query *bytes.Buffer,
 			query.WriteByte('&')
 		}
 
-		query.WriteString(url.QueryEscape(key) + "=")
+		query.WriteString(url.QueryEscape(key))
+		query.WriteString("=")
 		query.WriteString(url.QueryEscape(value))
 	}
 
@@ -146,8 +151,13 @@ func (b *Bot) getFormMultipart(request Request, files map[string]io.Reader) (con
 	query = new(bytes.Buffer)
 
 	var mw = multipart.NewWriter(query)
-	var fw io.Writer
+	defer func() {
+		if err = mw.Close(); err != nil {
+			return
+		}
+	}()
 
+	var fw io.Writer
 	for key, value := range values {
 		if fw, err = mw.CreateFormField(key); err != nil {
 			return
@@ -166,10 +176,6 @@ func (b *Bot) getFormMultipart(request Request, files map[string]io.Reader) (con
 		if _, err = io.Copy(fw, file); err != nil {
 			return
 		}
-	}
-
-	if err = mw.Close(); err != nil {
-		return
 	}
 
 	contentType = mw.FormDataContentType()

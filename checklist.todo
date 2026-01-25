@@ -1,9 +1,0 @@
-New Telegram API version:
-
-  ☐ Up version at `constants.go`
-  ☐ Copy requests and types from generator
-  ☐ Make code changes, if needed
-  ☐ Run `Reformat Code` at Goland editor
-  ☐ Commit changes to git
-  ☐ Add git tag
-  ☐ Push changes to git

@@ -1,3 +1,3 @@
 module github.com/temoon/telegram-bots-api
 
-go 1.21
+go 1.24.4
