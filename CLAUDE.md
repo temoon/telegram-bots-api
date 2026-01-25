@@ -118,6 +118,63 @@ func (r *SomeRequest) GetFiles() (files map[string]io.Reader) {
 4. **Error handling**: API errors are returned as Go errors with Telegram's description message
 5. **Context support**: All requests accept `context.Context` for cancellation/timeout control
 
+## Testing
+
+The codebase is comprehensively covered with automated tests that verify the correctness of request serialization and API method implementations.
+
+### Test Structure
+
+**`bot_test.go`** - Core bot functionality tests
+- Tests for `NewBot()` constructor with various configurations
+- Tests for `CallMethod()` request/response handling
+- Tests for form serialization (`getForm`, `getFormMultipart`)
+- Mock HTTP server tests for error handling
+- Includes `mockRequest` helper for testing the `Request` interface
+
+**`requests/*_test.go`** - Individual API method tests (auto-generated)
+- Each API method has a corresponding test file
+- Tests verify `GetValues()` serialization (required and optional fields)
+- Tests verify `GetFiles()` behavior for file upload methods
+- Table-driven tests for methods with complex parameters
+- All generated automatically alongside request implementations
+
+**`requests/helpers_test.go`** - Test utilities
+- Helper functions shared across request tests (e.g., `ptr[T]()` for creating pointers)
+
+### Running Tests
+
+```bash
+# Run all tests
+go test ./...
+
+# Run tests for a specific package
+go test ./requests
+
+# Run tests with verbose output
+go test -v ./...
+
+# Run tests with coverage
+go test -cover ./...
+
+# Run a specific test
+go test -run TestSendMessage_GetValues ./requests
+```
+
+### What Tests Verify
+
+Request tests validate:
+1. **Field serialization** - All struct fields correctly convert to API parameter format
+2. **Boolean encoding** - Boolean values serialize as `"1"` (true) or `"0"` (false)
+3. **Optional parameters** - Nil pointer fields are omitted from serialization
+4. **Complex types** - Objects and arrays correctly JSON-marshal to strings
+5. **File handling** - File upload methods return correct reader maps
+
+Bot tests validate:
+1. **Initialization** - Bot constructor handles various `BotOpts` configurations
+2. **HTTP client setup** - Custom and default HTTP clients work correctly
+3. **Form encoding** - Both URL-encoded and multipart forms serialize properly
+4. **Immutability** - Modifying `BotOpts` after `NewBot()` doesn't affect bot instance
+
 ## Code Generation
 
 **CRITICAL**: Most of this codebase is automatically generated from the official Telegram Bot API documentation using https://github.com/temoon/telegram-bots-api-generator
@@ -125,21 +182,25 @@ func (r *SomeRequest) GetFiles() (files map[string]io.Reader) {
 **DO NOT** manually edit the following files - all changes will be overwritten on next generation:
 - `types.go` - all type definitions
 - `requests/*.go` - all API method implementations
+- `requests/*_test.go` - all API method tests
 
 **Files safe to modify manually:**
 - `bot.go` - core bot implementation (NOT generated)
+- `bot_test.go` - core bot tests (NOT generated)
 - `constants.go` - API constants (NOT generated)
 - `type_chat_id.go` - custom ChatId type
 - `type_input_file.go` - custom InputFile type
+- `requests/helpers_test.go` - test utilities (NOT generated)
 - `go.mod` / `go.sum` - dependency management
 - `NOTICE` / `LICENSE` - copyright and licensing
 
 **To update when Telegram releases new API versions:**
 1. See documentation at https://github.com/temoon/telegram-bots-api-generator
 2. Run the generator against the updated Telegram API documentation
-3. The generator will regenerate `types.go` and `requests/*.go`
+3. The generator will regenerate `types.go`, `requests/*.go`, and `requests/*_test.go`
 4. Manually update `constants.go` with any new constants if needed
 5. Update version in `constants.go` to match new Telegram Bot API version
+6. Run `go test ./...` to verify all generated tests pass
 
 ## Version Updates
 
