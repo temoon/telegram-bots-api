@@ -3,8 +3,9 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SetBusinessAccountProfilePhoto struct {

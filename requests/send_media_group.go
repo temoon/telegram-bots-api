@@ -4,21 +4,23 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendMediaGroup struct {
-	ChatId               telegram.ChatId
-	Media                interface{}
-	AllowPaidBroadcast   *bool
-	BusinessConnectionId *string
-	DisableNotification  *bool
-	MessageEffectId      *string
-	MessageThreadId      *int64
-	ProtectContent       *bool
-	ReplyParameters      *telegram.ReplyParameters
+	ChatId                telegram.ChatId
+	Media                 interface{}
+	AllowPaidBroadcast    *bool
+	BusinessConnectionId  *string
+	DirectMessagesTopicId *int64
+	DisableNotification   *bool
+	MessageEffectId       *string
+	MessageThreadId       *int64
+	ProtectContent        *bool
+	ReplyParameters       *telegram.ReplyParameters
 }
 
 func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -55,6 +57,10 @@ func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) 
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -126,11 +132,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 			if item.Media.HasFile() {
 				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
 			}
-			if item.Cover != nil && item.Cover.HasFile() {
-				files[item.Cover.GetFormFieldName()] = item.Cover.GetFile()
-			}
 			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
 				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Cover != nil && item.Cover.HasFile() {
+				files[item.Cover.GetFormFieldName()] = item.Cover.GetFile()
 			}
 		}
 	}

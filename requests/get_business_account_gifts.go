@@ -2,21 +2,24 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type GetBusinessAccountGifts struct {
-	BusinessConnectionId string
-	ExcludeLimited       *bool
-	ExcludeSaved         *bool
-	ExcludeUnique        *bool
-	ExcludeUnlimited     *bool
-	ExcludeUnsaved       *bool
-	Limit                *int64
-	Offset               *string
-	SortByPrice          *bool
+	BusinessConnectionId        string
+	ExcludeFromBlockchain       *bool
+	ExcludeLimitedNonUpgradable *bool
+	ExcludeLimitedUpgradable    *bool
+	ExcludeSaved                *bool
+	ExcludeUnique               *bool
+	ExcludeUnlimited            *bool
+	ExcludeUnsaved              *bool
+	Limit                       *int64
+	Offset                      *string
+	SortByPrice                 *bool
 }
 
 func (r *GetBusinessAccountGifts) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -30,11 +33,27 @@ func (r *GetBusinessAccountGifts) GetValues() (values map[string]interface{}, er
 
 	values["business_connection_id"] = r.BusinessConnectionId
 
-	if r.ExcludeLimited != nil {
-		if *r.ExcludeLimited {
-			values["exclude_limited"] = "1"
+	if r.ExcludeFromBlockchain != nil {
+		if *r.ExcludeFromBlockchain {
+			values["exclude_from_blockchain"] = "1"
 		} else {
-			values["exclude_limited"] = "0"
+			values["exclude_from_blockchain"] = "0"
+		}
+	}
+
+	if r.ExcludeLimitedNonUpgradable != nil {
+		if *r.ExcludeLimitedNonUpgradable {
+			values["exclude_limited_non_upgradable"] = "1"
+		} else {
+			values["exclude_limited_non_upgradable"] = "0"
+		}
+	}
+
+	if r.ExcludeLimitedUpgradable != nil {
+		if *r.ExcludeLimitedUpgradable {
+			values["exclude_limited_upgradable"] = "1"
+		} else {
+			values["exclude_limited_upgradable"] = "0"
 		}
 	}
 

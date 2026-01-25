@@ -3,9 +3,10 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendInvoice struct {
@@ -16,6 +17,7 @@ type SendInvoice struct {
 	Prices                    []telegram.LabeledPrice
 	Title                     string
 	AllowPaidBroadcast        *bool
+	DirectMessagesTopicId     *int64
 	DisableNotification       *bool
 	IsFlexible                *bool
 	MaxTipAmount              *int64
@@ -37,6 +39,7 @@ type SendInvoice struct {
 	SendEmailToProvider       *bool
 	SendPhoneNumberToProvider *bool
 	StartParameter            *string
+	SuggestedPostParameters   *telegram.SuggestedPostParameters
 	SuggestedTipAmounts       []int64
 }
 
@@ -72,6 +75,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["allow_paid_broadcast"] = "0"
 		}
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -202,6 +209,15 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.StartParameter != nil {
 		values["start_parameter"] = *r.StartParameter
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.SuggestedTipAmounts != nil {

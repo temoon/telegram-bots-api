@@ -2,19 +2,24 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
+	"encoding/json"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type ForwardMessage struct {
-	ChatId              telegram.ChatId
-	FromChatId          telegram.ChatId
-	MessageId           int64
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ProtectContent      *bool
-	VideoStartTimestamp *int64
+	ChatId                  telegram.ChatId
+	FromChatId              telegram.ChatId
+	MessageId               int64
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ProtectContent          *bool
+	SuggestedPostParameters *telegram.SuggestedPostParameters
+	VideoStartTimestamp     *int64
 }
 
 func (r *ForwardMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -32,12 +37,20 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 
 	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
 
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -50,6 +63,15 @@ func (r *ForwardMessage) GetValues() (values map[string]interface{}, err error) 
 		} else {
 			values["protect_content"] = "0"
 		}
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.VideoStartTimestamp != nil {

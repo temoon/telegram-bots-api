@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendDocument struct {
@@ -16,6 +17,7 @@ type SendDocument struct {
 	BusinessConnectionId        *string
 	Caption                     *string
 	CaptionEntities             []telegram.MessageEntity
+	DirectMessagesTopicId       *int64
 	DisableContentTypeDetection *bool
 	DisableNotification         *bool
 	MessageEffectId             *string
@@ -24,6 +26,7 @@ type SendDocument struct {
 	ProtectContent              *bool
 	ReplyMarkup                 interface{}
 	ReplyParameters             *telegram.ReplyParameters
+	SuggestedPostParameters     *telegram.SuggestedPostParameters
 	Thumbnail                   *telegram.InputFile
 }
 
@@ -63,6 +66,10 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableContentTypeDetection != nil {
@@ -123,6 +130,15 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.Thumbnail != nil {

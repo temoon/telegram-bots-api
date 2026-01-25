@@ -4,26 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendPaidMedia struct {
-	ChatId                telegram.ChatId
-	Media                 []interface{}
-	StarCount             int64
-	AllowPaidBroadcast    *bool
-	BusinessConnectionId  *string
-	Caption               *string
-	CaptionEntities       []telegram.MessageEntity
-	DisableNotification   *bool
-	ParseMode             *string
-	Payload               *string
-	ProtectContent        *bool
-	ReplyMarkup           interface{}
-	ReplyParameters       *telegram.ReplyParameters
-	ShowCaptionAboveMedia *bool
+	ChatId                  telegram.ChatId
+	Media                   []interface{}
+	StarCount               int64
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	MessageThreadId         *int64
+	ParseMode               *string
+	Payload                 *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	SuggestedPostParameters *telegram.SuggestedPostParameters
 }
 
 func (r *SendPaidMedia) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -71,12 +75,20 @@ func (r *SendPaidMedia) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageThreadId != nil {
+		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
 
 	if r.ParseMode != nil {
@@ -125,6 +137,15 @@ func (r *SendPaidMedia) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["show_caption_above_media"] = "0"
 		}
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	return

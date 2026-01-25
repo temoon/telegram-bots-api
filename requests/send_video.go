@@ -4,34 +4,37 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendVideo struct {
-	ChatId                telegram.ChatId
-	Video                 telegram.InputFile
-	AllowPaidBroadcast    *bool
-	BusinessConnectionId  *string
-	Caption               *string
-	CaptionEntities       []telegram.MessageEntity
-	Cover                 *telegram.InputFile
-	DisableNotification   *bool
-	Duration              *int64
-	HasSpoiler            *bool
-	Height                *int64
-	MessageEffectId       *string
-	MessageThreadId       *int64
-	ParseMode             *string
-	ProtectContent        *bool
-	ReplyMarkup           interface{}
-	ReplyParameters       *telegram.ReplyParameters
-	ShowCaptionAboveMedia *bool
-	StartTimestamp        *int64
-	SupportsStreaming     *bool
-	Thumbnail             *telegram.InputFile
-	Width                 *int64
+	ChatId                  telegram.ChatId
+	Video                   telegram.InputFile
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	Cover                   *telegram.InputFile
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	Duration                *int64
+	HasSpoiler              *bool
+	Height                  *int64
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ParseMode               *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	StartTimestamp          *int64
+	SuggestedPostParameters *telegram.SuggestedPostParameters
+	SupportsStreaming       *bool
+	Thumbnail               *telegram.InputFile
+	Width                   *int64
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -74,6 +77,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Cover != nil {
 		values["cover"] = r.Cover.GetValue()
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -154,6 +161,15 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	if r.StartTimestamp != nil {
 		values["start_timestamp"] = strconv.FormatInt(*r.StartTimestamp, 10)
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.SupportsStreaming != nil {

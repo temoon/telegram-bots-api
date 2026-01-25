@@ -3,18 +3,20 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type ForwardMessages struct {
-	ChatId              telegram.ChatId
-	FromChatId          telegram.ChatId
-	MessageIds          []int64
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ProtectContent      *bool
+	ChatId                telegram.ChatId
+	FromChatId            telegram.ChatId
+	MessageIds            []int64
+	DirectMessagesTopicId *int64
+	DisableNotification   *bool
+	MessageThreadId       *int64
+	ProtectContent        *bool
 }
 
 func (r *ForwardMessages) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,6 +38,10 @@ func (r *ForwardMessages) GetValues() (values map[string]interface{}, err error)
 	}
 
 	values["message_ids"] = string(dataMessageIds)
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {

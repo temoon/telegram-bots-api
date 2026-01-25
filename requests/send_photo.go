@@ -4,27 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendPhoto struct {
-	ChatId                telegram.ChatId
-	Photo                 telegram.InputFile
-	AllowPaidBroadcast    *bool
-	BusinessConnectionId  *string
-	Caption               *string
-	CaptionEntities       []telegram.MessageEntity
-	DisableNotification   *bool
-	HasSpoiler            *bool
-	MessageEffectId       *string
-	MessageThreadId       *int64
-	ParseMode             *string
-	ProtectContent        *bool
-	ReplyMarkup           interface{}
-	ReplyParameters       *telegram.ReplyParameters
-	ShowCaptionAboveMedia *bool
+	ChatId                  telegram.ChatId
+	Photo                   telegram.InputFile
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	HasSpoiler              *bool
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ParseMode               *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	SuggestedPostParameters *telegram.SuggestedPostParameters
 }
 
 func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -63,6 +66,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -131,6 +138,15 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["show_caption_above_media"] = "0"
 		}
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	return

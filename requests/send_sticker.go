@@ -4,23 +4,26 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendSticker struct {
-	ChatId               telegram.ChatId
-	Sticker              telegram.InputFile
-	AllowPaidBroadcast   *bool
-	BusinessConnectionId *string
-	DisableNotification  *bool
-	Emoji                *string
-	MessageEffectId      *string
-	MessageThreadId      *int64
-	ProtectContent       *bool
-	ReplyMarkup          interface{}
-	ReplyParameters      *telegram.ReplyParameters
+	ChatId                  telegram.ChatId
+	Sticker                 telegram.InputFile
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	Emoji                   *string
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	SuggestedPostParameters *telegram.SuggestedPostParameters
 }
 
 func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -46,6 +49,10 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -98,6 +105,15 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	return

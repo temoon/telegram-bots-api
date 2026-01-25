@@ -1,6 +1,7 @@
 package telegram
 
 type AcceptedGiftTypes struct {
+	GiftsFromChannels   bool `json:"gifts_from_channels"`
 	LimitedGifts        bool `json:"limited_gifts"`
 	PremiumSubscription bool `json:"premium_subscription"`
 	UniqueGifts         bool `json:"unique_gifts"`
@@ -207,31 +208,33 @@ type CallbackQuery struct {
 }
 
 type Chat struct {
-	Id        int64   `json:"id"`
-	Type      string  `json:"type"`
-	FirstName *string `json:"first_name,omitempty"`
-	IsForum   *bool   `json:"is_forum,omitempty"`
-	LastName  *string `json:"last_name,omitempty"`
-	Title     *string `json:"title,omitempty"`
-	Username  *string `json:"username,omitempty"`
+	Id               int64   `json:"id"`
+	Type             string  `json:"type"`
+	FirstName        *string `json:"first_name,omitempty"`
+	IsDirectMessages *bool   `json:"is_direct_messages,omitempty"`
+	IsForum          *bool   `json:"is_forum,omitempty"`
+	LastName         *string `json:"last_name,omitempty"`
+	Title            *string `json:"title,omitempty"`
+	Username         *string `json:"username,omitempty"`
 }
 
 type ChatAdministratorRights struct {
-	CanChangeInfo       bool  `json:"can_change_info"`
-	CanDeleteMessages   bool  `json:"can_delete_messages"`
-	CanDeleteStories    bool  `json:"can_delete_stories"`
-	CanEditStories      bool  `json:"can_edit_stories"`
-	CanInviteUsers      bool  `json:"can_invite_users"`
-	CanManageChat       bool  `json:"can_manage_chat"`
-	CanManageVideoChats bool  `json:"can_manage_video_chats"`
-	CanPostStories      bool  `json:"can_post_stories"`
-	CanPromoteMembers   bool  `json:"can_promote_members"`
-	CanRestrictMembers  bool  `json:"can_restrict_members"`
-	IsAnonymous         bool  `json:"is_anonymous"`
-	CanEditMessages     *bool `json:"can_edit_messages,omitempty"`
-	CanManageTopics     *bool `json:"can_manage_topics,omitempty"`
-	CanPinMessages      *bool `json:"can_pin_messages,omitempty"`
-	CanPostMessages     *bool `json:"can_post_messages,omitempty"`
+	CanChangeInfo           bool  `json:"can_change_info"`
+	CanDeleteMessages       bool  `json:"can_delete_messages"`
+	CanDeleteStories        bool  `json:"can_delete_stories"`
+	CanEditStories          bool  `json:"can_edit_stories"`
+	CanInviteUsers          bool  `json:"can_invite_users"`
+	CanManageChat           bool  `json:"can_manage_chat"`
+	CanManageVideoChats     bool  `json:"can_manage_video_chats"`
+	CanPostStories          bool  `json:"can_post_stories"`
+	CanPromoteMembers       bool  `json:"can_promote_members"`
+	CanRestrictMembers      bool  `json:"can_restrict_members"`
+	IsAnonymous             bool  `json:"is_anonymous"`
+	CanEditMessages         *bool `json:"can_edit_messages,omitempty"`
+	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
+	CanManageTopics         *bool `json:"can_manage_topics,omitempty"`
+	CanPinMessages          *bool `json:"can_pin_messages,omitempty"`
+	CanPostMessages         *bool `json:"can_post_messages,omitempty"`
 }
 
 type ChatBackground struct {
@@ -307,6 +310,7 @@ type ChatFullInfo struct {
 	HasRestrictedVoiceAndVideoMessages *bool                 `json:"has_restricted_voice_and_video_messages,omitempty"`
 	HasVisibleHistory                  *bool                 `json:"has_visible_history,omitempty"`
 	InviteLink                         *string               `json:"invite_link,omitempty"`
+	IsDirectMessages                   *bool                 `json:"is_direct_messages,omitempty"`
 	IsForum                            *bool                 `json:"is_forum,omitempty"`
 	JoinByRequest                      *bool                 `json:"join_by_request,omitempty"`
 	JoinToSendMessages                 *bool                 `json:"join_to_send_messages,omitempty"`
@@ -314,15 +318,19 @@ type ChatFullInfo struct {
 	LinkedChatId                       *int64                `json:"linked_chat_id,omitempty"`
 	Location                           *ChatLocation         `json:"location,omitempty"`
 	MessageAutoDeleteTime              *int64                `json:"message_auto_delete_time,omitempty"`
+	PaidMessageStarCount               *int64                `json:"paid_message_star_count,omitempty"`
+	ParentChat                         *Chat                 `json:"parent_chat,omitempty"`
 	Permissions                        *ChatPermissions      `json:"permissions,omitempty"`
 	PersonalChat                       *Chat                 `json:"personal_chat,omitempty"`
 	Photo                              *ChatPhoto            `json:"photo,omitempty"`
 	PinnedMessage                      *Message              `json:"pinned_message,omitempty"`
 	ProfileAccentColorId               *int64                `json:"profile_accent_color_id,omitempty"`
 	ProfileBackgroundCustomEmojiId     *string               `json:"profile_background_custom_emoji_id,omitempty"`
+	Rating                             *UserRating           `json:"rating,omitempty"`
 	SlowModeDelay                      *int64                `json:"slow_mode_delay,omitempty"`
 	StickerSetName                     *string               `json:"sticker_set_name,omitempty"`
 	Title                              *string               `json:"title,omitempty"`
+	UniqueGiftColors                   *UniqueGiftColors     `json:"unique_gift_colors,omitempty"`
 	UnrestrictBoostCount               *int64                `json:"unrestrict_boost_count,omitempty"`
 	Username                           *string               `json:"username,omitempty"`
 }
@@ -356,25 +364,26 @@ type ChatLocation struct {
 }
 
 type ChatMemberAdministrator struct {
-	CanBeEdited         bool    `json:"can_be_edited"`
-	CanChangeInfo       bool    `json:"can_change_info"`
-	CanDeleteMessages   bool    `json:"can_delete_messages"`
-	CanDeleteStories    bool    `json:"can_delete_stories"`
-	CanEditStories      bool    `json:"can_edit_stories"`
-	CanInviteUsers      bool    `json:"can_invite_users"`
-	CanManageChat       bool    `json:"can_manage_chat"`
-	CanManageVideoChats bool    `json:"can_manage_video_chats"`
-	CanPostStories      bool    `json:"can_post_stories"`
-	CanPromoteMembers   bool    `json:"can_promote_members"`
-	CanRestrictMembers  bool    `json:"can_restrict_members"`
-	IsAnonymous         bool    `json:"is_anonymous"`
-	Status              string  `json:"status"`
-	User                User    `json:"user"`
-	CanEditMessages     *bool   `json:"can_edit_messages,omitempty"`
-	CanManageTopics     *bool   `json:"can_manage_topics,omitempty"`
-	CanPinMessages      *bool   `json:"can_pin_messages,omitempty"`
-	CanPostMessages     *bool   `json:"can_post_messages,omitempty"`
-	CustomTitle         *string `json:"custom_title,omitempty"`
+	CanBeEdited             bool    `json:"can_be_edited"`
+	CanChangeInfo           bool    `json:"can_change_info"`
+	CanDeleteMessages       bool    `json:"can_delete_messages"`
+	CanDeleteStories        bool    `json:"can_delete_stories"`
+	CanEditStories          bool    `json:"can_edit_stories"`
+	CanInviteUsers          bool    `json:"can_invite_users"`
+	CanManageChat           bool    `json:"can_manage_chat"`
+	CanManageVideoChats     bool    `json:"can_manage_video_chats"`
+	CanPostStories          bool    `json:"can_post_stories"`
+	CanPromoteMembers       bool    `json:"can_promote_members"`
+	CanRestrictMembers      bool    `json:"can_restrict_members"`
+	IsAnonymous             bool    `json:"is_anonymous"`
+	Status                  string  `json:"status"`
+	User                    User    `json:"user"`
+	CanEditMessages         *bool   `json:"can_edit_messages,omitempty"`
+	CanManageDirectMessages *bool   `json:"can_manage_direct_messages,omitempty"`
+	CanManageTopics         *bool   `json:"can_manage_topics,omitempty"`
+	CanPinMessages          *bool   `json:"can_pin_messages,omitempty"`
+	CanPostMessages         *bool   `json:"can_post_messages,omitempty"`
+	CustomTitle             *string `json:"custom_title,omitempty"`
 }
 
 type ChatMemberBanned struct {
@@ -476,6 +485,7 @@ type Checklist struct {
 type ChecklistTask struct {
 	Id              int64           `json:"id"`
 	Text            string          `json:"text"`
+	CompletedByChat *Chat           `json:"completed_by_chat,omitempty"`
 	CompletedByUser *User           `json:"completed_by_user,omitempty"`
 	CompletionDate  *int64          `json:"completion_date,omitempty"`
 	TextEntities    []MessageEntity `json:"text_entities,omitempty"`
@@ -520,6 +530,11 @@ type Dice struct {
 type DirectMessagePriceChanged struct {
 	AreDirectMessagesEnabled bool   `json:"are_direct_messages_enabled"`
 	DirectMessageStarCount   *int64 `json:"direct_message_star_count,omitempty"`
+}
+
+type DirectMessagesTopic struct {
+	TopicId int64 `json:"topic_id"`
+	User    *User `json:"user,omitempty"`
 }
 
 type Document struct {
@@ -596,6 +611,7 @@ type ForumTopic struct {
 	MessageThreadId   int64   `json:"message_thread_id"`
 	Name              string  `json:"name"`
 	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+	IsNameImplicit    *bool   `json:"is_name_implicit,omitempty"`
 }
 
 type ForumTopicClosed struct {
@@ -606,6 +622,7 @@ type ForumTopicCreated struct {
 	IconColor         int64   `json:"icon_color"`
 	Name              string  `json:"name"`
 	IconCustomEmojiId *string `json:"icon_custom_emoji_id,omitempty"`
+	IsNameImplicit    *bool   `json:"is_name_implicit,omitempty"`
 }
 
 type ForumTopicEdited struct {
@@ -641,12 +658,25 @@ type GeneralForumTopicUnhidden struct {
 }
 
 type Gift struct {
-	Id               string  `json:"id"`
-	StarCount        int64   `json:"star_count"`
-	Sticker          Sticker `json:"sticker"`
-	RemainingCount   *int64  `json:"remaining_count,omitempty"`
-	TotalCount       *int64  `json:"total_count,omitempty"`
-	UpgradeStarCount *int64  `json:"upgrade_star_count,omitempty"`
+	Id                     string          `json:"id"`
+	StarCount              int64           `json:"star_count"`
+	Sticker                Sticker         `json:"sticker"`
+	Background             *GiftBackground `json:"background,omitempty"`
+	HasColors              *bool           `json:"has_colors,omitempty"`
+	IsPremium              *bool           `json:"is_premium,omitempty"`
+	PersonalRemainingCount *int64          `json:"personal_remaining_count,omitempty"`
+	PersonalTotalCount     *int64          `json:"personal_total_count,omitempty"`
+	PublisherChat          *Chat           `json:"publisher_chat,omitempty"`
+	RemainingCount         *int64          `json:"remaining_count,omitempty"`
+	TotalCount             *int64          `json:"total_count,omitempty"`
+	UniqueGiftVariantCount *int64          `json:"unique_gift_variant_count,omitempty"`
+	UpgradeStarCount       *int64          `json:"upgrade_star_count,omitempty"`
+}
+
+type GiftBackground struct {
+	CenterColor int64 `json:"center_color"`
+	EdgeColor   int64 `json:"edge_color"`
+	TextColor   int64 `json:"text_color"`
 }
 
 type GiftInfo struct {
@@ -655,9 +685,11 @@ type GiftInfo struct {
 	ConvertStarCount        *int64          `json:"convert_star_count,omitempty"`
 	Entities                []MessageEntity `json:"entities,omitempty"`
 	IsPrivate               *bool           `json:"is_private,omitempty"`
+	IsUpgradeSeparate       *bool           `json:"is_upgrade_separate,omitempty"`
 	OwnedGiftId             *string         `json:"owned_gift_id,omitempty"`
 	PrepaidUpgradeStarCount *int64          `json:"prepaid_upgrade_star_count,omitempty"`
 	Text                    *string         `json:"text,omitempty"`
+	UniqueGiftNumber        *int64          `json:"unique_gift_number,omitempty"`
 }
 
 type Gifts struct {
@@ -1340,6 +1372,7 @@ type Message struct {
 	DeleteChatPhoto               *bool                          `json:"delete_chat_photo,omitempty"`
 	Dice                          *Dice                          `json:"dice,omitempty"`
 	DirectMessagePriceChanged     *DirectMessagePriceChanged     `json:"direct_message_price_changed,omitempty"`
+	DirectMessagesTopic           *DirectMessagesTopic           `json:"direct_messages_topic,omitempty"`
 	Document                      *Document                      `json:"document,omitempty"`
 	EditDate                      *int64                         `json:"edit_date,omitempty"`
 	EffectId                      *string                        `json:"effect_id,omitempty"`
@@ -1355,6 +1388,7 @@ type Message struct {
 	GeneralForumTopicHidden       *GeneralForumTopicHidden       `json:"general_forum_topic_hidden,omitempty"`
 	GeneralForumTopicUnhidden     *GeneralForumTopicUnhidden     `json:"general_forum_topic_unhidden,omitempty"`
 	Gift                          *GiftInfo                      `json:"gift,omitempty"`
+	GiftUpgradeSent               *GiftInfo                      `json:"gift_upgrade_sent,omitempty"`
 	Giveaway                      *Giveaway                      `json:"giveaway,omitempty"`
 	GiveawayCompleted             *GiveawayCompleted             `json:"giveaway_completed,omitempty"`
 	GiveawayCreated               *GiveawayCreated               `json:"giveaway_created,omitempty"`
@@ -1365,6 +1399,7 @@ type Message struct {
 	Invoice                       *Invoice                       `json:"invoice,omitempty"`
 	IsAutomaticForward            *bool                          `json:"is_automatic_forward,omitempty"`
 	IsFromOffline                 *bool                          `json:"is_from_offline,omitempty"`
+	IsPaidPost                    *bool                          `json:"is_paid_post,omitempty"`
 	IsTopicMessage                *bool                          `json:"is_topic_message,omitempty"`
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`
@@ -1388,6 +1423,7 @@ type Message struct {
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
 	RefundedPayment               *RefundedPayment               `json:"refunded_payment,omitempty"`
 	ReplyMarkup                   *InlineKeyboardMarkup          `json:"reply_markup,omitempty"`
+	ReplyToChecklistTaskId        *int64                         `json:"reply_to_checklist_task_id,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
 	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
 	SenderBoostCount              *int64                         `json:"sender_boost_count,omitempty"`
@@ -1397,6 +1433,12 @@ type Message struct {
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
 	Story                         *Story                         `json:"story,omitempty"`
 	SuccessfulPayment             *SuccessfulPayment             `json:"successful_payment,omitempty"`
+	SuggestedPostApprovalFailed   *SuggestedPostApprovalFailed   `json:"suggested_post_approval_failed,omitempty"`
+	SuggestedPostApproved         *SuggestedPostApproved         `json:"suggested_post_approved,omitempty"`
+	SuggestedPostDeclined         *SuggestedPostDeclined         `json:"suggested_post_declined,omitempty"`
+	SuggestedPostInfo             *SuggestedPostInfo             `json:"suggested_post_info,omitempty"`
+	SuggestedPostPaid             *SuggestedPostPaid             `json:"suggested_post_paid,omitempty"`
+	SuggestedPostRefunded         *SuggestedPostRefunded         `json:"suggested_post_refunded,omitempty"`
 	SupergroupChatCreated         *bool                          `json:"supergroup_chat_created,omitempty"`
 	Text                          *string                        `json:"text,omitempty"`
 	UniqueGift                    *UniqueGiftInfo                `json:"unique_gift,omitempty"`
@@ -1492,10 +1534,12 @@ type OwnedGiftRegular struct {
 	Entities                []MessageEntity `json:"entities,omitempty"`
 	IsPrivate               *bool           `json:"is_private,omitempty"`
 	IsSaved                 *bool           `json:"is_saved,omitempty"`
+	IsUpgradeSeparate       *bool           `json:"is_upgrade_separate,omitempty"`
 	OwnedGiftId             *string         `json:"owned_gift_id,omitempty"`
 	PrepaidUpgradeStarCount *int64          `json:"prepaid_upgrade_star_count,omitempty"`
 	SenderUser              *User           `json:"sender_user,omitempty"`
 	Text                    *string         `json:"text,omitempty"`
+	UniqueGiftNumber        *int64          `json:"unique_gift_number,omitempty"`
 	WasRefunded             *bool           `json:"was_refunded,omitempty"`
 }
 
@@ -1728,6 +1772,7 @@ type ReplyParameters struct {
 	MessageId                int64           `json:"message_id"`
 	AllowSendingWithoutReply *bool           `json:"allow_sending_without_reply,omitempty"`
 	ChatId                   *ChatId         `json:"chat_id,omitempty"`
+	ChecklistTaskId          *int64          `json:"checklist_task_id,omitempty"`
 	Quote                    *string         `json:"quote,omitempty"`
 	QuoteEntities            []MessageEntity `json:"quote_entities,omitempty"`
 	QuoteParseMode           *string         `json:"quote_parse_mode,omitempty"`
@@ -1894,6 +1939,50 @@ type SuccessfulPayment struct {
 	SubscriptionExpirationDate *int64     `json:"subscription_expiration_date,omitempty"`
 }
 
+type SuggestedPostApprovalFailed struct {
+	Price                SuggestedPostPrice `json:"price"`
+	SuggestedPostMessage *Message           `json:"suggested_post_message,omitempty"`
+}
+
+type SuggestedPostApproved struct {
+	SendDate             int64               `json:"send_date"`
+	Price                *SuggestedPostPrice `json:"price,omitempty"`
+	SuggestedPostMessage *Message            `json:"suggested_post_message,omitempty"`
+}
+
+type SuggestedPostDeclined struct {
+	Comment              *string  `json:"comment,omitempty"`
+	SuggestedPostMessage *Message `json:"suggested_post_message,omitempty"`
+}
+
+type SuggestedPostInfo struct {
+	State    string              `json:"state"`
+	Price    *SuggestedPostPrice `json:"price,omitempty"`
+	SendDate *int64              `json:"send_date,omitempty"`
+}
+
+type SuggestedPostPaid struct {
+	Currency             string      `json:"currency"`
+	Amount               *int64      `json:"amount,omitempty"`
+	StarAmount           *StarAmount `json:"star_amount,omitempty"`
+	SuggestedPostMessage *Message    `json:"suggested_post_message,omitempty"`
+}
+
+type SuggestedPostParameters struct {
+	Price    *SuggestedPostPrice `json:"price,omitempty"`
+	SendDate *int64              `json:"send_date,omitempty"`
+}
+
+type SuggestedPostPrice struct {
+	Amount   int64  `json:"amount"`
+	Currency string `json:"currency"`
+}
+
+type SuggestedPostRefunded struct {
+	Reason               string   `json:"reason"`
+	SuggestedPostMessage *Message `json:"suggested_post_message,omitempty"`
+}
+
 type SwitchInlineQueryChosenChat struct {
 	AllowBotChats     *bool   `json:"allow_bot_chats,omitempty"`
 	AllowChannelChats *bool   `json:"allow_channel_chats,omitempty"`
@@ -1953,12 +2042,17 @@ type TransactionPartnerUser struct {
 }
 
 type UniqueGift struct {
-	Backdrop UniqueGiftBackdrop `json:"backdrop"`
-	BaseName string             `json:"base_name"`
-	Model    UniqueGiftModel    `json:"model"`
-	Name     string             `json:"name"`
-	Number   int64              `json:"number"`
-	Symbol   UniqueGiftSymbol   `json:"symbol"`
+	Backdrop         UniqueGiftBackdrop `json:"backdrop"`
+	BaseName         string             `json:"base_name"`
+	GiftId           string             `json:"gift_id"`
+	Model            UniqueGiftModel    `json:"model"`
+	Name             string             `json:"name"`
+	Number           int64              `json:"number"`
+	Symbol           UniqueGiftSymbol   `json:"symbol"`
+	Colors           *UniqueGiftColors  `json:"colors,omitempty"`
+	IsFromBlockchain *bool              `json:"is_from_blockchain,omitempty"`
+	IsPremium        *bool              `json:"is_premium,omitempty"`
+	PublisherChat    *Chat              `json:"publisher_chat,omitempty"`
 }
 
 type UniqueGiftBackdrop struct {
@@ -1974,13 +2068,23 @@ type UniqueGiftBackdropColors struct {
 	TextColor   int64 `json:"text_color"`
 }
 
+type UniqueGiftColors struct {
+	DarkThemeMainColor    int64   `json:"dark_theme_main_color"`
+	DarkThemeOtherColors  []int64 `json:"dark_theme_other_colors"`
+	LightThemeMainColor   int64   `json:"light_theme_main_color"`
+	LightThemeOtherColors []int64 `json:"light_theme_other_colors"`
+	ModelCustomEmojiId    string  `json:"model_custom_emoji_id"`
+	SymbolCustomEmojiId   string  `json:"symbol_custom_emoji_id"`
+}
+
 type UniqueGiftInfo struct {
-	Gift                UniqueGift `json:"gift"`
-	Origin              string     `json:"origin"`
-	LastResaleStarCount *int64     `json:"last_resale_star_count,omitempty"`
-	NextTransferDate    *int64     `json:"next_transfer_date,omitempty"`
-	OwnedGiftId         *string    `json:"owned_gift_id,omitempty"`
-	TransferStarCount   *int64     `json:"transfer_star_count,omitempty"`
+	Gift               UniqueGift `json:"gift"`
+	Origin             string     `json:"origin"`
+	LastResaleAmount   *int64     `json:"last_resale_amount,omitempty"`
+	LastResaleCurrency *string    `json:"last_resale_currency,omitempty"`
+	NextTransferDate   *int64     `json:"next_transfer_date,omitempty"`
+	OwnedGiftId        *string    `json:"owned_gift_id,omitempty"`
+	TransferStarCount  *int64     `json:"transfer_star_count,omitempty"`
 }
 
 type UniqueGiftModel struct {
@@ -2031,6 +2135,7 @@ type User struct {
 	CanJoinGroups           *bool   `json:"can_join_groups,omitempty"`
 	CanReadAllGroupMessages *bool   `json:"can_read_all_group_messages,omitempty"`
 	HasMainWebApp           *bool   `json:"has_main_web_app,omitempty"`
+	HasTopicsEnabled        *bool   `json:"has_topics_enabled,omitempty"`
 	IsPremium               *bool   `json:"is_premium,omitempty"`
 	LanguageCode            *string `json:"language_code,omitempty"`
 	LastName                *string `json:"last_name,omitempty"`
@@ -2045,6 +2150,13 @@ type UserChatBoosts struct {
 type UserProfilePhotos struct {
 	Photos     [][]PhotoSize `json:"photos"`
 	TotalCount int64         `json:"total_count"`
+}
+
+type UserRating struct {
+	CurrentLevelRating int64  `json:"current_level_rating"`
+	Level              int64  `json:"level"`
+	Rating             int64  `json:"rating"`
+	NextLevelRating    *int64 `json:"next_level_rating,omitempty"`
 }
 
 type UsersShared struct {
