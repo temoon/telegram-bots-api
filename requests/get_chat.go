@@ -2,8 +2,9 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
 	"io"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type GetChat struct {
@@ -11,7 +12,7 @@ type GetChat struct {
 }
 
 func (r *GetChat) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
-	response = new(telegram.Chat)
+	response = new(telegram.ChatFullInfo)
 	err = b.CallMethod(ctx, "getChat", r, response)
 	return
 }

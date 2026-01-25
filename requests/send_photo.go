@@ -4,24 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendPhoto struct {
-	ChatId               telegram.ChatId
-	Photo                telegram.InputFile
-	BusinessConnectionId *string
-	Caption              *string
-	CaptionEntities      []telegram.MessageEntity
-	DisableNotification  *bool
-	HasSpoiler           *bool
-	MessageThreadId      *int64
-	ParseMode            *string
-	ProtectContent       *bool
-	ReplyMarkup          interface{}
-	ReplyParameters      *telegram.ReplyParameters
+	ChatId                  telegram.ChatId
+	Photo                   telegram.InputFile
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	HasSpoiler              *bool
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ParseMode               *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	SuggestedPostParameters *telegram.SuggestedPostParameters
 }
 
 func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -36,6 +42,14 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["photo"] = r.Photo.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
@@ -54,6 +68,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
@@ -68,6 +86,10 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["has_spoiler"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -108,6 +130,23 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	return

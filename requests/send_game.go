@@ -3,16 +3,19 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendGame struct {
 	ChatId               int64
 	GameShortName        string
+	AllowPaidBroadcast   *bool
 	BusinessConnectionId *string
 	DisableNotification  *bool
+	MessageEffectId      *string
 	MessageThreadId      *int64
 	ProtectContent       *bool
 	ReplyMarkup          *telegram.InlineKeyboardMarkup
@@ -32,6 +35,14 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 
 	values["game_short_name"] = r.GameShortName
 
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
+
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
 	}
@@ -42,6 +53,10 @@ func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {

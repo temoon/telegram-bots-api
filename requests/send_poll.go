@@ -4,15 +4,17 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendPoll struct {
 	ChatId                telegram.ChatId
-	Options               []string
+	Options               []telegram.InputPollOption
 	Question              string
+	AllowPaidBroadcast    *bool
 	AllowsMultipleAnswers *bool
 	BusinessConnectionId  *string
 	CloseDate             *int64
@@ -23,9 +25,12 @@ type SendPoll struct {
 	ExplanationParseMode  *string
 	IsAnonymous           *bool
 	IsClosed              *bool
+	MessageEffectId       *string
 	MessageThreadId       *int64
 	OpenPeriod            *int64
 	ProtectContent        *bool
+	QuestionEntities      []telegram.MessageEntity
+	QuestionParseMode     *string
 	ReplyMarkup           interface{}
 	ReplyParameters       *telegram.ReplyParameters
 	Type                  *string
@@ -50,6 +55,14 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 	values["options"] = string(dataOptions)
 
 	values["question"] = r.Question
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.AllowsMultipleAnswers != nil {
 		if *r.AllowsMultipleAnswers {
@@ -112,6 +125,10 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		}
 	}
 
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
+	}
+
 	if r.MessageThreadId != nil {
 		values["message_thread_id"] = strconv.FormatInt(*r.MessageThreadId, 10)
 	}
@@ -126,6 +143,19 @@ func (r *SendPoll) GetValues() (values map[string]interface{}, err error) {
 		} else {
 			values["protect_content"] = "0"
 		}
+	}
+
+	if r.QuestionEntities != nil {
+		var dataQuestionEntities []byte
+		if dataQuestionEntities, err = json.Marshal(r.QuestionEntities); err != nil {
+			return
+		}
+
+		values["question_entities"] = string(dataQuestionEntities)
+	}
+
+	if r.QuestionParseMode != nil {
+		values["question_parse_mode"] = *r.QuestionParseMode
 	}
 
 	if r.ReplyMarkup != nil {

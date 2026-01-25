@@ -4,29 +4,37 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendVideo struct {
-	ChatId               telegram.ChatId
-	Video                telegram.InputFile
-	BusinessConnectionId *string
-	Caption              *string
-	CaptionEntities      []telegram.MessageEntity
-	DisableNotification  *bool
-	Duration             *int64
-	HasSpoiler           *bool
-	Height               *int64
-	MessageThreadId      *int64
-	ParseMode            *string
-	ProtectContent       *bool
-	ReplyMarkup          interface{}
-	ReplyParameters      *telegram.ReplyParameters
-	SupportsStreaming    *bool
-	Thumbnail            *telegram.InputFile
-	Width                *int64
+	ChatId                  telegram.ChatId
+	Video                   telegram.InputFile
+	AllowPaidBroadcast      *bool
+	BusinessConnectionId    *string
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	Cover                   *telegram.InputFile
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	Duration                *int64
+	HasSpoiler              *bool
+	Height                  *int64
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ParseMode               *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	StartTimestamp          *int64
+	SuggestedPostParameters *telegram.SuggestedPostParameters
+	SupportsStreaming       *bool
+	Thumbnail               *telegram.InputFile
+	Width                   *int64
 }
 
 func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -41,6 +49,14 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["video"] = r.Video.GetValue()
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
 
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
@@ -57,6 +73,14 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["caption_entities"] = string(dataCaptionEntities)
+	}
+
+	if r.Cover != nil {
+		values["cover"] = r.Cover.GetValue()
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
 	}
 
 	if r.DisableNotification != nil {
@@ -81,6 +105,10 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 
 	if r.Height != nil {
 		values["height"] = strconv.FormatInt(*r.Height, 10)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -121,6 +149,27 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
+	}
+
+	if r.StartTimestamp != nil {
+		values["start_timestamp"] = strconv.FormatInt(*r.StartTimestamp, 10)
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.SupportsStreaming != nil {

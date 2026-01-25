@@ -2,8 +2,9 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
 	"io"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type GetFile struct {

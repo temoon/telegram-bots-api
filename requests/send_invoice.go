@@ -3,9 +3,10 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type SendInvoice struct {
@@ -14,11 +15,13 @@ type SendInvoice struct {
 	Description               string
 	Payload                   string
 	Prices                    []telegram.LabeledPrice
-	ProviderToken             string
 	Title                     string
+	AllowPaidBroadcast        *bool
+	DirectMessagesTopicId     *int64
 	DisableNotification       *bool
 	IsFlexible                *bool
 	MaxTipAmount              *int64
+	MessageEffectId           *string
 	MessageThreadId           *int64
 	NeedEmail                 *bool
 	NeedName                  *bool
@@ -30,11 +33,13 @@ type SendInvoice struct {
 	PhotoWidth                *int64
 	ProtectContent            *bool
 	ProviderData              *string
+	ProviderToken             *string
 	ReplyMarkup               *telegram.InlineKeyboardMarkup
 	ReplyParameters           *telegram.ReplyParameters
 	SendEmailToProvider       *bool
 	SendPhoneNumberToProvider *bool
 	StartParameter            *string
+	SuggestedPostParameters   *telegram.SuggestedPostParameters
 	SuggestedTipAmounts       []int64
 }
 
@@ -62,9 +67,19 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	values["prices"] = string(dataPrices)
 
-	values["provider_token"] = r.ProviderToken
-
 	values["title"] = r.Title
+
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
+
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
 
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
@@ -84,6 +99,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.MaxTipAmount != nil {
 		values["max_tip_amount"] = strconv.FormatInt(*r.MaxTipAmount, 10)
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -150,6 +169,10 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 		values["provider_data"] = *r.ProviderData
 	}
 
+	if r.ProviderToken != nil {
+		values["provider_token"] = *r.ProviderToken
+	}
+
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte
 		if dataReplyMarkup, err = json.Marshal(r.ReplyMarkup); err != nil {
@@ -186,6 +209,15 @@ func (r *SendInvoice) GetValues() (values map[string]interface{}, err error) {
 
 	if r.StartParameter != nil {
 		values["start_parameter"] = *r.StartParameter
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
 	}
 
 	if r.SuggestedTipAmounts != nil {

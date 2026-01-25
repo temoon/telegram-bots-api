@@ -3,15 +3,17 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type StopPoll struct {
-	ChatId      telegram.ChatId
-	MessageId   int64
-	ReplyMarkup *telegram.InlineKeyboardMarkup
+	ChatId               telegram.ChatId
+	MessageId            int64
+	BusinessConnectionId *string
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
 func (r *StopPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -26,6 +28,10 @@ func (r *StopPoll) GetValues() (values map[string]interface{}, err error) {
 	values["chat_id"] = r.ChatId.String()
 
 	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.ReplyMarkup != nil {
 		var dataReplyMarkup []byte

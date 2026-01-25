@@ -2,29 +2,31 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type PromoteChatMember struct {
-	ChatId              telegram.ChatId
-	UserId              int64
-	CanChangeInfo       *bool
-	CanDeleteMessages   *bool
-	CanDeleteStories    *bool
-	CanEditMessages     *bool
-	CanEditStories      *bool
-	CanInviteUsers      *bool
-	CanManageChat       *bool
-	CanManageTopics     *bool
-	CanManageVideoChats *bool
-	CanPinMessages      *bool
-	CanPostMessages     *bool
-	CanPostStories      *bool
-	CanPromoteMembers   *bool
-	CanRestrictMembers  *bool
-	IsAnonymous         *bool
+	ChatId                  telegram.ChatId
+	UserId                  int64
+	CanChangeInfo           *bool
+	CanDeleteMessages       *bool
+	CanDeleteStories        *bool
+	CanEditMessages         *bool
+	CanEditStories          *bool
+	CanInviteUsers          *bool
+	CanManageChat           *bool
+	CanManageDirectMessages *bool
+	CanManageTopics         *bool
+	CanManageVideoChats     *bool
+	CanPinMessages          *bool
+	CanPostMessages         *bool
+	CanPostStories          *bool
+	CanPromoteMembers       *bool
+	CanRestrictMembers      *bool
+	IsAnonymous             *bool
 }
 
 func (r *PromoteChatMember) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -93,6 +95,14 @@ func (r *PromoteChatMember) GetValues() (values map[string]interface{}, err erro
 			values["can_manage_chat"] = "1"
 		} else {
 			values["can_manage_chat"] = "0"
+		}
+	}
+
+	if r.CanManageDirectMessages != nil {
+		if *r.CanManageDirectMessages {
+			values["can_manage_direct_messages"] = "1"
+		} else {
+			values["can_manage_direct_messages"] = "0"
 		}
 	}
 

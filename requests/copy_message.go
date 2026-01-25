@@ -4,23 +4,30 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type CopyMessage struct {
-	ChatId              telegram.ChatId
-	FromChatId          telegram.ChatId
-	MessageId           int64
-	Caption             *string
-	CaptionEntities     []telegram.MessageEntity
-	DisableNotification *bool
-	MessageThreadId     *int64
-	ParseMode           *string
-	ProtectContent      *bool
-	ReplyMarkup         interface{}
-	ReplyParameters     *telegram.ReplyParameters
+	ChatId                  telegram.ChatId
+	FromChatId              telegram.ChatId
+	MessageId               int64
+	AllowPaidBroadcast      *bool
+	Caption                 *string
+	CaptionEntities         []telegram.MessageEntity
+	DirectMessagesTopicId   *int64
+	DisableNotification     *bool
+	MessageEffectId         *string
+	MessageThreadId         *int64
+	ParseMode               *string
+	ProtectContent          *bool
+	ReplyMarkup             interface{}
+	ReplyParameters         *telegram.ReplyParameters
+	ShowCaptionAboveMedia   *bool
+	SuggestedPostParameters *telegram.SuggestedPostParameters
+	VideoStartTimestamp     *int64
 }
 
 func (r *CopyMessage) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -38,6 +45,14 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 
 	values["message_id"] = strconv.FormatInt(r.MessageId, 10)
 
+	if r.AllowPaidBroadcast != nil {
+		if *r.AllowPaidBroadcast {
+			values["allow_paid_broadcast"] = "1"
+		} else {
+			values["allow_paid_broadcast"] = "0"
+		}
+	}
+
 	if r.Caption != nil {
 		values["caption"] = *r.Caption
 	}
@@ -51,12 +66,20 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 		values["caption_entities"] = string(dataCaptionEntities)
 	}
 
+	if r.DirectMessagesTopicId != nil {
+		values["direct_messages_topic_id"] = strconv.FormatInt(*r.DirectMessagesTopicId, 10)
+	}
+
 	if r.DisableNotification != nil {
 		if *r.DisableNotification {
 			values["disable_notification"] = "1"
 		} else {
 			values["disable_notification"] = "0"
 		}
+	}
+
+	if r.MessageEffectId != nil {
+		values["message_effect_id"] = *r.MessageEffectId
 	}
 
 	if r.MessageThreadId != nil {
@@ -97,6 +120,27 @@ func (r *CopyMessage) GetValues() (values map[string]interface{}, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShowCaptionAboveMedia != nil {
+		if *r.ShowCaptionAboveMedia {
+			values["show_caption_above_media"] = "1"
+		} else {
+			values["show_caption_above_media"] = "0"
+		}
+	}
+
+	if r.SuggestedPostParameters != nil {
+		var dataSuggestedPostParameters []byte
+		if dataSuggestedPostParameters, err = json.Marshal(r.SuggestedPostParameters); err != nil {
+			return
+		}
+
+		values["suggested_post_parameters"] = string(dataSuggestedPostParameters)
+	}
+
+	if r.VideoStartTimestamp != nil {
+		values["video_start_timestamp"] = strconv.FormatInt(*r.VideoStartTimestamp, 10)
 	}
 
 	return

@@ -3,9 +3,10 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type CreateInvoiceLink struct {
@@ -13,8 +14,8 @@ type CreateInvoiceLink struct {
 	Description               string
 	Payload                   string
 	Prices                    []telegram.LabeledPrice
-	ProviderToken             string
 	Title                     string
+	BusinessConnectionId      *string
 	IsFlexible                *bool
 	MaxTipAmount              *int64
 	NeedEmail                 *bool
@@ -26,8 +27,10 @@ type CreateInvoiceLink struct {
 	PhotoUrl                  *string
 	PhotoWidth                *int64
 	ProviderData              *string
+	ProviderToken             *string
 	SendEmailToProvider       *bool
 	SendPhoneNumberToProvider *bool
+	SubscriptionPeriod        *int64
 	SuggestedTipAmounts       []int64
 }
 
@@ -53,9 +56,11 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 
 	values["prices"] = string(dataPrices)
 
-	values["provider_token"] = r.ProviderToken
-
 	values["title"] = r.Title
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.IsFlexible != nil {
 		if *r.IsFlexible {
@@ -121,6 +126,10 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 		values["provider_data"] = *r.ProviderData
 	}
 
+	if r.ProviderToken != nil {
+		values["provider_token"] = *r.ProviderToken
+	}
+
 	if r.SendEmailToProvider != nil {
 		if *r.SendEmailToProvider {
 			values["send_email_to_provider"] = "1"
@@ -135,6 +144,10 @@ func (r *CreateInvoiceLink) GetValues() (values map[string]interface{}, err erro
 		} else {
 			values["send_phone_number_to_provider"] = "0"
 		}
+	}
+
+	if r.SubscriptionPeriod != nil {
+		values["subscription_period"] = strconv.FormatInt(*r.SubscriptionPeriod, 10)
 	}
 
 	if r.SuggestedTipAmounts != nil {

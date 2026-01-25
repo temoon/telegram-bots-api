@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
-	"github.com/temoon/telegram-bots-api/requests"
 	"log"
 	"os"
 	"time"
+
+	"github.com/temoon/telegram-bots-api"
+	"github.com/temoon/telegram-bots-api/requests"
 )
 
 func main() {

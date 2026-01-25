@@ -3,17 +3,19 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type EditMessageMedia struct {
-	Media           interface{}
-	ChatId          *telegram.ChatId
-	InlineMessageId *string
-	MessageId       *int64
-	ReplyMarkup     *telegram.InlineKeyboardMarkup
+	Media                interface{}
+	BusinessConnectionId *string
+	ChatId               *telegram.ChatId
+	InlineMessageId      *string
+	MessageId            *int64
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
 func (r *EditMessageMedia) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -31,6 +33,10 @@ func (r *EditMessageMedia) GetValues() (values map[string]interface{}, err error
 	}
 
 	values["media"] = string(dataMedia)
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.ChatId != nil {
 		values["chat_id"] = r.ChatId.String()
@@ -86,6 +92,9 @@ func (r *EditMessageMedia) GetFiles() (files map[string]io.Reader) {
 			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
 		}
 	case telegram.InputMediaVideo:
+		if value.Cover != nil && value.Cover.HasFile() {
+			files[value.Cover.GetFormFieldName()] = value.Cover.GetFile()
+		}
 		if value.Media.HasFile() {
 			files[value.Media.GetFormFieldName()] = value.Media.GetFile()
 		}

@@ -2,9 +2,10 @@ package requests
 
 import (
 	"context"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type EditForumTopic struct {

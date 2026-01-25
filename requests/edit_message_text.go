@@ -3,20 +3,22 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type EditMessageText struct {
-	Text               string
-	ChatId             *telegram.ChatId
-	Entities           []telegram.MessageEntity
-	InlineMessageId    *string
-	LinkPreviewOptions *telegram.LinkPreviewOptions
-	MessageId          *int64
-	ParseMode          *string
-	ReplyMarkup        *telegram.InlineKeyboardMarkup
+	Text                 string
+	BusinessConnectionId *string
+	ChatId               *telegram.ChatId
+	Entities             []telegram.MessageEntity
+	InlineMessageId      *string
+	LinkPreviewOptions   *telegram.LinkPreviewOptions
+	MessageId            *int64
+	ParseMode            *string
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
 func (r *EditMessageText) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -29,6 +31,10 @@ func (r *EditMessageText) GetValues() (values map[string]interface{}, err error)
 	values = make(map[string]interface{})
 
 	values["text"] = r.Text
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.ChatId != nil {
 		values["chat_id"] = r.ChatId.String()

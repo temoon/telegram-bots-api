@@ -3,16 +3,18 @@ package requests
 import (
 	"context"
 	"encoding/json"
-	"github.com/temoon/telegram-bots-api"
 	"io"
 	"strconv"
+
+	"github.com/temoon/telegram-bots-api"
 )
 
 type StopMessageLiveLocation struct {
-	ChatId          *telegram.ChatId
-	InlineMessageId *string
-	MessageId       *int64
-	ReplyMarkup     *telegram.InlineKeyboardMarkup
+	BusinessConnectionId *string
+	ChatId               *telegram.ChatId
+	InlineMessageId      *string
+	MessageId            *int64
+	ReplyMarkup          *telegram.InlineKeyboardMarkup
 }
 
 func (r *StopMessageLiveLocation) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -23,6 +25,10 @@ func (r *StopMessageLiveLocation) Call(ctx context.Context, b *telegram.Bot) (re
 
 func (r *StopMessageLiveLocation) GetValues() (values map[string]interface{}, err error) {
 	values = make(map[string]interface{})
+
+	if r.BusinessConnectionId != nil {
+		values["business_connection_id"] = *r.BusinessConnectionId
+	}
 
 	if r.ChatId != nil {
 		values["chat_id"] = r.ChatId.String()
