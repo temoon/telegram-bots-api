@@ -175,11 +175,11 @@ func (r *SendAnimation) GetValues() (values map[string]string, err error) {
 func (r *SendAnimation) GetFiles() (files map[string]io.Reader) {
 	files = make(map[string]io.Reader)
 
-	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
-		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
-	}
 	if r.Animation.HasFile() {
 		files[r.Animation.GetFormFieldName()] = r.Animation.GetFile()
+	}
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
 	}
 
 	return

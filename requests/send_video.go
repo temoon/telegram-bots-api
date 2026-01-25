@@ -194,14 +194,14 @@ func (r *SendVideo) GetValues() (values map[string]string, err error) {
 func (r *SendVideo) GetFiles() (files map[string]io.Reader) {
 	files = make(map[string]io.Reader)
 
-	if r.Video.HasFile() {
-		files[r.Video.GetFormFieldName()] = r.Video.GetFile()
-	}
 	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
 		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
 	}
 	if r.Cover != nil && r.Cover.HasFile() {
 		files[r.Cover.GetFormFieldName()] = r.Cover.GetFile()
+	}
+	if r.Video.HasFile() {
+		files[r.Video.GetFormFieldName()] = r.Video.GetFile()
 	}
 
 	return

@@ -87,38 +87,38 @@ func TestNewInputFile(t *testing.T) {
 
 func TestInputFile_String(t *testing.T) {
 	tests := []struct {
-		name         string
-		fileId       string
-		file         io.Reader
-		fileName     string
+		name           string
+		fileId         string
+		file           io.Reader
+		fileName       string
 		expectedPrefix string
 	}{
 		{
-			name:         "file ID",
-			fileId:       "AgACAgIAAxkBAAI...",
-			file:         nil,
-			fileName:     "",
+			name:           "file ID",
+			fileId:         "AgACAgIAAxkBAAI...",
+			file:           nil,
+			fileName:       "",
 			expectedPrefix: "AgACAgIAAxkBAAI...",
 		},
 		{
-			name:         "HTTP URL",
-			fileId:       "https://example.com/photo.jpg",
-			file:         nil,
-			fileName:     "",
+			name:           "HTTP URL",
+			fileId:         "https://example.com/photo.jpg",
+			file:           nil,
+			fileName:       "",
 			expectedPrefix: "https://example.com/photo.jpg",
 		},
 		{
-			name:         "file upload",
-			fileId:       "",
-			file:         bytes.NewReader([]byte("data")),
-			fileName:     "photo.jpg",
+			name:           "file upload",
+			fileId:         "",
+			file:           bytes.NewReader([]byte("data")),
+			fileName:       "photo.jpg",
 			expectedPrefix: "attach://file_photo.jpg",
 		},
 		{
-			name:         "empty",
-			fileId:       "",
-			file:         nil,
-			fileName:     "",
+			name:           "empty",
+			fileId:         "",
+			file:           nil,
+			fileName:       "",
 			expectedPrefix: "",
 		},
 	}

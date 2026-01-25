@@ -154,39 +154,39 @@ func TestChatId_MarshalJSON(t *testing.T) {
 
 func TestChatId_UnmarshalJSON(t *testing.T) {
 	tests := []struct {
-		name       string
-		json       string
-		expectedId int64
+		name         string
+		json         string
+		expectedId   int64
 		expectedName string
 	}{
 		{
-			name:       "numeric ID",
-			json:       `"123456"`,
-			expectedId: 123456,
+			name:         "numeric ID",
+			json:         `"123456"`,
+			expectedId:   123456,
 			expectedName: "",
 		},
 		{
-			name:       "numeric ID without quotes",
-			json:       `123456`,
-			expectedId: 123456,
+			name:         "numeric ID without quotes",
+			json:         `123456`,
+			expectedId:   123456,
 			expectedName: "",
 		},
 		{
-			name:       "negative ID",
-			json:       `"-123456"`,
-			expectedId: -123456,
+			name:         "negative ID",
+			json:         `"-123456"`,
+			expectedId:   -123456,
 			expectedName: "",
 		},
 		{
-			name:       "username",
-			json:       `"@testuser"`,
-			expectedId: 0,
+			name:         "username",
+			json:         `"@testuser"`,
+			expectedId:   0,
 			expectedName: "@testuser",
 		},
 		{
-			name:       "empty string",
-			json:       `""`,
-			expectedId: 0,
+			name:         "empty string",
+			json:         `""`,
+			expectedId:   0,
 			expectedName: "",
 		},
 	}
