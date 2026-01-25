@@ -21,8 +21,8 @@ func (r *SetStickerSetThumbnail) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *SetStickerSetThumbnail) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetStickerSetThumbnail) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["format"] = r.Format
 
@@ -31,12 +31,18 @@ func (r *SetStickerSetThumbnail) GetValues() (values map[string]interface{}, err
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 
 	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+		values["thumbnail"] = r.Thumbnail.String()
 	}
 
 	return
 }
 
 func (r *SetStickerSetThumbnail) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+
 	return
 }

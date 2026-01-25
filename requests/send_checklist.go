@@ -26,8 +26,8 @@ func (r *SendChecklist) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
-func (r *SendChecklist) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendChecklist) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["business_connection_id"] = r.BusinessConnectionId
 

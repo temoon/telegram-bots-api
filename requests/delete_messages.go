@@ -19,8 +19,8 @@ func (r *DeleteMessages) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *DeleteMessages) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *DeleteMessages) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

@@ -16,7 +16,7 @@ func (r *GetWebhookInfo) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *GetWebhookInfo) GetValues() (values map[string]interface{}, err error) {
+func (r *GetWebhookInfo) GetValues() (values map[string]string, err error) {
 	return
 }
 

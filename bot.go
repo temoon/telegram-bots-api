@@ -29,7 +29,7 @@ type BotOpts struct {
 
 type Request interface {
 	Call(context.Context, *Bot) (interface{}, error)
-	GetValues() (map[string]interface{}, error)
+	GetValues() (map[string]string, error)
 	GetFiles() map[string]io.Reader
 }
 
@@ -120,7 +120,7 @@ func (b *Bot) getForm(request Request) (contentType string, query *bytes.Buffer,
 		return
 	}
 
-	var values map[string]interface{}
+	var values map[string]string
 	if values, err = request.GetValues(); err != nil {
 		return
 	}
@@ -131,46 +131,40 @@ func (b *Bot) getForm(request Request) (contentType string, query *bytes.Buffer,
 		}
 
 		query.WriteString(url.QueryEscape(key) + "=")
-		query.WriteString(url.QueryEscape(value.(string)))
+		query.WriteString(url.QueryEscape(value))
 	}
 
 	return
 }
 
 func (b *Bot) getFormMultipart(request Request, files map[string]io.Reader) (contentType string, query *bytes.Buffer, err error) {
-	var values map[string]interface{}
+	var values map[string]string
 	if values, err = request.GetValues(); err != nil {
 		return
-	}
-
-	for name, file := range files {
-		values[name] = file
 	}
 
 	query = new(bytes.Buffer)
 
 	var mw = multipart.NewWriter(query)
 	var fw io.Writer
-	var data io.Reader
-	var ok bool
 
 	for key, value := range values {
-		if data, ok = value.(io.Reader); ok {
-			if fw, err = mw.CreateFormFile(key, key); err != nil {
-				return
-			}
+		if fw, err = mw.CreateFormField(key); err != nil {
+			return
+		}
 
-			if _, err = io.Copy(fw, data); err != nil {
-				return
-			}
-		} else {
-			if fw, err = mw.CreateFormField(key); err != nil {
-				return
-			}
+		if _, err = fw.Write([]byte(value)); err != nil {
+			return
+		}
+	}
 
-			if _, err = fw.Write([]byte(value.(string))); err != nil {
-				return
-			}
+	for name, file := range files {
+		if fw, err = mw.CreateFormFile(name, name); err != nil {
+			return
+		}
+
+		if _, err = io.Copy(fw, file); err != nil {
+			return
 		}
 	}
 

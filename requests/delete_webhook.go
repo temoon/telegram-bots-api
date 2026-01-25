@@ -17,8 +17,8 @@ func (r *DeleteWebhook) Call(ctx context.Context, b *telegram.Bot) (response int
 	return
 }
 
-func (r *DeleteWebhook) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *DeleteWebhook) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.DropPendingUpdates != nil {
 		if *r.DropPendingUpdates {

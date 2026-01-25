@@ -27,8 +27,8 @@ func (r *PostStory) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *PostStory) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *PostStory) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["active_period"] = strconv.FormatInt(r.ActivePeriod, 10)
 

@@ -17,8 +17,8 @@ func (r *GetMyDefaultAdministratorRights) Call(ctx context.Context, b *telegram.
 	return
 }
 
-func (r *GetMyDefaultAdministratorRights) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetMyDefaultAdministratorRights) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.ForChannels != nil {
 		if *r.ForChannels {

@@ -19,8 +19,8 @@ func (r *ApproveChatJoinRequest) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *ApproveChatJoinRequest) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *ApproveChatJoinRequest) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

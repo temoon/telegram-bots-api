@@ -19,8 +19,8 @@ func (r *SetStickerMaskPosition) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *SetStickerMaskPosition) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetStickerMaskPosition) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["sticker"] = r.Sticker
 

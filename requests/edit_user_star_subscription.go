@@ -20,8 +20,8 @@ func (r *EditUserStarSubscription) Call(ctx context.Context, b *telegram.Bot) (r
 	return
 }
 
-func (r *EditUserStarSubscription) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *EditUserStarSubscription) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.IsCanceled {
 		values["is_canceled"] = "1"

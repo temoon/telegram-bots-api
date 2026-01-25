@@ -19,8 +19,8 @@ func (r *RefundStarPayment) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *RefundStarPayment) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *RefundStarPayment) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["telegram_payment_charge_id"] = r.TelegramPaymentChargeId
 

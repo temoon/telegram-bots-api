@@ -36,12 +36,12 @@ func (r *SendDocument) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendDocument) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["document"] = r.Document.GetValue()
+	values["document"] = r.Document.String()
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -142,12 +142,21 @@ func (r *SendDocument) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+		values["thumbnail"] = r.Thumbnail.String()
 	}
 
 	return
 }
 
 func (r *SendDocument) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Document.HasFile() {
+		files[r.Document.GetFormFieldName()] = r.Document.GetFile()
+	}
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+
 	return
 }

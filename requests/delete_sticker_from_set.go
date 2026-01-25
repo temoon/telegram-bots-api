@@ -17,8 +17,8 @@ func (r *DeleteStickerFromSet) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
-func (r *DeleteStickerFromSet) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *DeleteStickerFromSet) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["sticker"] = r.Sticker
 

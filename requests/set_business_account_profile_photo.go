@@ -20,8 +20,8 @@ func (r *SetBusinessAccountProfilePhoto) Call(ctx context.Context, b *telegram.B
 	return
 }
 
-func (r *SetBusinessAccountProfilePhoto) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetBusinessAccountProfilePhoto) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["business_connection_id"] = r.BusinessConnectionId
 

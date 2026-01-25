@@ -16,7 +16,7 @@ func (r *GetMe) Call(ctx context.Context, b *telegram.Bot) (response interface{}
 	return
 }
 
-func (r *GetMe) GetValues() (values map[string]interface{}, err error) {
+func (r *GetMe) GetValues() (values map[string]string, err error) {
 	return
 }
 

@@ -19,8 +19,8 @@ func (r *BanChatSenderChat) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *BanChatSenderChat) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *BanChatSenderChat) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

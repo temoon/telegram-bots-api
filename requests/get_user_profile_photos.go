@@ -20,8 +20,8 @@ func (r *GetUserProfilePhotos) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
-func (r *GetUserProfilePhotos) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetUserProfilePhotos) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 

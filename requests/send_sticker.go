@@ -32,12 +32,12 @@ func (r *SendSticker) Call(ctx context.Context, b *telegram.Bot) (response inter
 	return
 }
 
-func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendSticker) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["sticker"] = r.Sticker.GetValue()
+	values["sticker"] = r.Sticker.String()
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -120,5 +120,11 @@ func (r *SendSticker) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SendSticker) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Sticker.HasFile() {
+		files[r.Sticker.GetFormFieldName()] = r.Sticker.GetFile()
+	}
+
 	return
 }

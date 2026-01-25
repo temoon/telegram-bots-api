@@ -30,8 +30,8 @@ func (r *GetChatMenuButton) CallWithResponse(ctx context.Context, b *telegram.Bo
 	return
 }
 
-func (r *GetChatMenuButton) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetChatMenuButton) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.ChatId != nil {
 		values["chat_id"] = strconv.FormatInt(*r.ChatId, 10)

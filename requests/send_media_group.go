@@ -29,8 +29,8 @@ func (r *SendMediaGroup) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *SendMediaGroup) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendMediaGroup) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
@@ -129,11 +129,11 @@ func (r *SendMediaGroup) GetFiles() (files map[string]io.Reader) {
 		}
 	case []telegram.InputMediaVideo:
 		for _, item := range value {
-			if item.Media.HasFile() {
-				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
-			}
 			if item.Thumbnail != nil && item.Thumbnail.HasFile() {
 				files[item.Thumbnail.GetFormFieldName()] = item.Thumbnail.GetFile()
+			}
+			if item.Media.HasFile() {
+				files[item.Media.GetFormFieldName()] = item.Media.GetFile()
 			}
 			if item.Cover != nil && item.Cover.HasFile() {
 				files[item.Cover.GetFormFieldName()] = item.Cover.GetFile()

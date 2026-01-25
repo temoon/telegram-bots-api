@@ -17,8 +17,8 @@ func (r *GetBusinessAccountStarBalance) Call(ctx context.Context, b *telegram.Bo
 	return
 }
 
-func (r *GetBusinessAccountStarBalance) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetBusinessAccountStarBalance) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["business_connection_id"] = r.BusinessConnectionId
 

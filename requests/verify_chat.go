@@ -18,8 +18,8 @@ func (r *VerifyChat) Call(ctx context.Context, b *telegram.Bot) (response interf
 	return
 }
 
-func (r *VerifyChat) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *VerifyChat) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

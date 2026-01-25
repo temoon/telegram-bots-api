@@ -16,7 +16,7 @@ func (r *GetForumTopicIconStickers) Call(ctx context.Context, b *telegram.Bot) (
 	return
 }
 
-func (r *GetForumTopicIconStickers) GetValues() (values map[string]interface{}, err error) {
+func (r *GetForumTopicIconStickers) GetValues() (values map[string]string, err error) {
 	return
 }
 

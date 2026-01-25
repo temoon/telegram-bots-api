@@ -52,17 +52,6 @@ func (f *InputFile) String() string {
 }
 
 //goland:noinspection GoMixedReceiverTypes
-func (f *InputFile) GetValue() interface{} {
-	if len(f.fileId) > 0 {
-		return f.fileId
-	} else if f.HasFile() {
-		return f.file
-	}
-
-	return ""
-}
-
-//goland:noinspection GoMixedReceiverTypes
 func (f *InputFile) HasFile() bool {
 	return f.file != nil && len(f.fileName) > 0
 }

@@ -16,7 +16,7 @@ func (r *LogOut) Call(ctx context.Context, b *telegram.Bot) (response interface{
 	return
 }
 
-func (r *LogOut) GetValues() (values map[string]interface{}, err error) {
+func (r *LogOut) GetValues() (values map[string]string, err error) {
 	return
 }
 

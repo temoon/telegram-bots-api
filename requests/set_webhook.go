@@ -25,8 +25,8 @@ func (r *SetWebhook) Call(ctx context.Context, b *telegram.Bot) (response interf
 	return
 }
 
-func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetWebhook) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["url"] = r.Url
 
@@ -40,7 +40,7 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Certificate != nil {
-		values["certificate"] = r.Certificate.GetValue()
+		values["certificate"] = r.Certificate.String()
 	}
 
 	if r.DropPendingUpdates != nil {
@@ -67,5 +67,11 @@ func (r *SetWebhook) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SetWebhook) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Certificate != nil && r.Certificate.HasFile() {
+		files[r.Certificate.GetFormFieldName()] = r.Certificate.GetFile()
+	}
+
 	return
 }

@@ -17,8 +17,8 @@ func (r *UnpinAllGeneralForumTopicMessages) Call(ctx context.Context, b *telegra
 	return
 }
 
-func (r *UnpinAllGeneralForumTopicMessages) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *UnpinAllGeneralForumTopicMessages) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

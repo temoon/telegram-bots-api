@@ -20,8 +20,8 @@ func (r *UnbanChatMember) Call(ctx context.Context, b *telegram.Bot) (response i
 	return
 }
 
-func (r *UnbanChatMember) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *UnbanChatMember) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 

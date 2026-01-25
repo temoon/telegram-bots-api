@@ -26,8 +26,8 @@ func (r *GetUserGifts) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *GetUserGifts) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetUserGifts) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["user_id"] = strconv.FormatInt(r.UserId, 10)
 

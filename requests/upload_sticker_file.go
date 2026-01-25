@@ -20,10 +20,10 @@ func (r *UploadStickerFile) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *UploadStickerFile) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
-	values["sticker"] = r.Sticker.GetValue()
+	values["sticker"] = r.Sticker.String()
 
 	values["sticker_format"] = r.StickerFormat
 
@@ -33,5 +33,11 @@ func (r *UploadStickerFile) GetValues() (values map[string]interface{}, err erro
 }
 
 func (r *UploadStickerFile) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Sticker.HasFile() {
+		files[r.Sticker.GetFormFieldName()] = r.Sticker.GetFile()
+	}
+
 	return
 }

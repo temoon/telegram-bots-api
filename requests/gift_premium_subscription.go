@@ -24,8 +24,8 @@ func (r *GiftPremiumSubscription) Call(ctx context.Context, b *telegram.Bot) (re
 	return
 }
 
-func (r *GiftPremiumSubscription) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GiftPremiumSubscription) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["month_count"] = strconv.FormatInt(r.MonthCount, 10)
 

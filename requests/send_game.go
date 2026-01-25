@@ -28,8 +28,8 @@ func (r *SendGame) Call(ctx context.Context, b *telegram.Bot) (response interfac
 	return
 }
 
-func (r *SendGame) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendGame) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 

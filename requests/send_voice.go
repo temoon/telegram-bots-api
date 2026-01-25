@@ -35,12 +35,12 @@ func (r *SendVoice) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendVoice) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["voice"] = r.Voice.GetValue()
+	values["voice"] = r.Voice.String()
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -140,5 +140,11 @@ func (r *SendVoice) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SendVoice) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Voice.HasFile() {
+		files[r.Voice.GetFormFieldName()] = r.Voice.GetFile()
+	}
+
 	return
 }

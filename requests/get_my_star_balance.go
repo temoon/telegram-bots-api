@@ -16,7 +16,7 @@ func (r *GetMyStarBalance) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-func (r *GetMyStarBalance) GetValues() (values map[string]interface{}, err error) {
+func (r *GetMyStarBalance) GetValues() (values map[string]string, err error) {
 	return
 }
 

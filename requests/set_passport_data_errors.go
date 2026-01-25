@@ -20,8 +20,8 @@ func (r *SetPassportDataErrors) Call(ctx context.Context, b *telegram.Bot) (resp
 	return
 }
 
-func (r *SetPassportDataErrors) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetPassportDataErrors) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	var dataErrors []byte
 	if dataErrors, err = json.Marshal(r.Errors); err != nil {

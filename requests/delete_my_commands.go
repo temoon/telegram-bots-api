@@ -19,8 +19,8 @@ func (r *DeleteMyCommands) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-func (r *DeleteMyCommands) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *DeleteMyCommands) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.LanguageCode != nil {
 		values["language_code"] = *r.LanguageCode

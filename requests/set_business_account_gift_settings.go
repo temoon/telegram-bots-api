@@ -20,8 +20,8 @@ func (r *SetBusinessAccountGiftSettings) Call(ctx context.Context, b *telegram.B
 	return
 }
 
-func (r *SetBusinessAccountGiftSettings) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetBusinessAccountGiftSettings) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	var dataAcceptedGiftTypes []byte
 	if dataAcceptedGiftTypes, err = json.Marshal(r.AcceptedGiftTypes); err != nil {

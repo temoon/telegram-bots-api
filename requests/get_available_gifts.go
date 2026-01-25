@@ -16,7 +16,7 @@ func (r *GetAvailableGifts) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *GetAvailableGifts) GetValues() (values map[string]interface{}, err error) {
+func (r *GetAvailableGifts) GetValues() (values map[string]string, err error) {
 	return
 }
 

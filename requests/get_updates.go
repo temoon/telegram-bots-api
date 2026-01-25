@@ -22,8 +22,8 @@ func (r *GetUpdates) Call(ctx context.Context, b *telegram.Bot) (response interf
 	return
 }
 
-func (r *GetUpdates) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetUpdates) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.AllowedUpdates != nil {
 		var dataAllowedUpdates []byte

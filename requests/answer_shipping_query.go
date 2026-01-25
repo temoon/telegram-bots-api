@@ -21,8 +21,8 @@ func (r *AnswerShippingQuery) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *AnswerShippingQuery) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *AnswerShippingQuery) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.Ok {
 		values["ok"] = "1"

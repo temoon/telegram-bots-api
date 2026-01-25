@@ -38,10 +38,10 @@ func (r *SendAudio) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendAudio) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
-	values["audio"] = r.Audio.GetValue()
+	values["audio"] = r.Audio.String()
 
 	values["chat_id"] = r.ChatId.String()
 
@@ -144,7 +144,7 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+		values["thumbnail"] = r.Thumbnail.String()
 	}
 
 	if r.Title != nil {
@@ -155,5 +155,14 @@ func (r *SendAudio) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SendAudio) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Audio.HasFile() {
+		files[r.Audio.GetFormFieldName()] = r.Audio.GetFile()
+	}
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+
 	return
 }

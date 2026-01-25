@@ -22,8 +22,8 @@ func (r *ReplaceStickerInSet) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *ReplaceStickerInSet) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *ReplaceStickerInSet) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["name"] = r.Name
 

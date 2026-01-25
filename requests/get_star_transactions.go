@@ -19,8 +19,8 @@ func (r *GetStarTransactions) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *GetStarTransactions) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *GetStarTransactions) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.Limit != nil {
 		values["limit"] = strconv.FormatInt(*r.Limit, 10)

@@ -24,8 +24,8 @@ func (r *SetGameScore) Call(ctx context.Context, b *telegram.Bot) (response inte
 	return
 }
 
-func (r *SetGameScore) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetGameScore) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["score"] = strconv.FormatInt(r.Score, 10)
 

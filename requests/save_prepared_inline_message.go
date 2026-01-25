@@ -24,8 +24,8 @@ func (r *SavePreparedInlineMessage) Call(ctx context.Context, b *telegram.Bot) (
 	return
 }
 
-func (r *SavePreparedInlineMessage) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SavePreparedInlineMessage) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	var dataResult []byte
 	if dataResult, err = json.Marshal(r.Result); err != nil {

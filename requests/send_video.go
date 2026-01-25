@@ -43,12 +43,12 @@ func (r *SendVideo) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendVideo) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["video"] = r.Video.GetValue()
+	values["video"] = r.Video.String()
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -76,7 +76,7 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Cover != nil {
-		values["cover"] = r.Cover.GetValue()
+		values["cover"] = r.Cover.String()
 	}
 
 	if r.DirectMessagesTopicId != nil {
@@ -181,7 +181,7 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 	}
 
 	if r.Thumbnail != nil {
-		values["thumbnail"] = r.Thumbnail.GetValue()
+		values["thumbnail"] = r.Thumbnail.String()
 	}
 
 	if r.Width != nil {
@@ -192,5 +192,17 @@ func (r *SendVideo) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SendVideo) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Video.HasFile() {
+		files[r.Video.GetFormFieldName()] = r.Video.GetFile()
+	}
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+	if r.Cover != nil && r.Cover.HasFile() {
+		files[r.Cover.GetFormFieldName()] = r.Cover.GetFile()
+	}
+
 	return
 }

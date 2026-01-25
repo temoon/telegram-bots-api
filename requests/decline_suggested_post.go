@@ -20,8 +20,8 @@ func (r *DeclineSuggestedPost) Call(ctx context.Context, b *telegram.Bot) (respo
 	return
 }
 
-func (r *DeclineSuggestedPost) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *DeclineSuggestedPost) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 

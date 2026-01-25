@@ -24,8 +24,8 @@ func (r *AnswerInlineQuery) Call(ctx context.Context, b *telegram.Bot) (response
 	return
 }
 
-func (r *AnswerInlineQuery) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *AnswerInlineQuery) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["inline_query_id"] = r.InlineQueryId
 

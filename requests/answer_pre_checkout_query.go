@@ -19,8 +19,8 @@ func (r *AnswerPreCheckoutQuery) Call(ctx context.Context, b *telegram.Bot) (res
 	return
 }
 
-func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *AnswerPreCheckoutQuery) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	if r.Ok {
 		values["ok"] = "1"

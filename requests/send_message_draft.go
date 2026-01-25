@@ -24,8 +24,8 @@ func (r *SendMessageDraft) Call(ctx context.Context, b *telegram.Bot) (response 
 	return
 }
 
-func (r *SendMessageDraft) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendMessageDraft) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = strconv.FormatInt(r.ChatId, 10)
 

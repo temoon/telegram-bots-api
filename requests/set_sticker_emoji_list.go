@@ -19,8 +19,8 @@ func (r *SetStickerEmojiList) Call(ctx context.Context, b *telegram.Bot) (respon
 	return
 }
 
-func (r *SetStickerEmojiList) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetStickerEmojiList) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	var dataEmojiList []byte
 	if dataEmojiList, err = json.Marshal(r.EmojiList); err != nil {

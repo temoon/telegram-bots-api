@@ -36,12 +36,12 @@ func (r *SendPhoto) Call(ctx context.Context, b *telegram.Bot) (response interfa
 	return
 }
 
-func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendPhoto) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["chat_id"] = r.ChatId.String()
 
-	values["photo"] = r.Photo.GetValue()
+	values["photo"] = r.Photo.String()
 
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
@@ -153,5 +153,11 @@ func (r *SendPhoto) GetValues() (values map[string]interface{}, err error) {
 }
 
 func (r *SendPhoto) GetFiles() (files map[string]io.Reader) {
+	files = make(map[string]io.Reader)
+
+	if r.Photo.HasFile() {
+		files[r.Photo.GetFormFieldName()] = r.Photo.GetFile()
+	}
+
 	return
 }

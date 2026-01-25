@@ -21,8 +21,8 @@ func (r *SendChatAction) Call(ctx context.Context, b *telegram.Bot) (response in
 	return
 }
 
-func (r *SendChatAction) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SendChatAction) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["action"] = r.Action
 
