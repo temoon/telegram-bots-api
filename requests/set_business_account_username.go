@@ -18,8 +18,8 @@ func (r *SetBusinessAccountUsername) Call(ctx context.Context, b *telegram.Bot) 
 	return
 }
 
-func (r *SetBusinessAccountUsername) GetValues() (values map[string]interface{}, err error) {
-	values = make(map[string]interface{})
+func (r *SetBusinessAccountUsername) GetValues() (values map[string]string, err error) {
+	values = make(map[string]string)
 
 	values["business_connection_id"] = r.BusinessConnectionId
 
