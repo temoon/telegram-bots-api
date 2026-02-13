@@ -132,11 +132,11 @@ func (r *SendVideoNote) GetValues() (values map[string]string, err error) {
 func (r *SendVideoNote) GetFiles() (files map[string]io.Reader) {
 	files = make(map[string]io.Reader)
 
-	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
-		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
-	}
 	if r.VideoNote.HasFile() {
 		files[r.VideoNote.GetFormFieldName()] = r.VideoNote.GetFile()
+	}
+	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
+		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
 	}
 
 	return
