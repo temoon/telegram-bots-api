@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a Go implementation of the Telegram Bots API (currently version 9.3.0), providing a type-safe client library for building Telegram bots. The implementation closely follows the official Telegram Bot API documentation at https://core.telegram.org/bots/api.
+This is a Go implementation of the Telegram Bots API (currently version 9.4.0), providing a type-safe client library for building Telegram bots. The implementation closely follows the official Telegram Bot API documentation at https://core.telegram.org/bots/api.
 
 ## Development Commands
 
@@ -204,6 +204,6 @@ Bot tests validate:
 
 ## Version Updates
 
-The library version in `constants.go` reflects the Telegram Bot API version. Current version: 9.3.0
+The library version in `constants.go` reflects the Telegram Bot API version. Current version: 9.4.0
 
 When Telegram updates their API, use the generator to create a new version rather than making manual changes.
