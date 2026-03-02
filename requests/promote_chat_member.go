@@ -19,6 +19,7 @@ type PromoteChatMember struct {
 	CanInviteUsers          *bool
 	CanManageChat           *bool
 	CanManageDirectMessages *bool
+	CanManageTags           *bool
 	CanManageTopics         *bool
 	CanManageVideoChats     *bool
 	CanPinMessages          *bool
@@ -103,6 +104,14 @@ func (r *PromoteChatMember) GetValues() (values map[string]string, err error) {
 			values["can_manage_direct_messages"] = "1"
 		} else {
 			values["can_manage_direct_messages"] = "0"
+		}
+	}
+
+	if r.CanManageTags != nil {
+		if *r.CanManageTags {
+			values["can_manage_tags"] = "1"
+		} else {
+			values["can_manage_tags"] = "0"
 		}
 	}
 

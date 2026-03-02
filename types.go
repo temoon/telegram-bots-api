@@ -232,6 +232,7 @@ type ChatAdministratorRights struct {
 	IsAnonymous             bool  `json:"is_anonymous"`
 	CanEditMessages         *bool `json:"can_edit_messages,omitempty"`
 	CanManageDirectMessages *bool `json:"can_manage_direct_messages,omitempty"`
+	CanManageTags           *bool `json:"can_manage_tags,omitempty"`
 	CanManageTopics         *bool `json:"can_manage_topics,omitempty"`
 	CanPinMessages          *bool `json:"can_pin_messages,omitempty"`
 	CanPostMessages         *bool `json:"can_post_messages,omitempty"`
@@ -381,6 +382,7 @@ type ChatMemberAdministrator struct {
 	User                    User    `json:"user"`
 	CanEditMessages         *bool   `json:"can_edit_messages,omitempty"`
 	CanManageDirectMessages *bool   `json:"can_manage_direct_messages,omitempty"`
+	CanManageTags           *bool   `json:"can_manage_tags,omitempty"`
 	CanManageTopics         *bool   `json:"can_manage_topics,omitempty"`
 	CanPinMessages          *bool   `json:"can_pin_messages,omitempty"`
 	CanPostMessages         *bool   `json:"can_post_messages,omitempty"`
@@ -399,9 +401,10 @@ type ChatMemberLeft struct {
 }
 
 type ChatMemberMember struct {
-	Status    string `json:"status"`
-	User      User   `json:"user"`
-	UntilDate *int64 `json:"until_date,omitempty"`
+	Status    string  `json:"status"`
+	User      User    `json:"user"`
+	Tag       *string `json:"tag,omitempty"`
+	UntilDate *int64  `json:"until_date,omitempty"`
 }
 
 type ChatMemberOwner struct {
@@ -412,24 +415,26 @@ type ChatMemberOwner struct {
 }
 
 type ChatMemberRestricted struct {
-	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
-	CanChangeInfo         bool   `json:"can_change_info"`
-	CanInviteUsers        bool   `json:"can_invite_users"`
-	CanManageTopics       bool   `json:"can_manage_topics"`
-	CanPinMessages        bool   `json:"can_pin_messages"`
-	CanSendAudios         bool   `json:"can_send_audios"`
-	CanSendDocuments      bool   `json:"can_send_documents"`
-	CanSendMessages       bool   `json:"can_send_messages"`
-	CanSendOtherMessages  bool   `json:"can_send_other_messages"`
-	CanSendPhotos         bool   `json:"can_send_photos"`
-	CanSendPolls          bool   `json:"can_send_polls"`
-	CanSendVideoNotes     bool   `json:"can_send_video_notes"`
-	CanSendVideos         bool   `json:"can_send_videos"`
-	CanSendVoiceNotes     bool   `json:"can_send_voice_notes"`
-	IsMember              bool   `json:"is_member"`
-	Status                string `json:"status"`
-	UntilDate             int64  `json:"until_date"`
-	User                  User   `json:"user"`
+	CanAddWebPagePreviews bool    `json:"can_add_web_page_previews"`
+	CanChangeInfo         bool    `json:"can_change_info"`
+	CanEditTag            bool    `json:"can_edit_tag"`
+	CanInviteUsers        bool    `json:"can_invite_users"`
+	CanManageTopics       bool    `json:"can_manage_topics"`
+	CanPinMessages        bool    `json:"can_pin_messages"`
+	CanSendAudios         bool    `json:"can_send_audios"`
+	CanSendDocuments      bool    `json:"can_send_documents"`
+	CanSendMessages       bool    `json:"can_send_messages"`
+	CanSendOtherMessages  bool    `json:"can_send_other_messages"`
+	CanSendPhotos         bool    `json:"can_send_photos"`
+	CanSendPolls          bool    `json:"can_send_polls"`
+	CanSendVideoNotes     bool    `json:"can_send_video_notes"`
+	CanSendVideos         bool    `json:"can_send_videos"`
+	CanSendVoiceNotes     bool    `json:"can_send_voice_notes"`
+	IsMember              bool    `json:"is_member"`
+	Status                string  `json:"status"`
+	UntilDate             int64   `json:"until_date"`
+	User                  User    `json:"user"`
+	Tag                   *string `json:"tag,omitempty"`
 }
 
 type ChatMemberUpdated struct {
@@ -454,6 +459,7 @@ type ChatOwnerLeft struct {
 type ChatPermissions struct {
 	CanAddWebPagePreviews *bool `json:"can_add_web_page_previews,omitempty"`
 	CanChangeInfo         *bool `json:"can_change_info,omitempty"`
+	CanEditTag            *bool `json:"can_edit_tag,omitempty"`
 	CanInviteUsers        *bool `json:"can_invite_users,omitempty"`
 	CanManageTopics       *bool `json:"can_manage_topics,omitempty"`
 	CanPinMessages        *bool `json:"can_pin_messages,omitempty"`
@@ -1444,6 +1450,7 @@ type Message struct {
 	SenderBoostCount              *int64                         `json:"sender_boost_count,omitempty"`
 	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
 	SenderChat                    *Chat                          `json:"sender_chat,omitempty"`
+	SenderTag                     *string                        `json:"sender_tag,omitempty"`
 	ShowCaptionAboveMedia         *bool                          `json:"show_caption_above_media,omitempty"`
 	Sticker                       *Sticker                       `json:"sticker,omitempty"`
 	Story                         *Story                         `json:"story,omitempty"`
@@ -1476,13 +1483,15 @@ type MessageAutoDeleteTimerChanged struct {
 }
 
 type MessageEntity struct {
-	Length        int64   `json:"length"`
-	Offset        int64   `json:"offset"`
-	Type          string  `json:"type"`
-	CustomEmojiId *string `json:"custom_emoji_id,omitempty"`
-	Language      *string `json:"language,omitempty"`
-	Url           *string `json:"url,omitempty"`
-	User          *User   `json:"user,omitempty"`
+	Length         int64   `json:"length"`
+	Offset         int64   `json:"offset"`
+	Type           string  `json:"type"`
+	CustomEmojiId  *string `json:"custom_emoji_id,omitempty"`
+	DateTimeFormat *string `json:"date_time_format,omitempty"`
+	Language       *string `json:"language,omitempty"`
+	UnixTime       *int64  `json:"unix_time,omitempty"`
+	Url            *string `json:"url,omitempty"`
+	User           *User   `json:"user,omitempty"`
 }
 
 type MessageId struct {

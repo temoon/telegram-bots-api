@@ -157,11 +157,11 @@ func (r *SendAudio) GetValues() (values map[string]string, err error) {
 func (r *SendAudio) GetFiles() (files map[string]io.Reader) {
 	files = make(map[string]io.Reader)
 
-	if r.Audio.HasFile() {
-		files[r.Audio.GetFormFieldName()] = r.Audio.GetFile()
-	}
 	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
 		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+	if r.Audio.HasFile() {
+		files[r.Audio.GetFormFieldName()] = r.Audio.GetFile()
 	}
 
 	return
