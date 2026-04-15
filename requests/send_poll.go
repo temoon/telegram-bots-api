@@ -11,29 +11,36 @@ import (
 )
 
 type SendPoll struct {
-	ChatId                telegram.ChatId
-	Options               []telegram.InputPollOption
-	Question              string
-	AllowPaidBroadcast    *bool
-	AllowsMultipleAnswers *bool
-	BusinessConnectionId  *string
-	CloseDate             *int64
-	CorrectOptionId       *int64
-	DisableNotification   *bool
-	Explanation           *string
-	ExplanationEntities   []telegram.MessageEntity
-	ExplanationParseMode  *string
-	IsAnonymous           *bool
-	IsClosed              *bool
-	MessageEffectId       *string
-	MessageThreadId       *int64
-	OpenPeriod            *int64
-	ProtectContent        *bool
-	QuestionEntities      []telegram.MessageEntity
-	QuestionParseMode     *string
-	ReplyMarkup           interface{}
-	ReplyParameters       *telegram.ReplyParameters
-	Type                  *string
+	ChatId                 telegram.ChatId
+	Options                []telegram.InputPollOption
+	Question               string
+	AllowAddingOptions     *bool
+	AllowPaidBroadcast     *bool
+	AllowsMultipleAnswers  *bool
+	AllowsRevoting         *bool
+	BusinessConnectionId   *string
+	CloseDate              *int64
+	CorrectOptionIds       []int64
+	Description            *string
+	DescriptionEntities    []telegram.MessageEntity
+	DescriptionParseMode   *string
+	DisableNotification    *bool
+	Explanation            *string
+	ExplanationEntities    []telegram.MessageEntity
+	ExplanationParseMode   *string
+	HideResultsUntilCloses *bool
+	IsAnonymous            *bool
+	IsClosed               *bool
+	MessageEffectId        *string
+	MessageThreadId        *int64
+	OpenPeriod             *int64
+	ProtectContent         *bool
+	QuestionEntities       []telegram.MessageEntity
+	QuestionParseMode      *string
+	ReplyMarkup            interface{}
+	ReplyParameters        *telegram.ReplyParameters
+	ShuffleOptions         *bool
+	Type                   *string
 }
 
 func (r *SendPoll) Call(ctx context.Context, b *telegram.Bot) (response interface{}, err error) {
@@ -56,6 +63,14 @@ func (r *SendPoll) GetValues() (values map[string]string, err error) {
 
 	values["question"] = r.Question
 
+	if r.AllowAddingOptions != nil {
+		if *r.AllowAddingOptions {
+			values["allow_adding_options"] = "1"
+		} else {
+			values["allow_adding_options"] = "0"
+		}
+	}
+
 	if r.AllowPaidBroadcast != nil {
 		if *r.AllowPaidBroadcast {
 			values["allow_paid_broadcast"] = "1"
@@ -72,6 +87,14 @@ func (r *SendPoll) GetValues() (values map[string]string, err error) {
 		}
 	}
 
+	if r.AllowsRevoting != nil {
+		if *r.AllowsRevoting {
+			values["allows_revoting"] = "1"
+		} else {
+			values["allows_revoting"] = "0"
+		}
+	}
+
 	if r.BusinessConnectionId != nil {
 		values["business_connection_id"] = *r.BusinessConnectionId
 	}
@@ -80,8 +103,30 @@ func (r *SendPoll) GetValues() (values map[string]string, err error) {
 		values["close_date"] = strconv.FormatInt(*r.CloseDate, 10)
 	}
 
-	if r.CorrectOptionId != nil {
-		values["correct_option_id"] = strconv.FormatInt(*r.CorrectOptionId, 10)
+	if r.CorrectOptionIds != nil {
+		var dataCorrectOptionIds []byte
+		if dataCorrectOptionIds, err = json.Marshal(r.CorrectOptionIds); err != nil {
+			return
+		}
+
+		values["correct_option_ids"] = string(dataCorrectOptionIds)
+	}
+
+	if r.Description != nil {
+		values["description"] = *r.Description
+	}
+
+	if r.DescriptionEntities != nil {
+		var dataDescriptionEntities []byte
+		if dataDescriptionEntities, err = json.Marshal(r.DescriptionEntities); err != nil {
+			return
+		}
+
+		values["description_entities"] = string(dataDescriptionEntities)
+	}
+
+	if r.DescriptionParseMode != nil {
+		values["description_parse_mode"] = *r.DescriptionParseMode
 	}
 
 	if r.DisableNotification != nil {
@@ -107,6 +152,14 @@ func (r *SendPoll) GetValues() (values map[string]string, err error) {
 
 	if r.ExplanationParseMode != nil {
 		values["explanation_parse_mode"] = *r.ExplanationParseMode
+	}
+
+	if r.HideResultsUntilCloses != nil {
+		if *r.HideResultsUntilCloses {
+			values["hide_results_until_closes"] = "1"
+		} else {
+			values["hide_results_until_closes"] = "0"
+		}
 	}
 
 	if r.IsAnonymous != nil {
@@ -180,6 +233,14 @@ func (r *SendPoll) GetValues() (values map[string]string, err error) {
 		}
 
 		values["reply_parameters"] = string(dataReplyParameters)
+	}
+
+	if r.ShuffleOptions != nil {
+		if *r.ShuffleOptions {
+			values["shuffle_options"] = "1"
+		} else {
+			values["shuffle_options"] = "0"
+		}
 	}
 
 	if r.Type != nil {

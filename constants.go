@@ -3,7 +3,7 @@ package telegram
 //goland:noinspection GoUnusedConst
 const (
 	Name    = "Telegram Bots API"
-	Version = "9.5.0"
+	Version = "9.6.0"
 
 	ParseModeMarkdown   = "Markdown"
 	ParseModeMarkdownV2 = "MarkdownV2"
