@@ -1,6 +1,6 @@
 # Telegram Bots API
 
-A Go library for working with the [Telegram Bot API](https://core.telegram.org/bots/api). Implements all methods and types from Telegram Bots API version 9.4.0.
+A Go library for working with the [Telegram Bot API](https://core.telegram.org/bots/api). Implements all methods and types from Telegram Bots API version 9.6.0.
 
 ## Installation
 

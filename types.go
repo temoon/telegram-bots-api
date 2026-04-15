@@ -1273,15 +1273,16 @@ type Invoice struct {
 }
 
 type KeyboardButton struct {
-	Text              string                      `json:"text"`
-	IconCustomEmojiId *string                     `json:"icon_custom_emoji_id,omitempty"`
-	RequestChat       *KeyboardButtonRequestChat  `json:"request_chat,omitempty"`
-	RequestContact    *bool                       `json:"request_contact,omitempty"`
-	RequestLocation   *bool                       `json:"request_location,omitempty"`
-	RequestPoll       *KeyboardButtonPollType     `json:"request_poll,omitempty"`
-	RequestUsers      *KeyboardButtonRequestUsers `json:"request_users,omitempty"`
-	Style             *string                     `json:"style,omitempty"`
-	WebApp            *WebAppInfo                 `json:"web_app,omitempty"`
+	Text              string                           `json:"text"`
+	IconCustomEmojiId *string                          `json:"icon_custom_emoji_id,omitempty"`
+	RequestChat       *KeyboardButtonRequestChat       `json:"request_chat,omitempty"`
+	RequestContact    *bool                            `json:"request_contact,omitempty"`
+	RequestLocation   *bool                            `json:"request_location,omitempty"`
+	RequestManagedBot *KeyboardButtonRequestManagedBot `json:"request_managed_bot,omitempty"`
+	RequestPoll       *KeyboardButtonPollType          `json:"request_poll,omitempty"`
+	RequestUsers      *KeyboardButtonRequestUsers      `json:"request_users,omitempty"`
+	Style             *string                          `json:"style,omitempty"`
+	WebApp            *WebAppInfo                      `json:"web_app,omitempty"`
 }
 
 type KeyboardButtonPollType struct {
@@ -1300,6 +1301,12 @@ type KeyboardButtonRequestChat struct {
 	RequestTitle            *bool                    `json:"request_title,omitempty"`
 	RequestUsername         *bool                    `json:"request_username,omitempty"`
 	UserAdministratorRights *ChatAdministratorRights `json:"user_administrator_rights,omitempty"`
+}
+
+type KeyboardButtonRequestManagedBot struct {
+	RequestId         int64   `json:"request_id"`
+	SuggestedName     *string `json:"suggested_name,omitempty"`
+	SuggestedUsername *string `json:"suggested_username,omitempty"`
 }
 
 type KeyboardButtonRequestUsers struct {
@@ -1346,6 +1353,15 @@ type LoginUrl struct {
 	BotUsername        *string `json:"bot_username,omitempty"`
 	ForwardText        *string `json:"forward_text,omitempty"`
 	RequestWriteAccess *bool   `json:"request_write_access,omitempty"`
+}
+
+type ManagedBotCreated struct {
+	Bot User `json:"bot"`
+}
+
+type ManagedBotUpdated struct {
+	Bot  User `json:"bot"`
+	User User `json:"user"`
 }
 
 type MaskPosition struct {
@@ -1425,6 +1441,7 @@ type Message struct {
 	LeftChatMember                *User                          `json:"left_chat_member,omitempty"`
 	LinkPreviewOptions            *LinkPreviewOptions            `json:"link_preview_options,omitempty"`
 	Location                      *Location                      `json:"location,omitempty"`
+	ManagedBotCreated             *ManagedBotCreated             `json:"managed_bot_created,omitempty"`
 	MediaGroupId                  *string                        `json:"media_group_id,omitempty"`
 	MessageAutoDeleteTimerChanged *MessageAutoDeleteTimerChanged `json:"message_auto_delete_timer_changed,omitempty"`
 	MessageThreadId               *int64                         `json:"message_thread_id,omitempty"`
@@ -1440,12 +1457,15 @@ type Message struct {
 	Photo                         []PhotoSize                    `json:"photo,omitempty"`
 	PinnedMessage                 interface{}                    `json:"pinned_message,omitempty"`
 	Poll                          *Poll                          `json:"poll,omitempty"`
+	PollOptionAdded               *PollOptionAdded               `json:"poll_option_added,omitempty"`
+	PollOptionDeleted             *PollOptionDeleted             `json:"poll_option_deleted,omitempty"`
 	ProximityAlertTriggered       *ProximityAlertTriggered       `json:"proximity_alert_triggered,omitempty"`
 	Quote                         *TextQuote                     `json:"quote,omitempty"`
 	RefundedPayment               *RefundedPayment               `json:"refunded_payment,omitempty"`
 	ReplyMarkup                   *InlineKeyboardMarkup          `json:"reply_markup,omitempty"`
 	ReplyToChecklistTaskId        *int64                         `json:"reply_to_checklist_task_id,omitempty"`
 	ReplyToMessage                *Message                       `json:"reply_to_message,omitempty"`
+	ReplyToPollOptionId           *string                        `json:"reply_to_poll_option_id,omitempty"`
 	ReplyToStory                  *Story                         `json:"reply_to_story,omitempty"`
 	SenderBoostCount              *int64                         `json:"sender_boost_count,omitempty"`
 	SenderBusinessBot             *User                          `json:"sender_business_bot,omitempty"`
@@ -1702,6 +1722,7 @@ type PhotoSize struct {
 
 type Poll struct {
 	AllowsMultipleAnswers bool            `json:"allows_multiple_answers"`
+	AllowsRevoting        bool            `json:"allows_revoting"`
 	Id                    string          `json:"id"`
 	IsAnonymous           bool            `json:"is_anonymous"`
 	IsClosed              bool            `json:"is_closed"`
@@ -1710,7 +1731,9 @@ type Poll struct {
 	TotalVoterCount       int64           `json:"total_voter_count"`
 	Type                  string          `json:"type"`
 	CloseDate             *int64          `json:"close_date,omitempty"`
-	CorrectOptionId       *int64          `json:"correct_option_id,omitempty"`
+	CorrectOptionIds      []int64         `json:"correct_option_ids,omitempty"`
+	Description           *string         `json:"description,omitempty"`
+	DescriptionEntities   []MessageEntity `json:"description_entities,omitempty"`
 	Explanation           *string         `json:"explanation,omitempty"`
 	ExplanationEntities   []MessageEntity `json:"explanation_entities,omitempty"`
 	OpenPeriod            *int64          `json:"open_period,omitempty"`
@@ -1718,16 +1741,35 @@ type Poll struct {
 }
 
 type PollAnswer struct {
-	OptionIds []int64 `json:"option_ids"`
-	PollId    string  `json:"poll_id"`
-	User      *User   `json:"user,omitempty"`
-	VoterChat *Chat   `json:"voter_chat,omitempty"`
+	OptionIds           []int64  `json:"option_ids"`
+	OptionPersistentIds []string `json:"option_persistent_ids"`
+	PollId              string   `json:"poll_id"`
+	User                *User    `json:"user,omitempty"`
+	VoterChat           *Chat    `json:"voter_chat,omitempty"`
 }
 
 type PollOption struct {
+	PersistentId string          `json:"persistent_id"`
 	Text         string          `json:"text"`
 	VoterCount   int64           `json:"voter_count"`
+	AddedByChat  *Chat           `json:"added_by_chat,omitempty"`
+	AddedByUser  *User           `json:"added_by_user,omitempty"`
+	AdditionDate *int64          `json:"addition_date,omitempty"`
 	TextEntities []MessageEntity `json:"text_entities,omitempty"`
+}
+
+type PollOptionAdded struct {
+	OptionPersistentId string          `json:"option_persistent_id"`
+	OptionText         string          `json:"option_text"`
+	OptionTextEntities []MessageEntity `json:"option_text_entities,omitempty"`
+	PollMessage        interface{}     `json:"poll_message,omitempty"`
+}
+
+type PollOptionDeleted struct {
+	OptionPersistentId string          `json:"option_persistent_id"`
+	OptionText         string          `json:"option_text"`
+	OptionTextEntities []MessageEntity `json:"option_text_entities,omitempty"`
+	PollMessage        interface{}     `json:"poll_message,omitempty"`
 }
 
 type PreCheckoutQuery struct {
@@ -1743,6 +1785,10 @@ type PreCheckoutQuery struct {
 type PreparedInlineMessage struct {
 	ExpirationDate int64  `json:"expiration_date"`
 	Id             string `json:"id"`
+}
+
+type PreparedKeyboardButton struct {
+	Id string `json:"id"`
 }
 
 type ProximityAlertTriggered struct {
@@ -1797,6 +1843,7 @@ type ReplyParameters struct {
 	AllowSendingWithoutReply *bool           `json:"allow_sending_without_reply,omitempty"`
 	ChatId                   *ChatId         `json:"chat_id,omitempty"`
 	ChecklistTaskId          *int64          `json:"checklist_task_id,omitempty"`
+	PollOptionId             *string         `json:"poll_option_id,omitempty"`
 	Quote                    *string         `json:"quote,omitempty"`
 	QuoteEntities            []MessageEntity `json:"quote_entities,omitempty"`
 	QuoteParseMode           *string         `json:"quote_parse_mode,omitempty"`
@@ -2140,6 +2187,7 @@ type Update struct {
 	EditedChannelPost       *Message                     `json:"edited_channel_post,omitempty"`
 	EditedMessage           *Message                     `json:"edited_message,omitempty"`
 	InlineQuery             *InlineQuery                 `json:"inline_query,omitempty"`
+	ManagedBot              *ManagedBotUpdated           `json:"managed_bot,omitempty"`
 	Message                 *Message                     `json:"message,omitempty"`
 	MessageReaction         *MessageReactionUpdated      `json:"message_reaction,omitempty"`
 	MessageReactionCount    *MessageReactionCountUpdated `json:"message_reaction_count,omitempty"`
@@ -2160,6 +2208,7 @@ type User struct {
 	AllowsUsersToCreateTopics *bool   `json:"allows_users_to_create_topics,omitempty"`
 	CanConnectToBusiness      *bool   `json:"can_connect_to_business,omitempty"`
 	CanJoinGroups             *bool   `json:"can_join_groups,omitempty"`
+	CanManageBots             *bool   `json:"can_manage_bots,omitempty"`
 	CanReadAllGroupMessages   *bool   `json:"can_read_all_group_messages,omitempty"`
 	HasMainWebApp             *bool   `json:"has_main_web_app,omitempty"`
 	HasTopicsEnabled          *bool   `json:"has_topics_enabled,omitempty"`

@@ -151,11 +151,11 @@ func (r *SendDocument) GetValues() (values map[string]string, err error) {
 func (r *SendDocument) GetFiles() (files map[string]io.Reader) {
 	files = make(map[string]io.Reader)
 
-	if r.Document.HasFile() {
-		files[r.Document.GetFormFieldName()] = r.Document.GetFile()
-	}
 	if r.Thumbnail != nil && r.Thumbnail.HasFile() {
 		files[r.Thumbnail.GetFormFieldName()] = r.Thumbnail.GetFile()
+	}
+	if r.Document.HasFile() {
+		files[r.Document.GetFormFieldName()] = r.Document.GetFile()
 	}
 
 	return
